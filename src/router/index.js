@@ -12,14 +12,6 @@ const routes = [
   },
   {
     meta: {
-      title: 'Tables'
-    },
-    path: '/tables',
-    name: 'tables',
-    component: () => import('@/views/TablesView.vue')
-  },
-  {
-    meta: {
       title: 'Forms'
     },
     path: '/forms',
@@ -57,14 +49,6 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/LoginView.vue')
-  },
-  {
-    meta: {
-      title: 'Error'
-    },
-    path: '/error',
-    name: 'error',
-    component: () => import('@/views/ErrorView.vue')
   }
 ]
 

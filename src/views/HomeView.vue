@@ -112,11 +112,7 @@ const transactionBarItems = computed(() => mainStore.history)
       <SectionBannerStarOnGitHub class="mt-6 mb-6" />
 
       <SectionTitleLineWithButton :icon="mdiChartPie" title="Trends overview">
-<<<<<<< HEAD
         <BaseButton :icon="mdiReload" color="whiteDark" @click="fillChartData" small />
-=======
-        <BaseButton :icon="mdiReload" color="whiteDark" @click="fillChartData" />
->>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
       </SectionTitleLineWithButton>
 
       <CardBox class="mb-6">

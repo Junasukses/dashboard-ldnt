@@ -72,13 +72,8 @@ const submitPass = () => {
 
           <template #footer>
             <BaseButtons>
-<<<<<<< HEAD
               <BaseButton color="info" type="submit" label="Submit" small />
               <BaseButton color="info" label="Options" outline small />
-=======
-              <BaseButton color="info" type="submit" label="Submit" />
-              <BaseButton color="info" label="Options" outline />
->>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
             </BaseButtons>
           </template>
         </CardBox>
@@ -121,13 +116,8 @@ const submitPass = () => {
 
           <template #footer>
             <BaseButtons>
-<<<<<<< HEAD
               <BaseButton type="submit" color="info" label="Submit" small />
               <BaseButton color="info" label="Options" outline small />
-=======
-              <BaseButton type="submit" color="info" label="Submit" />
-              <BaseButton color="info" label="Options" outline />
->>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
             </BaseButtons>
           </template>
         </CardBox>

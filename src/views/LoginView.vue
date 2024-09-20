@@ -56,8 +56,13 @@ const submit = () => {
 
         <template #footer>
           <BaseButtons>
+<<<<<<< HEAD
             <BaseButton type="submit" color="info" label="Login" small />
             <BaseButton to="/" color="info" outline label="Back" small />
+=======
+            <BaseButton type="submit" color="info" label="Login" />
+            <BaseButton to="/" color="info" outline label="Back" />
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
           </BaseButtons>
         </template>
       </CardBox>

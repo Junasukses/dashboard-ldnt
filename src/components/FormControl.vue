@@ -61,9 +61,15 @@ const computedValue = computed({
 
 const inputElClass = computed(() => {
   const base = [
+<<<<<<< HEAD
     'px-3 py-0 max-w-full focus:ring-1 focus:outline-none border-gray-700 rounded-lg w-full text-sm',
     'dark:placeholder-gray-400',
     computedType.value === 'textarea' ? 'h-24' : 'h-10',
+=======
+    'px-3 py-2 max-w-full focus:ring focus:outline-none border-gray-700 rounded w-full',
+    'dark:placeholder-gray-400',
+    computedType.value === 'textarea' ? 'h-24' : 'h-12',
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
     props.borderless ? 'border-0' : 'border',
     props.transparent ? 'bg-transparent' : 'bg-white dark:bg-slate-800'
   ]
@@ -77,7 +83,11 @@ const inputElClass = computed(() => {
 
 const computedType = computed(() => (props.options ? 'select' : props.type))
 
+<<<<<<< HEAD
 const controlIconH = computed(() => (props.type === 'textarea' ? 'h-full' : 'h-10'))
+=======
+const controlIconH = computed(() => (props.type === 'textarea' ? 'h-full' : 'h-12'))
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
 
 const mainStore = useMainStore()
 
@@ -125,8 +135,24 @@ if (props.ctrlKFocus) {
 
 <template>
   <div class="relative">
+<<<<<<< HEAD
     <textarea
       v-if="computedType === 'textarea'"
+=======
+    <select
+      v-if="computedType === 'select'"
+      :id="id"
+      v-model="computedValue"
+      :name="name"
+      :class="inputElClass"
+    >
+      <option v-for="option in options" :key="option.id ?? option" :value="option">
+        {{ option.label ?? option }}
+      </option>
+    </select>
+    <textarea
+      v-else-if="computedType === 'textarea'"
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
       :id="id"
       v-model="computedValue"
       :class="inputElClass"

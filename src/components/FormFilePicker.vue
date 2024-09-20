@@ -93,7 +93,10 @@ const upload = (event) => {
         :icon="icon"
         :color="color"
         :rounded-full="isRoundIcon"
+<<<<<<< HEAD
         small
+=======
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
       />
       <input
         ref="root"

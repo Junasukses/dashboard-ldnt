@@ -88,7 +88,11 @@ const darkModeStore = useDarkModeStore()
     <SectionMain>
       <CardBox class="md:w-7/12 lg:w-5/12 xl:w-4/12 shadow-2xl md:mx-auto">
         <div class="text-center py-24 lg:py-12 text-gray-500 dark:text-slate-400">
+<<<<<<< HEAD
           <BaseButton label="Toggle" color="contrast" @click="darkModeStore.set()" small />
+=======
+          <BaseButton label="Toggle" color="contrast" @click="darkModeStore.set()" />
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
         </div>
       </CardBox>
     </SectionMain>
@@ -111,8 +115,13 @@ const darkModeStore = useDarkModeStore()
 
           <template #footer>
             <BaseButtons>
+<<<<<<< HEAD
               <BaseButton label="Confirm" color="info" small />
               <BaseButton label="Cancel" color="info" outline small />
+=======
+              <BaseButton label="Confirm" color="info" />
+              <BaseButton label="Cancel" color="info" outline />
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
             </BaseButtons>
           </template>
         </CardBox>

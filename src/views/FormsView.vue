@@ -14,7 +14,10 @@ import SectionTitle from '@/components/SectionTitle.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
+<<<<<<< HEAD
 import FieldSelect from '@/components/forms/FieldSelect.vue'
+=======
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
 
 const selectOptions = [
   { id: 1, label: 'Business development' },
@@ -80,7 +83,11 @@ const formStatusSubmit = () => {
         </FormField>
 
         <FormField label="Dropdown">
+<<<<<<< HEAD
           <FieldSelect v-model="form.department" :options="selectOptions" />
+=======
+          <FormControl v-model="form.department" :options="selectOptions" />
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
         </FormField>
 
         <BaseDivider />
@@ -91,8 +98,13 @@ const formStatusSubmit = () => {
 
         <template #footer>
           <BaseButtons>
+<<<<<<< HEAD
             <BaseButton type="submit" color="info" label="Submit" small />
             <BaseButton type="reset" color="info" outline label="Reset" small />
+=======
+            <BaseButton type="submit" color="info" label="Submit" />
+            <BaseButton type="reset" color="info" outline label="Reset" />
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
           </BaseButtons>
         </template>
       </CardBox>
@@ -163,7 +175,11 @@ const formStatusSubmit = () => {
         </FormField>
 
         <template #footer>
+<<<<<<< HEAD
           <BaseButton label="Trigger" type="submit" color="info" small />
+=======
+          <BaseButton label="Trigger" type="submit" color="info" />
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
         </template>
       </CardBox>
     </SectionMain>

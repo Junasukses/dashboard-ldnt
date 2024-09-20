@@ -15,7 +15,10 @@ import { gradientBgPinkRed } from '@/colors'
         label="GitHub"
         target="_blank"
         rounded-full
+<<<<<<< HEAD
         small
+=======
+>>>>>>> b9347c5c7043f1a42f8f59e66bb8b7bb60837e7f
       />
     </div>
   </SectionBanner>

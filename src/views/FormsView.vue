@@ -22,6 +22,8 @@ const selectOptions = [
   { id: 3, label: 'Sales' }
 ]
 
+// const selectOptions = ['Business development', 'Marketing', 'Sales']
+
 const form = reactive({
   name: 'John Doe',
   email: 'john.doe@example.com',
@@ -80,7 +82,16 @@ const formStatusSubmit = () => {
         </FormField>
 
         <FormField label="Dropdown">
+<<<<<<< HEAD
           <FieldSelect v-model="form.department" :options="selectOptions" />
+=======
+          <FieldSelect
+            v-model="form.department"
+            :options="selectOptions"
+            display-key="label"
+            value-key="id"
+          />
+>>>>>>> ac273ad3c20e1c9b8cb4a5a4d39eca5b9e6fb4b9
         </FormField>
 
         <BaseDivider />

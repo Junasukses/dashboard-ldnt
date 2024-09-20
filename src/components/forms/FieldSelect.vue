@@ -1,30 +1,25 @@
 <script setup>
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useMainStore } from '@/stores/main'
+import axios from 'axios'
 import 'vue-select/dist/vue-select.css'
 
+const token = ref(localStorage.getItem('authToken') ?? '')
+const env = ref(import.meta.env.VITE_API_URL)
+
+const mainStore = useMainStore()
+
+const selectEl = ref(null)
 const props = defineProps({
+  api: {
+    type: String,
+    default: null
+  },
   name: {
     type: String,
     default: null
   },
   id: {
-    type: String,
-    default: null
-  },
-  autocomplete: {
-    type: String,
-    default: null
-  },
-  maxlength: {
-    type: String,
-    default: null
-  },
-  placeholder: {
-    type: String,
-    default: null
-  },
-  inputmode: {
     type: String,
     default: null
   },
@@ -34,14 +29,38 @@ const props = defineProps({
   },
   options: {
     type: Array,
-    default: null
-  },
-  type: {
-    type: String,
-    default: 'text'
+    default: () => []
   },
   modelValue: {
     type: [String, Number, Boolean, Array, Object],
+    default: ''
+  },
+  params: {
+    type: Object,
+    default: () => ({})
+  },
+  valueKey: {
+    type: String,
+    default: null
+  },
+  displayKey: {
+    type: String,
+    default: null
+  },
+  placeholder: {
+    type: String,
+    default: 'Select an option'
+  },
+  isClear: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  errorMsg: {
+    type: [String, Array],
     default: ''
   },
   required: Boolean,
@@ -52,35 +71,69 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'setRef'])
 
+watch(
+  () => props.params,
+  () => {
+    fetchData()
+  }
+)
+
+async function fetchData() {
+  try {
+    let tempParams = {}
+    if (props.params) {
+      tempParams = props.params
+    }
+    const fixedParams = new URLSearchParams(props.params)
+    let res = await axios.get(env.value + '/' + props.api + '?' + fixedParams, {
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      }
+    })
+    props.options = res.data.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const computedValue = computed({
-  get: () => props.modelValue,
+  get: () => {
+    // Jika valueKey di-set, ambil modelValue berdasarkan valueKey (untuk array object)
+    return props.options.find(
+      (option) => (props.valueKey ? option[props.valueKey] : option) === props.modelValue
+    )
+  },
   set: (value) => {
-    emit('update:modelValue', value)
+    // Emit berdasarkan valueKey (jika array object) atau nilai langsung (jika array primitif)
+    emit('update:modelValue', props.valueKey ? value[props.valueKey] : value)
   }
 })
 
-const inputElClass = computed(() => {
-  const base = [
-    'px-3 py-0 max-w-full focus:ring-1 focus:outline-none border-gray-700 rounded-lg w-full text-sm',
-    'dark:placeholder-gray-400',
-    props.borderless ? 'border-0' : 'border',
-    props.transparent ? 'bg-transparent' : 'bg-white dark:bg-slate-800'
-  ]
-
-  if (props.icon) {
-    base.push('pl-10')
-  }
-
-  return base
+const processedOptions = computed(() => {
+  return props.options.map((option) => {
+    // Jika array object, gunakan displayKey untuk menampilkan label dan valueKey untuk nilai
+    if (typeof option === 'object') {
+      return {
+        label: option[props.displayKey],
+        value: option[props.valueKey]
+      }
+    }
+    // Jika array primitif, gunakan nilai langsung sebagai label dan value
+    else {
+      return {
+        label: option,
+        value: option
+      }
+    }
+  })
 })
-
-const mainStore = useMainStore()
-
-const selectEl = ref(null)
 
 onMounted(() => {
   if (selectEl.value) {
     emit('setRef', selectEl.value)
+  }
+  if (props.api) {
+    fetchData()
   }
 })
 
@@ -88,9 +141,9 @@ if (props.ctrlKFocus) {
   const fieldFocusHook = (e) => {
     if (e.ctrlKey && e.key === 'k') {
       e.preventDefault()
-      inputEl.value.focus()
+      selectEl.value.focus()
     } else if (e.key === 'Escape') {
-      inputEl.value.blur()
+      selectEl.value.blur()
     }
   }
 
@@ -98,8 +151,6 @@ if (props.ctrlKFocus) {
     if (!mainStore.isFieldFocusRegistered) {
       window.addEventListener('keydown', fieldFocusHook)
       mainStore.isFieldFocusRegistered = true
-    } else {
-      // console.error('Duplicate field focus event')
     }
   })
 
@@ -109,7 +160,6 @@ if (props.ctrlKFocus) {
   })
 }
 </script>
-
 <style scoped>
 >>> {
   --vs-controls-color: #374151;
@@ -132,7 +182,16 @@ if (props.ctrlKFocus) {
   --vs-border-radius: 0.5rem;
 }
 </style>
-
 <template>
-  <v-select :id="id" v-model="computedValue" :options="options" :name="name"> </v-select>
+  <v-select
+    :id="id"
+    :label="displayKey"
+    v-model="computedValue"
+    :options="processedOptions"
+    :name="name"
+    :disabled="disabled"
+    :clearable="isClear"
+    :placeholder="placeholder"
+  >
+  </v-select>
 </template>

@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
-import { useMainStore } from '@/stores/main'
 import axios from 'axios'
 import 'vue-select/dist/vue-select.css'
 
@@ -13,9 +12,6 @@ const env = ref(import.meta.env.VITE_API_URL)
 
 const selectEl = ref(null)
 const options = ref([])
-const currentPage = ref(1)
-const hasNextPage = ref(false)
-const loadingMore = ref(false)
 
 const props = defineProps({
   api: {
@@ -77,56 +73,34 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'setRef', 'update:valuefull'])
+const params = ref({ ...props.params })
 
-async function fetchData(page = 1) {
-  if (loadingMore.value) return // Jika masih loading, jangan fetch lagi
-
-  loadingMore.value = true
+function handleSearch(searchText) {
+  options.value = []
+  params.value.searchtext = searchText
+  fetchData()
+}
+async function fetchData() {
   try {
-    const params = new URLSearchParams({
-      page,
-      ...props.params
+    const queryParams = new URLSearchParams({
+      ...params.value
     })
-    const res = await axios.get(`${env.value}/operation/${props.api}?${params}`, {
+    const res = await axios.get(`${env.value}/operation/${props.api}?${queryParams}`, {
       headers: {
         Authorization: `Bearer ${token.value}`
       }
     })
 
-    if (page === 1) {
-      options.value = res.data.data
-    } else {
-      options.value = [...options.value, ...res.data.data]
-    }
-
-    currentPage.value = res.data.current_page
-    hasNextPage.value = res.data.has_next
+    options.value = res.data.data
   } catch (error) {
     console.error(error)
-  } finally {
-    loadingMore.value = false
   }
-}
-function handleDropdownScroll(event) {
-  const dropdown = event.target
-  if (dropdown.scrollTop + dropdown.clientHeight >= dropdown.scrollHeight - 10) {
-    if (hasNextPage.value && !loadingMore.value) {
-      fetchData(currentPage.value + 1) // Fetch next page
-    }
-  }
-}
-function handleDropdownOpen() {
-  nextTick(() => {
-    const dropdown = selectEl.value?.$el?.querySelector('.vs__dropdown-menu')
-    if (dropdown) {
-      dropdown.addEventListener('scroll', handleDropdownScroll)
-    }
-  })
 }
 
 watch(
   () => props.params,
-  () => {
+  (newParams) => {
+    params.value = { ...newParams }
     if (props.api) fetchData()
   },
   { immediate: true }
@@ -202,7 +176,7 @@ if (props.ctrlKFocus) {
     :disabled="disabled"
     :clearable="isClear"
     :placeholder="placeholder"
-    @open="handleDropdownOpen"
+    @search="handleSearch"
   >
   </v-select>
 </template>

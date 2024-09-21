@@ -88,6 +88,8 @@ const formStatusSubmit = () => {
             display-key="label"
             value-key="id"
           />
+
+          <FieldSelect v-model="form.apiDept" display-key="name" value-key="id" api="m_cust" />
         </FormField>
 
         <BaseDivider />

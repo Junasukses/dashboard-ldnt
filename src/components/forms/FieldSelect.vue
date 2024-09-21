@@ -4,12 +4,18 @@ import { useMainStore } from '@/stores/main'
 import axios from 'axios'
 import 'vue-select/dist/vue-select.css'
 
-const token = ref(localStorage.getItem('authToken') ?? '')
+// Token dan URL API diambil dari localStorage atau env
+const token = ref(
+  localStorage.getItem('authToken') ??
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMzRmOTJiN2Y5ZWQ2NTljMjRkYzY1ODAyODg4OWUxNTk5ZDZiY2M2ZmM3YjJjN2VlMmU0YWI3YWVlYTdiMTU3MWY1ZDRmYjM4OGUyNjZlZjAiLCJpYXQiOjE3MjY4ODAzMTAuMzc2MjQ3LCJuYmYiOjE3MjY4ODAzMTAuMzc2MjUxLCJleHAiOjE3NTg0MTYzMTAuMzcwNDY5LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.rQ13lQsgWyehnxe0UMphZl3iMGvTo5NVc0DQFQBupbdn0foOu70b-8R7sUyonRrxqa691iv9Xuqd2jpIvCA3YTHJalf-75UbtM4c4mfUm4tpzuMFtUZMjYaSrccvnc45nMmAMFJgmmCd8rVZCID1fFPnLdOHMqii9kluIscOZwC29g-Qsl-4IIUeWTERUWKdFIz8I_wzNMFC7Km_1cNQ-vFHMtuLe-JL5PqR9BwTWKgrDeG41t8S52YXKPZrDDkTeWtDqwSmKkVU7nmDynFbH2lBslMuN_w9rd2kesdSTIg8_RoVvGKxoqJ0dcuVtF3DRli5tKv50qzPzAibCH53hYOqLNhOim7O8v4r-uwLw2betSdJoQn_xXFYsmW2O6sJDRP3Rk-mXzOKPs-uBjsrTNGkdX0y91NqeXKMQ2qUsVprPXMv71Felgz5YsmthUwu0vYQXf62wAbzWJS-U_sR-m0V_PiE5TfTSlmJHcWAzP3BSFye9RjOhOwknV0dkFgD9mTpxhbc-E0PfQW74ZXoFRj_obpbnQXBNLMXumPgHAS5DShI0zp3UKLIKGPFS73bByBjMdAg5hwTzjKa2MsnarkeDt0g8QT6MHES14mcEPz_HXOTfqahU-_5MzhLDczZhYxiVGq9OCoO1sRLBKZfz0I3V0UfwSCnNyuZEn17n8Q'
+)
 const env = ref(import.meta.env.VITE_API_URL)
 
-const mainStore = useMainStore()
-
+// Referensi untuk komponen select
 const selectEl = ref(null)
+const options = ref([]) // Ref untuk opsi yang akan diambil
+
+// Props yang digunakan pada komponen FieldSelect
 const props = defineProps({
   api: {
     type: String,
@@ -69,63 +75,60 @@ const props = defineProps({
   ctrlKFocus: Boolean
 })
 
-const emit = defineEmits(['update:modelValue', 'setRef'])
-
-watch(
-  () => props.params,
-  () => {
-    fetchData()
-  }
-)
+const emit = defineEmits(['update:modelValue', 'setRef', 'update:valuefull'])
 
 async function fetchData() {
   try {
-    let tempParams = {}
-    if (props.params) {
-      tempParams = props.params
-    }
-    const fixedParams = new URLSearchParams(props.params)
-    let res = await axios.get(env.value + '/' + props.api + '?' + fixedParams, {
+    let fixedParams = new URLSearchParams(props.params)
+    let res = await axios.get(`${env.value}/operation/${props.api}?${fixedParams}`, {
       headers: {
         Authorization: `Bearer ${token.value}`
       }
     })
-    props.options = res.data.data
+    options.value = res.data.data // Opsi diisi dengan data API
+    console.log(options.value, res.data)
   } catch (error) {
     console.log(error)
   }
 }
 
+watch(
+  () => props.params,
+  () => {
+    if (props.api) fetchData()
+  },
+  { immediate: true }
+)
+
+const processedOptions = computed(() => {
+  let finalOptions = props.options.length ? props.options : options.value
+
+  return finalOptions.map((option) => {
+    if (typeof option === 'object') {
+      return {
+        [props.displayKey]: option[props.displayKey] || 'Label Not Available',
+        [props.valueKey]: option[props.valueKey]
+      }
+    } else {
+      return {
+        [props.displayKey]: option,
+        [props.valueKey]: option
+      }
+    }
+  })
+})
+
 const computedValue = computed({
   get: () => {
-    // Jika valueKey di-set, ambil modelValue berdasarkan valueKey (untuk array object)
-    return props.options.find(
+    let finalOptions = props.options.length ? props.options : options.value
+    return finalOptions.find(
       (option) => (props.valueKey ? option[props.valueKey] : option) === props.modelValue
     )
   },
   set: (value) => {
-    // Emit berdasarkan valueKey (jika array object) atau nilai langsung (jika array primitif)
-    emit('update:modelValue', props.valueKey ? value[props.valueKey] : value)
+    emit('update:valuefull', value) // Emit nilai penuh
+    emit('update:modelValue', props.valueKey ? value[props.valueKey] : value) // Emit hanya ID atau value
   }
-})
-
-const processedOptions = computed(() => {
-  return props.options.map((option) => {
-    // Jika array object, gunakan displayKey untuk menampilkan label dan valueKey untuk nilai
-    if (typeof option === 'object') {
-      return {
-        label: option[props.displayKey],
-        value: option[props.valueKey]
-      }
-    }
-    // Jika array primitif, gunakan nilai langsung sebagai label dan value
-    else {
-      return {
-        label: option,
-        value: option
-      }
-    }
-  })
 })
 
 onMounted(() => {
@@ -148,18 +151,29 @@ if (props.ctrlKFocus) {
   }
 
   onMounted(() => {
-    if (!mainStore.isFieldFocusRegistered) {
-      window.addEventListener('keydown', fieldFocusHook)
-      mainStore.isFieldFocusRegistered = true
-    }
+    window.addEventListener('keydown', fieldFocusHook)
   })
 
   onBeforeUnmount(() => {
     window.removeEventListener('keydown', fieldFocusHook)
-    mainStore.isFieldFocusRegistered = false
   })
 }
 </script>
+
+<template>
+  <v-select
+    :id="id"
+    :label="displayKey"
+    v-model="computedValue"
+    :options="processedOptions"
+    :name="name"
+    :disabled="disabled"
+    :clearable="isClear"
+    :placeholder="placeholder"
+  >
+  </v-select>
+</template>
+
 <style scoped>
 >>> {
   --vs-controls-color: #374151;
@@ -182,16 +196,3 @@ if (props.ctrlKFocus) {
   --vs-border-radius: 0.5rem;
 }
 </style>
-<template>
-  <v-select
-    :id="id"
-    :label="displayKey"
-    v-model="computedValue"
-    :options="processedOptions"
-    :name="name"
-    :disabled="disabled"
-    :clearable="isClear"
-    :placeholder="placeholder"
-  >
-  </v-select>
-</template>

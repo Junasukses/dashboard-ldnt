@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useMainStore } from '@/stores/main'
 import axios from 'axios'
 import 'vue-select/dist/vue-select.css'
@@ -11,11 +11,12 @@ const token = ref(
 )
 const env = ref(import.meta.env.VITE_API_URL)
 
-// Referensi untuk komponen select
 const selectEl = ref(null)
-const options = ref([]) // Ref untuk opsi yang akan diambil
+const options = ref([])
+const currentPage = ref(1)
+const hasNextPage = ref(false)
+const loadingMore = ref(false)
 
-// Props yang digunakan pada komponen FieldSelect
 const props = defineProps({
   api: {
     type: String,
@@ -77,19 +78,50 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'setRef', 'update:valuefull'])
 
-async function fetchData() {
+async function fetchData(page = 1) {
+  if (loadingMore.value) return // Jika masih loading, jangan fetch lagi
+
+  loadingMore.value = true
   try {
-    let fixedParams = new URLSearchParams(props.params)
-    let res = await axios.get(`${env.value}/operation/${props.api}?${fixedParams}`, {
+    const params = new URLSearchParams({
+      page,
+      ...props.params
+    })
+    const res = await axios.get(`${env.value}/operation/${props.api}?${params}`, {
       headers: {
         Authorization: `Bearer ${token.value}`
       }
     })
-    options.value = res.data.data // Opsi diisi dengan data API
-    console.log(options.value, res.data)
+
+    if (page === 1) {
+      options.value = res.data.data
+    } else {
+      options.value = [...options.value, ...res.data.data]
+    }
+
+    currentPage.value = res.data.current_page
+    hasNextPage.value = res.data.has_next
   } catch (error) {
-    console.log(error)
+    console.error(error)
+  } finally {
+    loadingMore.value = false
   }
+}
+function handleDropdownScroll(event) {
+  const dropdown = event.target
+  if (dropdown.scrollTop + dropdown.clientHeight >= dropdown.scrollHeight - 10) {
+    if (hasNextPage.value && !loadingMore.value) {
+      fetchData(currentPage.value + 1) // Fetch next page
+    }
+  }
+}
+function handleDropdownOpen() {
+  nextTick(() => {
+    const dropdown = selectEl.value?.$el?.querySelector('.vs__dropdown-menu')
+    if (dropdown) {
+      dropdown.addEventListener('scroll', handleDropdownScroll)
+    }
+  })
 }
 
 watch(
@@ -126,8 +158,8 @@ const computedValue = computed({
     )
   },
   set: (value) => {
-    emit('update:valuefull', value) // Emit nilai penuh
-    emit('update:modelValue', props.valueKey ? value[props.valueKey] : value) // Emit hanya ID atau value
+    emit('update:valuefull', value)
+    emit('update:modelValue', props.valueKey ? value[props.valueKey] : value)
   }
 })
 
@@ -170,6 +202,7 @@ if (props.ctrlKFocus) {
     :disabled="disabled"
     :clearable="isClear"
     :placeholder="placeholder"
+    @open="handleDropdownOpen"
   >
   </v-select>
 </template>

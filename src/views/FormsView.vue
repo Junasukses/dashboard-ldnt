@@ -82,7 +82,6 @@ const formStatusSubmit = () => {
         </FormField>
 
         <FormField label="Dropdown">
-          <FieldSelect v-model="form.department" :options="selectOptions" />
           <FieldSelect
             v-model="form.department"
             :options="selectOptions"
@@ -90,7 +89,7 @@ const formStatusSubmit = () => {
             value-key="id"
           />
 
-          <FieldSelect v-model="form.apiDept" display-key="name" value-key="id" api="m_cust" />
+          <FieldSelect v-model="form.apiDept" display-key="value1" value-key="id" api="m_gen" />
         </FormField>
 
         <BaseDivider />

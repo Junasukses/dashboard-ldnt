@@ -82,9 +82,7 @@ const formStatusSubmit = () => {
         </FormField>
 
         <FormField label="Dropdown">
-<<<<<<< HEAD
           <FieldSelect v-model="form.department" :options="selectOptions" />
-=======
           <FieldSelect
             v-model="form.department"
             :options="selectOptions"

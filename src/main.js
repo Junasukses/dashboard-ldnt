@@ -14,6 +14,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 import './css/main.css'
 import Icon from './components/Icon.vue'
 import ColFilter from './components/forms/ColFilter.vue'
+import { VueFinalModal } from 'vue-final-modal'
 
 // Init Pinia
 const pinia = createPinia()
@@ -28,6 +29,7 @@ app.component('v-select', vSelect)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.component('Icon', Icon)
 app.component('ColFilter', ColFilter)
+app.component('VueFinalModal', VueFinalModal)
 
 app.use(vClickOutside)
 app.mount('#app')

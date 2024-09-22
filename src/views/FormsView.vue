@@ -15,8 +15,11 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
 import FieldSelect from '@/components/forms/FieldSelect.vue'
+import FieldPopup from '@/components/forms/FieldPopup.vue'
 import TableApi from '@/components/forms/TableApi.vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const baseUrl = ref(import.meta.env.VITE_API_URL)
 const token = ref(
   localStorage.getItem('authToken') ??
@@ -33,6 +36,8 @@ const selectOptions = [
 // const selectOptions = ['Business development', 'Marketing', 'Sales']
 
 const apiTable = ref()
+const actionText = ref(route.params.id === 'create' ? 'Tambah' : route.query.action)
+const formErrors = ref({})
 const form = reactive({
   name: 'John Doe',
   email: 'john.doe@example.com',
@@ -246,6 +251,81 @@ const landing = reactive({
 
         <FormField label="With help line" help="Do not enter the leading zero">
           <FormControl v-model="form.phone" type="tel" placeholder="Your phone number" />
+        </FormField>
+        <FormField label="Field Pop Up">
+          <FieldPopup
+            :api="{
+              url: `${baseUrl}/operation/m_supp`,
+              headers: {
+                'Content-Type': 'Application/json',
+                Authorization: `Bearer ${token}`
+              },
+              params: {
+                simplest: true,
+                where: 'this.is_active = true',
+                searchfield: 'this.name,this.email,this.phone_1,city.value1'
+              }
+            }"
+            valueField="id"
+            displayField="name"
+            :bind="{ readonly: false }"
+            :value="form.m_supp_id"
+            @input="(v) => (form.m_supp_id = v)"
+            :errorText="formErrors.m_supp_id ? 'failed' : ''"
+            :hints="formErrors.m_supp_id"
+            placeholder="Pilih Supplier"
+            label="Supplier"
+            :check="false"
+            :columns="[
+              {
+                checkboxSelection: true,
+                headerCheckboxSelection: true,
+                headerName: 'No',
+                valueGetter: (p) => '',
+                width: 60,
+                sortable: false,
+                resizable: true,
+                filter: false,
+                cellClass: ['justify-center', 'bg-gray-50', '!border-gray-200']
+              },
+              {
+                flex: 1,
+                field: 'name',
+                headerName: 'Nama Supplier',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'phone_1',
+                headerName: 'No. Telephone',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'email',
+                headerName: 'Email',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'city.value1',
+                headerName: 'Kota',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              }
+            ]"
+          />
         </FormField>
 
         <FormField label="Dropdown">

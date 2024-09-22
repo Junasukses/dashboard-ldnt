@@ -45,7 +45,7 @@
       <template #icon-clear></template>
       <template #input>
         <input
-          class="font-normal px-1 cursor-pointer bg-gray-50 py-1.1 rounded-sm border w-full hover:(bg-white) focus:(shadow-md border-blue-400 bg-white placeholder-transparent) outline-none transition-all duration-200 placeholder-transparent"
+          class="border-gray-300 font-normal px-1 cursor-pointer bg-gray-50 py-1.1 rounded-sm border w-full hover:bg-white focus:shadow-md focus:border-blue-400 focus:bg-white focus:placeholder-transparent outline-none transition-all duration-200 placeholder-transparent"
           :class="{
             '!bg-white': filterText,
             '!border-blue-400': filterText
@@ -71,7 +71,7 @@
 
     <input
       v-else
-      class="font-normal px-1 bg-gray-50 py-1 rounded-sm border w-full hover:(bg-white) focus:(shadow-md border-blue-400 bg-white placeholder-transparent) outline-none transition-all duration-200 placeholder-transparent"
+      class="border-gray-300 font-normal px-1 bg-gray-50 py-1 rounded-sm border w-full hover:bg-white focus:shadow-md focus:border-blue-400 focus:bg-white focus:placeholder-transparent outline-none transition-all duration-200 placeholder-transparent"
       :class="{
         '!bg-white': filterText,
         '!border-blue-400': filterText

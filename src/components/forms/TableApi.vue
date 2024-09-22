@@ -10,7 +10,7 @@
         :class="{
           '!border-blue-400': Boolean(chosenScope)
         }"
-        class="page-length-selector px-2 mr-2 border bg-white transition-all duration-300 relative group select-none rounded-sm border min-w-24 py-1 px-2 flex items-center justify-center hover:(bg-gray-50 !border-blue-400 shadow-sm) cursor-pointer"
+        class="page-length-selector px-2 mr-2 border bg-white transition-all duration-300 relative group select-none rounded-sm border min-w-24 py-1 px-2 flex items-center justify-center hover:bg-gray-50 hover:!border-blue-400 hover:shadow-sm cursor-pointer"
         @click="isScopeSelecting = !isScopeSelecting"
       >
         <div
@@ -58,7 +58,7 @@
           :class="{
             'border-blue-500': searchText
           }"
-          class="rounded-sm search-table-api input-target ring-none text-sm bg-light-200 transition-all duration-300 text-gray-700 <md:w-20 md:w-30 focus:(w-45 w-35 bg-white border-blue-400 shadow-sm) pl-8 pr-2 py-1 outline-none ring-transparent border border-gray-300"
+          class="rounded-sm search-table-api input-target ring-none text-sm bg-light-200 transition-all duration-300 text-gray-700 <md:w-20 md:w-30 focus:w-45 focus:w-35 bg-white focus:border-blue-400 focus:shadow-sm pl-8 pr-2 py-1 outline-none ring-transparent border border-gray-300"
           @keydown.esc="onSearchTextChange(null)"
           @change="onSearchTextChange"
         />
@@ -89,7 +89,7 @@
           hover
         >
           <button
-            class="py-1 px-2 rounded-sm bg-opacity-80 hover:(bg-opacity-100 shadow-sm) focus:( !outline-none) transition-all duration-200 animated animate-zoom-in animate-duration-100"
+            class="py-1 px-2 rounded-sm bg-opacity-80 hover:bg-opacity-100 hover:shadow-sm focus: !outline-none transition-all duration-200 animated animate-zoom-in animate-duration-100"
             :class="action.class"
             @click="action.click(selectedRow)"
           >
@@ -108,7 +108,7 @@
             v-show="action.show ? action.show(selectedRow) : true"
             :key="'action-' + idx"
             arrow
-            class="py-2 px-2 my-2 flex items-center border-t justify-between rounded-sm bg-opacity-80 hover:(bg-opacity-100 shadow-sm) focus:( !outline-none) transition-all duration-200"
+            class="py-2 px-2 my-2 flex items-center border-t justify-between rounded-sm bg-opacity-80 hover:bg-opacity-100 hover:shadow-sm focus:!outline-none transition-all duration-200"
             @click="action.click(selectedRow)"
           >
             {{ action.title || '' }}
@@ -127,7 +127,7 @@
       <div class="ml-2 flex gap-x-1 items-center">
         <div
           title="Refresh"
-          class="px-2.5 bg-white py-1 transition-all duration-300 border border-gray-300 rounded-sm hover:(shadow-sm !border-blue-500) group cursor-pointer"
+          class="px-2.5 bg-white py-1 transition-all duration-300 border border-gray-300 rounded-sm hover:shadow-sm hover:!border-blue-500 group cursor-pointer"
           @click="reload(true)"
         >
           <FontAwesomeIcon
@@ -142,7 +142,7 @@
         <!-- PAGE LENGTH -->
         <div
           v-click-outside="clickOutsidePageLength"
-          class="page-length-selector <lg:hidden bg-white transition-all duration-300 relative border-gray-300 group select-none rounded-sm border py-1 px-2 w-16 flex items-center justify-center hover:(bg-gray-50 !border-blue-400 shadow-sm) cursor-pointer"
+          class="page-length-selector <lg:hidden bg-white transition-all duration-300 relative border-gray-300 group select-none rounded-sm border py-1 px-2 w-16 flex items-center justify-center hover:bg-gray-50 hover:!border-blue-400 hover:shadow-sm cursor-pointer"
           @click="isPageLengthSelecting = !isPageLengthSelecting"
         >
           <div
@@ -226,7 +226,7 @@
           fa="times"
           :size="`lg absolute top-2 ${
             mouseX < 0 ? 'left-2' : 'right-2'
-          } text-gray-400 z-11 cursor-pointer transform hover:(text-red-500 rotate-180) transition-all duration-100`"
+          } text-gray-400 z-11 cursor-pointer transform hover:text-red-500 hover:rotate-180 transition-all duration-100`"
           @click="detailShow = false"
         />
         <slot name="preview" :data="selectedRow" />
@@ -259,7 +259,7 @@
         v-show="action.show ? action.show(selectedRow || {}) : true"
         :key="'action-context-' + idx"
         arrow
-        class="py-1 cursor-pointer text-gray-600 px-1 gap-x-2 flex items-center hover:bg-gray-100 border-t justify-between !text-sm rounded-sm hover:(text-gray-800) transition-all duration-100"
+        class="py-1 cursor-pointer text-gray-600 px-1 gap-x-2 flex items-center hover:bg-gray-100 border-t justify-between !text-sm rounded-sm hover:text-gray-800 transition-all duration-100"
         @click="onActionClick(action)"
       >
         {{ action.title || '' }}
@@ -1051,7 +1051,7 @@ defineExpose({
   @apply !px-0.5;
 }
 .ag-api .ag-header.ag-focus-managed.ag-pivot-off {
-  @apply !min-h-[72px];
+  @apply !min-h-[75px];
 }
 
 .ag-api .ag-floating-filter-full-body {

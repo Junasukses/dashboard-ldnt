@@ -5,19 +5,33 @@ import App from './App.vue'
 import router from './router'
 import { useMainStore } from '@/stores/main.js'
 import vSelect from 'vue-select'
-
+import vClickOutside from 'v-click-outside'
+import { library, icon } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
 
 import './css/main.css'
+import Icon from './components/Icon.vue'
+import ColFilter from './components/forms/ColFilter.vue'
 
 // Init Pinia
 const pinia = createPinia()
 
 // Create Vue app
-const app = createApp(App);
+library.add(fas, fab)
+const app = createApp(App)
 app.use(router)
 app.use(pinia)
-app.component("v-select", vSelect)
+
+app.component('v-select', vSelect)
+app.component('FontAwesomeIcon', FontAwesomeIcon)
+app.component('Icon', Icon)
+app.component('ColFilter', ColFilter)
+
+app.use(vClickOutside)
 app.mount('#app')
+app.provide('icon', icon)
 // Init main store
 const mainStore = useMainStore(pinia)
 

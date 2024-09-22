@@ -15,6 +15,14 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
 import FieldSelect from '@/components/forms/FieldSelect.vue'
+import TableApi from '@/components/forms/TableApi.vue'
+
+const baseUrl = ref(import.meta.env.VITE_API_URL)
+const token = ref(
+  localStorage.getItem('authToken') ??
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMzRmOTJiN2Y5ZWQ2NTljMjRkYzY1ODAyODg4OWUxNTk5ZDZiY2M2ZmM3YjJjN2VlMmU0YWI3YWVlYTdiMTU3MWY1ZDRmYjM4OGUyNjZlZjAiLCJpYXQiOjE3MjY4ODAzMTAuMzc2MjQ3LCJuYmYiOjE3MjY4ODAzMTAuMzc2MjUxLCJleHAiOjE3NTg0MTYzMTAuMzcwNDY5LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.rQ13lQsgWyehnxe0UMphZl3iMGvTo5NVc0DQFQBupbdn0foOu70b-8R7sUyonRrxqa691iv9Xuqd2jpIvCA3YTHJalf-75UbtM4c4mfUm4tpzuMFtUZMjYaSrccvnc45nMmAMFJgmmCd8rVZCID1fFPnLdOHMqii9kluIscOZwC29g-Qsl-4IIUeWTERUWKdFIz8I_wzNMFC7Km_1cNQ-vFHMtuLe-JL5PqR9BwTWKgrDeG41t8S52YXKPZrDDkTeWtDqwSmKkVU7nmDynFbH2lBslMuN_w9rd2kesdSTIg8_RoVvGKxoqJ0dcuVtF3DRli5tKv50qzPzAibCH53hYOqLNhOim7O8v4r-uwLw2betSdJoQn_xXFYsmW2O6sJDRP3Rk-mXzOKPs-uBjsrTNGkdX0y91NqeXKMQ2qUsVprPXMv71Felgz5YsmthUwu0vYQXf62wAbzWJS-U_sR-m0V_PiE5TfTSlmJHcWAzP3BSFye9RjOhOwknV0dkFgD9mTpxhbc-E0PfQW74ZXoFRj_obpbnQXBNLMXumPgHAS5DShI0zp3UKLIKGPFS73bByBjMdAg5hwTzjKa2MsnarkeDt0g8QT6MHES14mcEPz_HXOTfqahU-_5MzhLDczZhYxiVGq9OCoO1sRLBKZfz0I3V0UfwSCnNyuZEn17n8Q'
+)
+const endpointApi = 'm_approval'
 
 const selectOptions = [
   { id: 1, label: 'Business development' },
@@ -24,6 +32,7 @@ const selectOptions = [
 
 // const selectOptions = ['Business development', 'Marketing', 'Sales']
 
+const apiTable = ref()
 const form = reactive({
   name: 'John Doe',
   email: 'john.doe@example.com',
@@ -55,6 +64,164 @@ const formStatusSubmit = () => {
     ? formStatusCurrent.value + 1
     : 0
 }
+
+const landing = reactive({
+  actions: [
+    {
+      icon: 'trash',
+      class: 'bg-red-600 text-light-100',
+      title: 'Hapus',
+      // show: () => store.user.data.username==='developer',
+      click(row) {
+        swal
+          .fire({
+            icon: 'warning',
+            text: 'Hapus Data Terpilih?',
+            confirmButtonText: 'Yes',
+            showDenyButton: true
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              try {
+                const dataURL = `${baseUrl.value}/operation/${endpointApi}/${row.id}`
+                isRequesting.value = true
+                const res = await fetch(dataURL, {
+                  method: 'DELETE',
+                  headers: {
+                    'Content-Type': 'Application/json',
+                    Authorization: `Bearer ${token.value}`
+                  }
+                })
+                if (!res.ok) {
+                  const resultJson = await res.json()
+                  throw resultJson.message || 'Failed when trying to remove data'
+                }
+                apiTable.value.reload()
+                // const resultJson = await res.json()
+              } catch (err) {
+                isBadForm.value = true
+                swal.fire({
+                  icon: 'error',
+                  text: err
+                })
+              }
+              isRequesting.value = false
+            }
+          })
+      }
+    },
+    {
+      icon: 'eye',
+      title: 'Read',
+      class: 'bg-green-600 text-light-100',
+      click(row) {
+        router.push(`${route.path}/${row.id}?` + tsId)
+      }
+    },
+    {
+      icon: 'edit',
+      title: 'Edit',
+      class: 'bg-blue-600 text-light-100',
+      click(row) {
+        router.push(`${route.path}/${row.id}?action=Edit&` + tsId)
+      }
+    },
+    {
+      icon: 'copy',
+      title: 'Copy',
+      class: 'bg-gray-600 text-light-100',
+      click(row) {
+        router.push(`${route.path}/${row.id}?action=Copy&` + tsId)
+      }
+    }
+  ],
+  api: {
+    url: `${baseUrl.value}/operation/${endpointApi}`,
+    headers: {
+      'Content-Type': 'Application/json',
+      authorization: `Bearer ${token.value}`
+    },
+    params: {
+      simplest: true,
+      searchfield: 'this.id, this.code, m_menu.menu, this.name, this.note, this.is_active'
+    },
+    onsuccess(response) {
+      response.page = response.current_page
+      response.hasNext = response.has_next
+      return response
+    }
+  },
+  columns: [
+    {
+      headerName: 'No',
+      valueGetter: (params) => params.node.rowIndex + 1,
+      width: 60,
+      sortable: true,
+      resizable: true,
+      filter: true,
+      cellClass: ['justify-center', 'bg-gray-50', 'border-r', '!border-gray-200']
+    },
+    {
+      field: 'code',
+      filter: true,
+      sortable: true,
+      flex: 1,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'm_menu.menu',
+      headerName: 'Menu',
+      filter: true,
+      sortable: true,
+      flex: 1,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'name',
+      headerName: 'Nama',
+      filter: true,
+      sortable: true,
+      flex: 1,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'note',
+      headerName: 'Catatan',
+      filter: true,
+      sortable: true,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      flex: 1,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'is_active',
+      headerName: 'Status',
+      filter: true,
+      filter: 'ColFilter',
+      // resizable: true,
+      // valueGetter: (p) => p.node.data['status'].toLowerCase()==='active'? 'Aktif':'Tidak Aktif',
+      sortable: true,
+      flex: 1,
+      cellClass: ['border-r', '!border-gray-200', 'justify-center'],
+      cellRenderer: ({ value }) => {
+        return value === true
+          ? `<span class="text-green-500 rounded-md text-xs font-medium px-4 py-1 inline-block capitalize">Active</span>`
+          : `<span class="text-gray-500 rounded-md text-xs font-medium px-4 py-1 inline-block capitalize">Inactive</span>`
+      }
+    }
+  ]
+})
 </script>
 
 <template>
@@ -98,6 +265,17 @@ const formStatusSubmit = () => {
           <FormControl type="textarea" placeholder="Explain how we can help you" />
         </FormField>
 
+        <BaseDivider />
+        <FormField label="Table Api" help="Table for list data">
+          <TableApi
+            ref="apiTable"
+            :api="landing.api"
+            :columns="landing.columns"
+            :actions="landing.actions"
+            class="max-h-[450px]"
+          >
+          </TableApi>
+        </FormField>
         <template #footer>
           <BaseButtons>
             <BaseButton type="submit" color="info" label="Submit" small />

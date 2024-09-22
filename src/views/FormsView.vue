@@ -69,51 +69,51 @@ const landing = reactive({
   actions: [
     {
       icon: 'trash',
-      class: 'bg-red-600 text-light-100',
-      title: 'Hapus',
+      class: 'bg-red-600 text-slate-100',
+      title: 'Hapus'
       // show: () => store.user.data.username==='developer',
-      click(row) {
-        swal
-          .fire({
-            icon: 'warning',
-            text: 'Hapus Data Terpilih?',
-            confirmButtonText: 'Yes',
-            showDenyButton: true
-          })
-          .then(async (result) => {
-            if (result.isConfirmed) {
-              try {
-                const dataURL = `${baseUrl.value}/operation/${endpointApi}/${row.id}`
-                isRequesting.value = true
-                const res = await fetch(dataURL, {
-                  method: 'DELETE',
-                  headers: {
-                    'Content-Type': 'Application/json',
-                    Authorization: `Bearer ${token.value}`
-                  }
-                })
-                if (!res.ok) {
-                  const resultJson = await res.json()
-                  throw resultJson.message || 'Failed when trying to remove data'
-                }
-                apiTable.value.reload()
-                // const resultJson = await res.json()
-              } catch (err) {
-                isBadForm.value = true
-                swal.fire({
-                  icon: 'error',
-                  text: err
-                })
-              }
-              isRequesting.value = false
-            }
-          })
-      }
+      // click(row) {
+      //   swal
+      //     .fire({
+      //       icon: 'warning',
+      //       text: 'Hapus Data Terpilih?',
+      //       confirmButtonText: 'Yes',
+      //       showDenyButton: true
+      //     })
+      //     .then(async (result) => {
+      //       if (result.isConfirmed) {
+      //         try {
+      //           const dataURL = `${baseUrl.value}/operation/${endpointApi}/${row.id}`
+      //           isRequesting.value = true
+      //           const res = await fetch(dataURL, {
+      //             method: 'DELETE',
+      //             headers: {
+      //               'Content-Type': 'Application/json',
+      //               Authorization: `Bearer ${token.value}`
+      //             }
+      //           })
+      //           if (!res.ok) {
+      //             const resultJson = await res.json()
+      //             throw resultJson.message || 'Failed when trying to remove data'
+      //           }
+      //           apiTable.value.reload()
+      //           // const resultJson = await res.json()
+      //         } catch (err) {
+      //           isBadForm.value = true
+      //           swal.fire({
+      //             icon: 'error',
+      //             text: err
+      //           })
+      //         }
+      //         isRequesting.value = false
+      //       }
+      //     })
+      // }
     },
     {
       icon: 'eye',
       title: 'Read',
-      class: 'bg-green-600 text-light-100',
+      class: 'bg-green-600 text-slate-100',
       click(row) {
         router.push(`${route.path}/${row.id}?` + tsId)
       }
@@ -121,7 +121,7 @@ const landing = reactive({
     {
       icon: 'edit',
       title: 'Edit',
-      class: 'bg-blue-600 text-light-100',
+      class: 'bg-blue-600 text-slate-100',
       click(row) {
         router.push(`${route.path}/${row.id}?action=Edit&` + tsId)
       }
@@ -129,7 +129,7 @@ const landing = reactive({
     {
       icon: 'copy',
       title: 'Copy',
-      class: 'bg-gray-600 text-light-100',
+      class: 'bg-gray-600 text-slate-100',
       click(row) {
         router.push(`${route.path}/${row.id}?action=Copy&` + tsId)
       }

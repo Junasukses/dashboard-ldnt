@@ -89,7 +89,7 @@
           hover
         >
           <button
-            class="py-1.3 px-2 rounded-sm bg-opacity-80 hover:(bg-opacity-100 shadow-sm) focus:( !outline-none) transition-all duration-200 animated animate-zoom-in animate-duration-100"
+            class="py-1 px-2 rounded-sm bg-opacity-80 hover:(bg-opacity-100 shadow-sm) focus:( !outline-none) transition-all duration-200 animated animate-zoom-in animate-duration-100"
             :class="action.class"
             @click="action.click(selectedRow)"
           >
@@ -1036,7 +1036,7 @@ defineExpose({
 }
 
 .ag-api .ag-header-row-column-filter {
-  @apply !flex items-center justify-center !h-32;
+  @apply !flex items-center justify-center !h-[40px];
 }
 
 .ag-api .ag-header-cell.ag-floating-filter {
@@ -1051,7 +1051,7 @@ defineExpose({
   @apply !px-0.5;
 }
 .ag-api .ag-header.ag-focus-managed.ag-pivot-off {
-  @apply !min-h-[6rem] !max-h-80;
+  @apply !min-h-[72px];
 }
 
 .ag-api .ag-floating-filter-full-body {

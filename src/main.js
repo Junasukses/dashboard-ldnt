@@ -3,18 +3,23 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import { useMainStore } from '@/stores/main.js'
+import { useMainStore, downloadBlob } from '@/stores/main.js'
 import vSelect from 'vue-select'
 import vClickOutside from 'v-click-outside'
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
+import Popper from 'vue3-popper'
 
 import './css/main.css'
 import Icon from './components/Icon.vue'
 import ColFilter from './components/forms/ColFilter.vue'
 import { VueFinalModal } from 'vue-final-modal'
+import FieldSelect from '@/components/forms/FieldSelect.vue'
+import FieldPopup from '@/components/forms/FieldPopup.vue'
+import TableApi from '@/components/forms/TableApi.vue'
+import FieldUpload from '@/components/forms/FieldUpload.vue'
 
 // Init Pinia
 const pinia = createPinia()
@@ -26,6 +31,11 @@ app.use(router)
 app.use(pinia)
 
 app.component('v-select', vSelect)
+app.component('FieldSelect', FieldSelect)
+app.component('TableApi', TableApi)
+app.component('FieldUpload', FieldUpload)
+app.component('FieldPopup', FieldPopup)
+app.component('Popper', Popper)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.component('Icon', Icon)
 app.component('ColFilter', ColFilter)
@@ -34,6 +44,7 @@ app.component('VueFinalModal', VueFinalModal)
 app.use(vClickOutside)
 app.mount('#app')
 app.provide('icon', icon)
+app.provide('download', downloadBlob)
 // Init main store
 const mainStore = useMainStore(pinia)
 

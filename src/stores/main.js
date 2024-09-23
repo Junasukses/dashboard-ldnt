@@ -62,3 +62,31 @@ export const useMainStore = defineStore('main', () => {
     fetchSampleHistory
   }
 })
+
+export function downloadBlob(
+  m = {
+    url,
+    type: 'application/pdf',
+    headers
+  },
+  onLoading = () => {},
+  onSuccess = () => {},
+  onError = () => {}
+) {
+  const xhr = new XMLHttpRequest()
+  xhr.open('GET', m.url, true)
+  for (const key in m.headers) {
+    xhr.setRequestHeader(key, m.headers[key])
+  }
+  xhr.responseType = 'blob'
+  xhr.onload = function (e) {
+    onLoading()
+    if (this['status'] == 200) {
+      var blob = new Blob([this['response']], { type: m.type })
+      onSuccess(blob)
+    } else {
+      onError(this)
+    }
+  }
+  xhr.send()
+}

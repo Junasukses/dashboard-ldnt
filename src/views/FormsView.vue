@@ -14,9 +14,6 @@ import SectionTitle from '@/components/SectionTitle.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
-import FieldSelect from '@/components/forms/FieldSelect.vue'
-import FieldPopup from '@/components/forms/FieldPopup.vue'
-import TableApi from '@/components/forms/TableApi.vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -252,7 +249,7 @@ const landing = reactive({
         <FormField label="With help line" help="Do not enter the leading zero">
           <FormControl v-model="form.phone" type="tel" placeholder="Your phone number" />
         </FormField>
-        <FormField label="Field Pop Up">
+        <FormField label="Field Pop Up And Uploads">
           <FieldPopup
             :api="{
               url: `${baseUrl}/operation/m_supp`,
@@ -325,6 +322,25 @@ const landing = reactive({
                 cellClass: ['border-r', '!border-gray-200', 'justify-center']
               }
             ]"
+          />
+          <FieldUpload
+            :value="form.file"
+            @input="(v) => (form.file = v)"
+            :errorText="formErrors.file ? 'failed' : ''"
+            :hints="formErrors.file"
+            :maxSize="10"
+            :reducerDisplay="(val) => (!val ? null : val.split(':::')[val.split(':::').length - 1])"
+            :api="{
+              url: `${baseUrl}/operation/m_cust_d_upload/upload`,
+              headers: { Authorization: `Bearer ${token}` },
+              params: { field: 'file' },
+              onsuccess: (response) => response,
+              onerror: (error) => {}
+            }"
+            placeholder="Pilih File"
+            fa-icon="upload"
+            accept=".png,.jpg"
+            :check="false"
           />
         </FormField>
 

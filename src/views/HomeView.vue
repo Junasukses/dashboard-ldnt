@@ -51,7 +51,6 @@ const transactionBarItems = computed(() => mainStore.history)
           label="Star on GitHub"
           color="contrast"
           rounded-full
-          small
         />
       </SectionTitleLineWithButton>
 
@@ -112,7 +111,7 @@ const transactionBarItems = computed(() => mainStore.history)
       <SectionBannerStarOnGitHub class="mt-6 mb-6" />
 
       <SectionTitleLineWithButton :icon="mdiChartPie" title="Trends overview">
-        <BaseButton :icon="mdiReload" color="whiteDark" @click="fillChartData" small />
+        <BaseButton :icon="mdiReload" color="whiteDark" @click="fillChartData" />
       </SectionTitleLineWithButton>
 
       <CardBox class="mb-6">

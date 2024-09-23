@@ -5,12 +5,17 @@
     :icon="['fas', prop.fa]"
     :title="title"
     @click="$emit('click')"
+    :size="sizeProp"
   />
 </template>
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const prop = defineProps({
+  sizeProp: {
+    type: String,
+    default: 'sm'
+  },
   title: {
     type: String,
     default: ''

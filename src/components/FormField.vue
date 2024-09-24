@@ -28,7 +28,7 @@ const wrapperClass = computed(() => {
   const base = []
 
   if (slotsLength.value > 1) {
-    base.push(`grid grid-cols-1 gap-3 md:grid-cols-${slotsLength.value}`)
+    base.push(`grid grid-cols-1 gap-3 md:grid-cols-2`)
   }
 
   if (props.slotClass) {

@@ -373,7 +373,23 @@ const landing = reactive({
           </div>
           <div>
             <label class="block font-bold mb-2">Dropdown Api</label>
-            <FieldSelect v-model="form.apiDept" display-key="value1" value-key="id" api="m_gen" />
+            <FieldSelect
+              v-model="form.apiDept"
+              display-key="name"
+              value-key="id"
+              :api="{
+                url: `${baseUrl}/operation/m_supp`,
+                headers: {
+                  'Content-Type': 'Application/json',
+                  Authorization: `Bearer ${token}`
+                },
+                params: {
+                  simplest: true,
+                  where: 'this.is_active = true',
+                  searchfield: 'this.name,this.email,this.phone_1,city.value1'
+                }
+              }"
+            />
           </div>
         </FormField>
 

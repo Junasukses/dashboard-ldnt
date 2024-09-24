@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { mdiBallotOutline, mdiAccount, mdiMail, mdiGithub } from '@mdi/js'
+import { mdiBallotOutline, mdiAccount, mdiMail, mdiPlus, mdiEye, mdiTrashCan } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import FormCheckRadioGroup from '@/components/FormCheckRadioGroup.vue'
@@ -11,10 +11,12 @@ import BaseDivider from '@/components/BaseDivider.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import SectionTitle from '@/components/SectionTitle.vue'
+import ButtonMultiSelect from '@/components/forms/ButtonMultiSelect.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
 import { useRoute } from 'vue-router'
+import { useMainStore } from '@/stores/main'
 
 const route = useRoute()
 const baseUrl = ref(import.meta.env.VITE_API_URL)
@@ -32,9 +34,12 @@ const selectOptions = [
 
 // const selectOptions = ['Business development', 'Marketing', 'Sales']
 
+const mainStore = useMainStore()
 const apiTable = ref()
 const actionText = ref(route.params.id === 'create' ? 'Tambah' : route.query.action)
 const formErrors = ref({})
+const detailArr = ref(mainStore.clients)
+
 const form = reactive({
   name: 'John Doe',
   email: 'john.doe@example.com',
@@ -65,6 +70,15 @@ const formStatusSubmit = () => {
   formStatusCurrent.value = formStatusOptions[formStatusCurrent.value + 1]
     ? formStatusCurrent.value + 1
     : 0
+}
+
+const onDetailAdd = (e) => {
+  e.forEach((row) => {
+    if (row.uid) {
+      delete row.uid
+    }
+    detailArr.value.push(row)
+  })
 }
 
 const landing = reactive({
@@ -230,17 +244,8 @@ const landing = reactive({
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Forms example" main>
-        <BaseButton
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          target="_blank"
-          :icon="mdiGithub"
-          label="Star on GitHub"
-          color="contrast"
-          rounded-full
-          small
-        />
       </SectionTitleLineWithButton>
-      <CardBox form @submit.prevent="submit">
+      <CardBox>
         <FormField>
           <div>
             <label class="block font-bold mb-2">Grouped with icons</label>
@@ -410,10 +415,156 @@ const landing = reactive({
           >
           </TableApi>
         </FormField>
+
+        <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Forms example detail">
+          <div class="flex my-auto h-6 w-0.5 bg-gray-900 mx-3"></div>
+          <ButtonMultiSelect
+            title="Add To List"
+            @add="onDetailAdd"
+            :api="{
+              url: `${baseUrl}/operation/m_supp`,
+              headers: {
+                'Content-Type': 'Application/json',
+                Authorization: `Bearer ${token}`
+              },
+              params: {
+                simplest: true
+              },
+              onsuccess: (response) => {
+                response.data = [...response.data].map((dt) => {
+                  return dt
+                })
+                response.page = response.current_page
+                response.hasNext = response.has_next
+                return response
+              }
+            }"
+            :columns="[
+              {
+                checkboxSelection: true,
+                headerCheckboxSelection: true,
+                headerName: 'No',
+                valueGetter: (p) => '',
+                width: 60,
+                sortable: false,
+                resizable: true,
+                filter: false,
+                cellClass: ['justify-center', 'bg-gray-50', '!border-gray-200']
+              },
+              {
+                flex: 1,
+                field: 'name',
+                headerName: 'Nama Supplier',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'phone_1',
+                headerName: 'No. Telephone',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'email',
+                headerName: 'Email',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'city.value1',
+                headerName: 'Kota',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              }
+            ]"
+          >
+            <BaseButton color="info" label="Add To List" small :icon="mdiPlus" />
+          </ButtonMultiSelect>
+        </SectionTitleLineWithButton>
+
+        <div class="relative overflow-x-auto">
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            >
+              <tr>
+                <th scope="col" class="px-6 py-3 w-[5%]">No</th>
+                <th scope="col" class="px-6 py-3">Nama</th>
+                <th scope="col" class="px-6 py-3">Company</th>
+                <th scope="col" class="px-6 py-3">City</th>
+                <th scope="col" class="px-6 py-3">Progress</th>
+                <th scope="col" class="px-6 py-3">Created</th>
+                <th scope="col" class="px-6 py-3">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-if="detailArr.length > 0"
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                v-for="(client, i) in detailArr"
+                :key="client.id"
+              >
+                <td class="px-6 py-4">
+                  {{ i + 1 }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ client.name }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ client.company }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ client.city }}
+                </td>
+                <td class="px-6 py-4">
+                  <progress
+                    class="flex w-2/5 self-center lg:w-full"
+                    max="100"
+                    :value="client.progress"
+                  >
+                    {{ client.progress }}
+                  </progress>
+                </td>
+                <td class="px-6 py-4">
+                  <small class="text-gray-500 dark:text-slate-400" :title="client.created">{{
+                    client.created
+                  }}</small>
+                </td>
+                <td class="px-6 py-4">
+                  <BaseButtons type="justify-start lg:justify-end" no-wrap>
+                    <BaseButton color="info" :icon="mdiEye" small @click="isModalActive = true" />
+                    <BaseButton
+                      color="danger"
+                      :icon="mdiTrashCan"
+                      small
+                      @click="isModalDangerActive = true"
+                    />
+                  </BaseButtons>
+                </td>
+              </tr>
+
+              <tr v-else>
+                <td colspan="7" class="py-[20px] text-center">No data to show</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <template #footer>
-          <BaseButtons>
-            <BaseButton type="submit" color="info" label="Submit" small />
-            <BaseButton type="reset" color="info" outline label="Reset" small />
+          <BaseButtons class="flex justify-end mt-4">
+            <BaseButton type="submit" color="success" label="Submit" small />
+            <BaseButton type="reset" color="danger" outline label="Reset" small />
           </BaseButtons>
         </template>
       </CardBox>

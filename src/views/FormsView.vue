@@ -241,118 +241,140 @@ const landing = reactive({
         />
       </SectionTitleLineWithButton>
       <CardBox form @submit.prevent="submit">
-        <FormField label="Grouped with icons">
-          <FormControl v-model="form.name" :icon="mdiAccount" />
-          <FormControl v-model="form.email" type="email" :icon="mdiMail" />
+        <FormField>
+          <div>
+            <label class="block font-bold mb-2">Grouped with icons</label>
+            <FormControl v-model="form.name" :icon="mdiAccount" />
+          </div>
+          <div>
+            <label class="block font-bold mb-2">Inline with icons</label>
+            <FormControl v-model="form.email" type="email" :icon="mdiMail" />
+          </div>
         </FormField>
 
-        <FormField label="With help line" help="Do not enter the leading zero">
-          <FormControl v-model="form.phone" type="tel" placeholder="Your phone number" />
+        <FormField help="Do not enter the leading zero">
+          <div class="col-span-2">
+            <label class="block font-bold mb-2">With help line</label>
+            <FormControl v-model="form.phone" type="tel" placeholder="Your phone number" />
+          </div>
         </FormField>
-        <FormField label="Field Pop Up And Uploads">
-          <FieldPopup
-            :api="{
-              url: `${baseUrl}/operation/m_supp`,
-              headers: {
-                'Content-Type': 'Application/json',
-                Authorization: `Bearer ${token}`
-              },
-              params: {
-                simplest: true,
-                where: 'this.is_active = true',
-                searchfield: 'this.name,this.email,this.phone_1,city.value1'
-              }
-            }"
-            valueField="id"
-            displayField="name"
-            :bind="{ readonly: false }"
-            :value="form.m_supp_id"
-            @input="(v) => (form.m_supp_id = v)"
-            :errorText="formErrors.m_supp_id ? 'failed' : ''"
-            :hints="formErrors.m_supp_id"
-            placeholder="Pilih Supplier"
-            label="Supplier"
-            :check="false"
-            :columns="[
-              {
-                checkboxSelection: true,
-                headerCheckboxSelection: true,
-                headerName: 'No',
-                valueGetter: (p) => '',
-                width: 60,
-                sortable: false,
-                resizable: true,
-                filter: false,
-                cellClass: ['justify-center', 'bg-gray-50', '!border-gray-200']
-              },
-              {
-                flex: 1,
-                field: 'name',
-                headerName: 'Nama Supplier',
-                sortable: false,
-                resizable: true,
-                filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
-              },
-              {
-                flex: 1,
-                field: 'phone_1',
-                headerName: 'No. Telephone',
-                sortable: false,
-                resizable: true,
-                filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
-              },
-              {
-                flex: 1,
-                field: 'email',
-                headerName: 'Email',
-                sortable: false,
-                resizable: true,
-                filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
-              },
-              {
-                flex: 1,
-                field: 'city.value1',
-                headerName: 'Kota',
-                sortable: false,
-                resizable: true,
-                filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
-              }
-            ]"
-          />
-          <FieldUpload
-            :value="form.file"
-            @input="(v) => (form.file = v)"
-            :errorText="formErrors.file ? 'failed' : ''"
-            :hints="formErrors.file"
-            :maxSize="10"
-            :reducerDisplay="(val) => (!val ? null : val.split(':::')[val.split(':::').length - 1])"
-            :api="{
-              url: `${baseUrl}/operation/m_cust_d_upload/upload`,
-              headers: { Authorization: `Bearer ${token}` },
-              params: { field: 'file' },
-              onsuccess: (response) => response,
-              onerror: (error) => {}
-            }"
-            placeholder="Pilih File"
-            fa-icon="upload"
-            accept=".png,.jpg"
-            :check="false"
-          />
+        <FormField>
+          <div>
+            <label class="block font-bold mb-2">Field Pop Up</label>
+            <FieldPopup
+              :api="{
+                url: `${baseUrl}/operation/m_supp`,
+                headers: {
+                  'Content-Type': 'Application/json',
+                  Authorization: `Bearer ${token}`
+                },
+                params: {
+                  simplest: true,
+                  where: 'this.is_active = true',
+                  searchfield: 'this.name,this.email,this.phone_1,city.value1'
+                }
+              }"
+              valueField="id"
+              displayField="name"
+              :bind="{ readonly: false }"
+              :value="form.m_supp_id"
+              @input="(v) => (form.m_supp_id = v)"
+              :errorText="formErrors.m_supp_id ? 'failed' : ''"
+              :hints="formErrors.m_supp_id"
+              placeholder="Pilih Supplier"
+              label="Supplier"
+              :check="false"
+              :columns="[
+                {
+                  checkboxSelection: true,
+                  headerCheckboxSelection: true,
+                  headerName: 'No',
+                  valueGetter: (p) => '',
+                  width: 60,
+                  sortable: false,
+                  resizable: true,
+                  filter: false,
+                  cellClass: ['justify-center', 'bg-gray-50', '!border-gray-200']
+                },
+                {
+                  flex: 1,
+                  field: 'name',
+                  headerName: 'Nama Supplier',
+                  sortable: false,
+                  resizable: true,
+                  filter: 'ColFilter',
+                  cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                },
+                {
+                  flex: 1,
+                  field: 'phone_1',
+                  headerName: 'No. Telephone',
+                  sortable: false,
+                  resizable: true,
+                  filter: 'ColFilter',
+                  cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                },
+                {
+                  flex: 1,
+                  field: 'email',
+                  headerName: 'Email',
+                  sortable: false,
+                  resizable: true,
+                  filter: 'ColFilter',
+                  cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                },
+                {
+                  flex: 1,
+                  field: 'city.value1',
+                  headerName: 'Kota',
+                  sortable: false,
+                  resizable: true,
+                  filter: 'ColFilter',
+                  cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                }
+              ]"
+            />
+          </div>
+          <div>
+            <label class="block font-bold mb-2">Field Upload</label>
+            <FieldUpload
+              :value="form.file"
+              @input="(v) => (form.file = v)"
+              :errorText="formErrors.file ? 'failed' : ''"
+              :hints="formErrors.file"
+              :maxSize="10"
+              :reducerDisplay="
+                (val) => (!val ? null : val.split(':::')[val.split(':::').length - 1])
+              "
+              :api="{
+                url: `${baseUrl}/operation/m_cust_d_upload/upload`,
+                headers: { Authorization: `Bearer ${token}` },
+                params: { field: 'file' },
+                onsuccess: (response) => response,
+                onerror: (error) => {}
+              }"
+              placeholder="Pilih File"
+              fa-icon="upload"
+              accept=".png,.jpg"
+              :check="false"
+            />
+          </div>
         </FormField>
 
-        <FormField label="Dropdown">
-          <FieldSelect
-            v-model="form.department"
-            :options="selectOptions"
-            display-key="label"
-            value-key="id"
-          />
-
-          <FieldSelect v-model="form.apiDept" display-key="value1" value-key="id" api="m_gen" />
+        <FormField>
+          <div>
+            <label class="block font-bold mb-2">Dropdown Static</label>
+            <FieldSelect
+              v-model="form.department"
+              :options="selectOptions"
+              display-key="label"
+              value-key="id"
+            />
+          </div>
+          <div>
+            <label class="block font-bold mb-2">Dropdown Api</label>
+            <FieldSelect v-model="form.apiDept" display-key="value1" value-key="id" api="m_gen" />
+          </div>
         </FormField>
 
         <BaseDivider />

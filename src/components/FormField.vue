@@ -1,7 +1,7 @@
 <script setup>
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: null
@@ -13,21 +13,26 @@ defineProps({
   help: {
     type: String,
     default: null
+  },
+  slotClass: {
+    type: String,
+    default: ''
   }
 })
 
 const slots = useSlots()
 
+const slotsLength = ref(slots.default().length)
+
 const wrapperClass = computed(() => {
   const base = []
-  const slotsLength = slots.default().length
 
-  if (slotsLength > 1) {
-    base.push('grid grid-cols-1 gap-3')
+  if (slotsLength.value > 1) {
+    base.push(`grid grid-cols-1 gap-3 md:grid-cols-${slotsLength.value}`)
   }
 
-  if (slotsLength === 2) {
-    base.push('md:grid-cols-2')
+  if (props.slotClass) {
+    base.push(props.slotClass)
   }
 
   return base
@@ -36,7 +41,9 @@ const wrapperClass = computed(() => {
 
 <template>
   <div class="mb-6 last:mb-0">
-    <label v-if="label" :for="labelFor" class="block font-bold mb-2">{{ label }}</label>
+    <label v-if="label && slotsLength == 1" :for="labelFor" class="block font-bold mb-2">{{
+      label
+    }}</label>
     <div :class="wrapperClass">
       <slot />
     </div>

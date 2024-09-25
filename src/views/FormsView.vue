@@ -1,6 +1,15 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { mdiBallotOutline, mdiAccount, mdiMail, mdiPlus, mdiEye, mdiTrashCan } from '@mdi/js'
+import {
+  mdiBallotOutline,
+  mdiAccount,
+  mdiMail,
+  mdiPlus,
+  mdiEye,
+  mdiTrashCan,
+  mdiCalendar,
+  mdiCalendarMonth
+} from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import FormCheckRadioGroup from '@/components/FormCheckRadioGroup.vue'
@@ -17,6 +26,7 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/main'
+import BaseIcon from '@/components/BaseIcon.vue'
 
 const route = useRoute()
 const baseUrl = ref(import.meta.env.VITE_API_URL)
@@ -239,7 +249,46 @@ const landing = reactive({
   ]
 })
 </script>
+<style>
+.datePickerCustomCalender {
+  font-size: 0.8rem;
+}
+.datePickerCustomCell {
+  width: 30px;
+  height: 20px;
+  font-size: 0.8rem;
+}
 
+.datePickerCustomMenu {
+  font-size: 0.8rem;
+}
+
+.datePickerCustom {
+  padding-top: 0;
+  padding-bottom: 0;
+  max-width: 100%;
+  width: 100%;
+  height: 40px;
+  border-radius: 0.5rem;
+  border: 1px solid #374151;
+  font-size: 0.875rem;
+  background-color: white;
+  transition: all 300ms;
+  outline: none;
+}
+.datePickerCustom:hover {
+  border: 1px solid #374151 !important;
+}
+.datePickerCustomMenu:hover ~ .datePickerCustom,
+.datePickerCustomMenu:focus-within ~ .datePickerCustom {
+  border-color: #3b82f6 !important;
+}
+.datePickerCustom:focus-within,
+.dp__input_focus {
+  border: 1px solid #3b82f6 !important;
+  box-shadow: 0 0 0 1px #3b82f6; /* Efek seperti ring */
+}
+</style>
 <template>
   <LayoutAuthenticated>
     <SectionMain>
@@ -258,9 +307,34 @@ const landing = reactive({
         </FormField>
 
         <FormField help="Do not enter the leading zero">
-          <div class="col-span-2">
+          <div>
             <label class="block font-bold mb-2">With help line</label>
             <FormControl v-model="form.phone" type="tel" placeholder="Your phone number" />
+          </div>
+          <div>
+            <label class="block font-bold mb-2">Date</label>
+
+            <VueDatePicker
+              :ui="{
+                input: 'datePickerCustom',
+                calender: 'datePickerCustomCalendar',
+                calendarCell: 'datePickerCustomCell',
+                menu: 'datePickerCustomMenu'
+              }"
+              v-model="form.date"
+              format="yyyy/dd/MM"
+              :enable-time-picker="false"
+              placeholder="Select Date"
+            >
+              <template #input-icon>
+                <BaseIcon
+                  :path="mdiCalendarMonth"
+                  w="w-10"
+                  h="h-10"
+                  class="pointer-events-none text-gray-500 dark:text-slate-400 mr-5"
+                />
+              </template>
+            </VueDatePicker>
           </div>
         </FormField>
         <FormField>

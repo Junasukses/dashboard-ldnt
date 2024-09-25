@@ -44,6 +44,14 @@ const routes = [
   },
   {
     meta: {
+      title: 'Menu POS'
+    },
+    path: '/pos',
+    name: 'pos',
+    component: () => import('@/views/PosView.vue')
+  },
+  {
+    meta: {
       title: 'Login'
     },
     path: '/login',

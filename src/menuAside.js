@@ -20,6 +20,11 @@ export default [
     label: 'Dashboard'
   },
   {
+    to: '/pos',
+    icon: mdiMonitor,
+    label: 'POS'
+  },
+  {
     label: 'Overview',
     icon: mdiViewList,
     menu: [

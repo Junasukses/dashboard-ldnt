@@ -22,6 +22,9 @@ import FieldSelect from '@/components/forms/FieldSelect.vue'
 import FieldPopup from '@/components/forms/FieldPopup.vue'
 import TableApi from '@/components/forms/TableApi.vue'
 import FieldUpload from '@/components/forms/FieldUpload.vue'
+import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
+import SectionMain from '@/components/SectionMain.vue'
+import CardBox from '@/components/CardBox.vue'
 
 // Init Pinia
 const pinia = createPinia()
@@ -32,6 +35,9 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 
+app.component('CardBox', CardBox)
+app.component('SectionMain', SectionMain)
+app.component('LayoutAuthenticated', LayoutAuthenticated)
 app.component('v-select', vSelect)
 app.component('FieldSelect', FieldSelect)
 app.component('TableApi', TableApi)

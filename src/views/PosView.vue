@@ -94,11 +94,19 @@ const equal = () => {
       <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Halaman Pembayaran" main>
       </SectionTitleLineWithButton>
       <div class="grid grid-cols-12 gap-[12px]">
-        <div class="h-60 bg-red-600 row-span-2 col-span-2"></div>
+        <div class="row-span-2 col-span-2 text-xs">
+          <CardBox>
+            <h1 class="font-semibold text-center text-base">Detail Nota</h1>
+            <div class="flex justify-between items-center py-4 borter-t border-b flex-wrap">
+              <span>List Order</span>
+              <span>Kamis, 14 Oktober 2024</span>
+            </div>
+          </CardBox>
+        </div>
         <!-- Info Nota -->
         <div class="col-span-5">
           <CardBox>
-            <table>
+            <table class="">
               <thead>
                 <tr>
                   <th colspan="3" class="p-0 pb-2 text-xl">Info Nota</th>
@@ -106,24 +114,27 @@ const equal = () => {
               </thead>
               <tbody>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">Tgl</td>
-                  <td class="whitespace-normal align-top !border-0 p-0 px-1">:</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">Tgl</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px-1 w-[1%]">:</td>
                   <td class="whitespace-normal align-top !border-0 p-0">09/03/2024 18:20:22</td>
                 </tr>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">Nomor</td>
-                  <td class="whitespace-normal align-top !border-0 p-0 px-1">:</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">Nomor</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px-1 w-[1%]">:</td>
                   <td class="whitespace-normal align-top !border-0 p-0">INV-20240309000025</td>
                 </tr>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">Kasir</td>
-                  <td class="whitespace-normal align-top !border-0 p-0 px-1">:</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">Kasir</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px-1 w-[1%]">:</td>
                   <td class="whitespace-normal align-top !border-0 p-0">Widya</td>
                 </tr>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">Shift</td>
-                  <td class="whitespace-normal align-top !border-0 p-0 px-1">:</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">Shift</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px-1 w-[1%]">:</td>
                   <td class="whitespace-normal align-top !border-0 p-0">1</td>
+                </tr>
+                <tr class="!bg-white">
+                  <td></td>
                 </tr>
               </tbody>
             </table>
@@ -140,25 +151,26 @@ const equal = () => {
               </thead>
               <tbody>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">Kode/Nama</td>
-                  <td class="whitespace-normal align-top !border-0 p-0 px-1">:</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">Kode/Nama</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px-1 w-[1%]">:</td>
                   <td class="whitespace-normal align-top !border-0 p-0">C0001/Sari</td>
                 </tr>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">No Telp</td>
-                  <td class="whitespace-normal align-top !border-0 p-0 px-1">:</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">No Telp</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px-1 w-[1%]">:</td>
                   <td class="whitespace-normal align-top !border-0 p-0">08772788321</td>
                 </tr>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">Alamat</td>
-                  <td class="whitespace-normal align-top !border-0 p-0 px-1">:</td>
-                  <td class="whitespace-normal align-top !border-0 p-0">
-                    Jl. Soekarno Hatta No. 45 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">Alamat</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px-1 w-[1%]">:</td>
+                  <td class="align-top !border-0 p-0">
+                    Jl. Soekarno Hatta No. 45 asaksa aksaks aksaks aksaksaks aksaksaksa aksaksak
+                    aksaks akska askaksa aksaks
                   </td>
                 </tr>
                 <tr class="!bg-white">
-                  <td class="whitespace-normal align-top !border-0 p-0">Point</td>
-                  <td class="whitespace-normal align-top !border-0 p-0">:</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 w-[10%]">Point</td>
+                  <td class="whitespace-normal align-top !border-0 p-0 px=1 w-[1%]">:</td>
                   <td class="whitespace-normal align-top !border-0 p-0">35</td>
                 </tr>
               </tbody>

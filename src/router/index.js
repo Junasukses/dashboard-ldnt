@@ -44,11 +44,20 @@ const routes = [
   },
   {
     meta: {
-      title: 'Menu POS'
+      title: 'POS Pembayaran'
     },
     path: '/pos',
     name: 'pos',
     component: () => import('@/views/PosView.vue')
+  },
+
+  {
+    meta: {
+      title: 'POS Landing'
+    },
+    path: '/pos-landing',
+    name: 'pos-landing',
+    component: () => import('@/views/PosLandingView.vue')
   },
   {
     meta: {

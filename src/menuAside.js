@@ -20,7 +20,7 @@ export default [
     label: 'Dashboard'
   },
   {
-    to: '/pos',
+    to: '/pos-landing',
     icon: mdiMonitor,
     label: 'POS'
   },

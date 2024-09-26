@@ -31,7 +31,7 @@ const form = reactive({})
       class="lg:ml-0 pt-14 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100"
     >
       <NavBar :menu="menuNavBar" class="ml-60 lg:ml-0 xl:pl-60"> </NavBar>
-      <SectionMain class="!pt-0">
+      <SectionMain class="!py-0 overflow-hidden">
         <h1 class="ml-2 mb-4 font-bold text-2xl">Halaman Pembayaran</h1>
         <div class="grid grid-cols-12 gap-[12px]">
           <div class="row-span-2 col-span-3 text-[12px] h-full">
@@ -101,7 +101,7 @@ const form = reactive({})
             </CardBox>
           </div>
           <!-- Info Nota -->
-          <div class="col-span-6 text-[12px] h-full">
+          <div class="col-span-6 text-[13px] h-full">
             <CardBox>
               <div class="grid grid-cols-2 gap-2">
                 <table>
@@ -168,7 +168,7 @@ const form = reactive({})
           </div>
 
           <CardBox class="col-span-3 row-span-2">
-            <div class="flex flex-col text-[12px] gap-2">
+            <div class="flex flex-col text-[13px] gap-2">
               <div class="flex justify-between items-center">
                 <h1>Total Belanja</h1>
                 <FormControl v-model="form.name" class="w-[50%] !h-[10%]" />
@@ -211,7 +211,7 @@ const form = reactive({})
               </div>
               <div class="flex items-stretch text-sm">
                 <button
-                  class="w-full flex items-center justify-center bg-[#f4f4f4] duration-300 rounded-tl-lg text-gray-600"
+                  class="w-full flex items-center justify-center bg-[#f4f4f4] rounded-tl-lg text-gray-600 hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
                   :class="{ ' text-white font-bold': activeTabIndex === 0 }"
                   @click="activeTabIndex = 0"
                 >
@@ -228,14 +228,14 @@ const form = reactive({})
                   @click="activeTabIndex = 1"
                 >
                   <div
-                    class="w-full h-full flex items-center justify-center bg-none p-3"
+                    class="w-full h-full flex items-center justify-center bg-none p-3 hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
                     :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 1 }"
                   >
                     <BaseIcon :path="mdiCreditCard" size="80" />
                   </div>
                 </button>
                 <button
-                  class="w-full flex items-center justify-center border-b-2 bg-[#f4f4f4] duration-300 rounded-tr-lg"
+                  class="w-full flex items-center justify-center border-b-2 bg-[#f4f4f4] rounded-tr-lg hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
                   :class="{ 'text-white font-bold': activeTabIndex === 2 }"
                   @click="activeTabIndex = 2"
                 >
@@ -247,19 +247,19 @@ const form = reactive({})
                   </div>
                 </button>
               </div>
-              <div class="flex items-center space-x-2">
+              <div class="flex items-center space-x-2 mt-3">
                 <div
-                  class="bg-blue-600 text-white w-full h-full text-center py-3 text-[14px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+                  class="bg-blue-600 hover:bg-blue-700 text-white w-full h-full text-center py-2 text-[13px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
                 >
                   <button class="flex flex-col items-center justify-center">
-                    <BaseIcon :path="mdiContentSave" size="30" />Simpan
+                    <BaseIcon :path="mdiContentSave" size="20" />Simpan
                   </button>
                 </div>
                 <div
-                  class="bg-green-600 text-white w-full h-full text-center py-3 text-[14px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+                  class="bg-green-600 hover:bg-green-700 text-white w-full h-full text-center py-2 text-[13px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
                 >
                   <button class="flex flex-col items-center justify-center">
-                    <BaseIcon :path="mdiPrinter" size="30" />Simpan & Cetak
+                    <BaseIcon :path="mdiPrinter" size="20" />Simpan & Cetak
                   </button>
                 </div>
               </div>

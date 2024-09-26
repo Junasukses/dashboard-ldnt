@@ -1,6 +1,6 @@
 <script setup>
 import { mdiForwardburger, mdiBackburger, mdiMenu } from '@mdi/js'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import menuAside from '@/menuAside.js'
 import menuNavBar from '@/menuNavBar.js'
@@ -14,12 +14,24 @@ import FooterBar from '@/components/FooterBar.vue'
 
 // const layoutAsidePadding = 'xl:pl-60'
 
+const props = defineProps({
+  withoutSidebar: {
+    type: Boolean,
+    default: false
+  }
+})
 const darkModeStore = useDarkModeStore()
 
 const router = useRouter()
 
 const isAsideMobileExpanded = ref(false)
 const isAsideLgActive = ref(false)
+
+// const updateIsAsideMobileExpanded = computed(() => {
+//   return props.withoutSidebar ? true : isAsideMobileExpanded.value
+// })
+
+// isAsideMobileExpanded.value = updateIsAsideMobileExpanded.value
 
 router.beforeEach(() => {
   isAsideMobileExpanded.value = false

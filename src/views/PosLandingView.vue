@@ -1,81 +1,132 @@
-<script setup>
-import BaseIcon from '@/components/BaseIcon.vue'
-import CardBox from '@/components/CardBox.vue'
-import NavBar from '@/components/NavBar.vue'
-import {
-  mdiAccountGroupOutline,
-  mdiCash,
-  mdiListBoxOutline,
-  mdiMinus,
-  mdiPlus,
-  mdiSaleOutline,
-  mdiTrashCan
-} from '@mdi/js'
-import { ref, reactive } from 'vue'
-import menuNavBar from '@/menuNavBar.js'
-import BaseButtons from '@/components/BaseButtons.vue'
-import BaseButton from '@/components/BaseButton.vue'
-import FieldPopupKode from '@/components/FieldPopupKode.vue'
+  <script setup>
+  import BaseIcon from '@/components/BaseIcon.vue'
+  import CardBox from '@/components/CardBox.vue'
+  import NavBar from '@/components/NavBar.vue'
+  import {
+    mdiAccountGroupOutline,
+    mdiCash,
+    mdiListBoxOutline,
+    mdiMinus,
+    mdiPlus,
+    mdiSaleOutline,
+    mdiTrashCan
+  } from '@mdi/js'
+  import { ref, reactive, nextTick, computed  } from 'vue'
+  import menuNavBar from '@/menuNavBar.js'
+  import BaseButtons from '@/components/BaseButtons.vue'
+  import BaseButton from '@/components/BaseButton.vue'
+  import FieldPopupKode from '@/components/FieldPopupKode.vue'
 
-const baseUrl = ref(import.meta.env.VITE_API_URL);
-const token = ref(localStorage.getItem('authToken'));
-const activeTabIndex = ref(0);
-const barcodeInput = ref();
-const values = reactive({barcode: ''});
-const form = reactive({});
-const item = reactive({group_data: []});
+  const baseUrl = ref(import.meta.env.VITE_API_URL);
+  const token = ref(localStorage.getItem('authToken'));
+  const activeTabIndex = ref(0);
+  const listItem = ref();
+  const barcodeInput = ref();
+  const values = reactive({barcode: '', list_item: ''});
+  const form = reactive({});
+  const item = reactive({group_data: []});
+  const data = reactive({netto: 0});
 
-function newDataItem(newData){
-  const isData = item.group_data.filter(dt => dt.id === newData.id);
-  if(isData.length === 0){
-    item.group_data = [...item.group_data, {...newData, qty: 1, disc_percent: 0, disc_amount: 0, sub_total: newData.price}];
-  } else {
-    item.group_data = item.group_data.map(dt => {
-      if(dt.id === newData.id){
-        return {...dt, qty: dt.qty + 1, sub_total: dt.price * (dt.qty + 1)}
-      } else {
-        return dt;
-      }
-    })
-  }
-}
-
-function onEnterBarcode(data) {
-  console.log('Before Reset:', barcodeInput.value); // Debug
-  newDataItem(data);
-  setTimeout(() => {
-    if (barcodeInput.value) {
-      barcodeInput.value.onReset();
+  function formatNumber(amount, decimals = 2) {
+    if (isNaN(amount)) {
+      return '';
     }
-    values.barcode = '';
-  }, 200);
-}
+    amount = amount ? Number(amount) : 0
+    const roundedAmount = amount.toFixed(decimals);
+    const [integerPart, decimalPart] = roundedAmount.split('.');
+    const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-function changeQty(type, id){
-  item.group_data = item.group_data.map(dt => {
-    if(dt.id === id){
-        if(type === 'plus'){
+    return `${formattedIntegerPart}${decimalPart ? ',' + decimalPart : ''}`;
+    
+  }
+
+
+  const formattedDate = ref(getFormattedDate());
+
+  function getFormattedDate() {
+    const now = new Date();
+
+    // Define options for the date format
+    const dateOptions = {
+        weekday: 'long',  // Full name of the day
+        year: 'numeric',   // Full numeric year
+        month: 'long',     // Full name of the month
+        day: 'numeric'     // Numeric day of the month
+    };
+    const dateFormatter = new Intl.DateTimeFormat('id-ID', dateOptions);
+    const formattedDate = dateFormatter.format(now);
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${formattedDate} ${hours}:${minutes}:${seconds}`;
+  }
+
+  setInterval(() => {
+      formattedDate.value = getFormattedDate();
+  }, 1000); 
+
+  function openListItem(){
+    nextTick (() => {
+      listItem.value?.onEnter();
+    });
+  }
+
+  function newDataItem(newData){
+    const isData = item.group_data.filter(dt => dt.id === newData.id);
+    if(isData.length === 0){
+      item.group_data = [...item.group_data, {...newData, qty: 1, disc_percent: 0, disc_amount: 0, sub_total: newData.price}];
+    } else {
+      item.group_data = item.group_data.map(dt => {
+        if(dt.id === newData.id){
           return {...dt, qty: dt.qty + 1, sub_total: dt.price * (dt.qty + 1)}
-        } else if (type === 'min'){
-          return {...dt, qty: dt.qty - 1, sub_total: dt.price * (dt.qty - 1)}
         } else {
           return dt;
         }
-      } else {
-        return dt;
-      }
+      })
+    }
+  }
+
+  function onEnterBarcode(data) {
+    newDataItem(data);
+    nextTick(() => {
+      barcodeInput.value?.onReset();
+      values.barcode = '';
+    });
+  }
+
+  const grand_total = computed(()=>{
+    const total = item.group_data.reduce(((a, b) => a + Number(b.sub_total)), 0)
+    data.netto = parseFloat(total);
+    return data.netto;
   })
 
-  item.group_data = item.group_data.filter(dt => dt.qty > 0);
-}
+  function changeQty(type, id){
+    item.group_data = item.group_data.map(dt => {
+      if(dt.id === id){
+          if(type === 'plus'){
+            return {...dt, qty: dt.qty + 1, sub_total: dt.price * (dt.qty + 1)}
+          } else if (type === 'min'){
+            return {...dt, qty: dt.qty - 1, sub_total: dt.price * (dt.qty - 1)}
+          } else {
+            return dt;
+          }
+        } else {
+          return dt;
+        }
+    })
 
-function deleteItem(id){
-  item.group_data = item.group_data.filter(dt => dt.id !== id)
-}
+    item.group_data = item.group_data.filter(dt => dt.qty > 0);
+  }
+
+  function deleteItem(id){
+    item.group_data = item.group_data.filter(dt => dt.id !== id)
+  }
 
 
-</script>
-<style scoped>
+  </script>
+  <style scoped>
 @tailwind base;
 
 @layer base {
@@ -122,7 +173,55 @@ function deleteItem(id){
           <div class="col-span-9">
             <h1 class="!ml-2 !mb-4 !font-bold !text-2xl">Selamat Datang Admin</h1>
             <div class="flex flex-wrap items-center space-x-4">
-              <div
+
+              <button @click="openListItem" class="!text-[#086968] !border-2 !border-[#086968] flex items-center !p-2 rounded-lg !font-semibold shadow-md cursor-pointer duration-150 transition hover:bg-[#086968] hover:!text-white">
+                <BaseIcon :path="mdiListBoxOutline" size="20" />
+                <span class="ml-2">List Item</span>
+              </button>
+
+              <FieldPopupKode 
+                  ref="listItem"
+                  :check="false"
+                  :api="{
+                    url: `${baseUrl}/operation/v_item_catalog`,
+                    headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token}`},
+                    params: {
+                      simplest:true,
+                      searchfield: 'this.item_code, this.item_name, this.barcode'
+                    }
+                  }"
+                  :columns="[{
+                    headerName: 'No',
+                    valueGetter:(p)=>p.node.rowIndex + 1,
+                    width: 60,
+                    sortable: false, resizable: false, filter: false,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  }, {
+                    headerName: 'Kode',
+                    field: 'item_code',
+                    width: 60,
+                    flex: 1,
+                    sortable: true, resizable: true, filter: true,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  }, {
+                    headerName: 'Nama',
+                    field: 'item_name',
+                    width: 60,
+                    flex: 1,
+                    sortable: true, resizable: true, filter: true,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  }, {
+                    headerName: 'Barcode',
+                    field: 'barcode',
+                    width: 60,
+                    flex: 1,
+                    sortable: true, resizable: true, filter: true,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  },
+                  ]"
+                  class="!mt-0 hidden" />
+
+              <!-- <div
                 class="flex items-center p-2 rounded-lg font-semibold shadow-md cursor-pointer duration-300 transition"
                 :class="
                   activeTabIndex == 0
@@ -133,7 +232,7 @@ function deleteItem(id){
               >
                 <BaseIcon :path="mdiListBoxOutline" size="20" />
                 <span class="ml-2">List Item</span>
-              </div>
+              </div> -->
               <div
                 class="flex items-center p-2 rounded-lg font-semibold shadow-md cursor-pointer duration-300 transition"
                 :class="
@@ -171,6 +270,7 @@ function deleteItem(id){
                 <span class="ml-2">Pembayaran</span>
               </div>
             </div>
+
             <CardBox class="mt-4">
               <div class="flex items-center justify-between font-semibold mb-6">
                 <div class="flex justify-between items-center space-x-6">
@@ -228,7 +328,7 @@ function deleteItem(id){
 
                 <div class="flex items-center space-x-6">
                   <h2 style="text-wrap: nowrap;">Grand Total</h2>
-                  <FieldX :value="form.name"  @input="v => form.name = v" class="!mt-0" :check="false"/>
+                  <span class="text-2xl text-blue-900">{{formatNumber(grand_total)}}</span>
                 </div>
               </div>
 
@@ -257,7 +357,7 @@ function deleteItem(id){
                     <tr v-for="(dt, i) in item.group_data" :key="i" class="bg-white border-b dark:border-gray-700">
                       <td class="px-6 py-3">{{ i + 1 }}</td>
                       <td class="px-6 py-3">{{dt.item_name}}</td>
-                      <td class="px-6 py-3">{{ dt.price }}</td>
+                      <td class="px-6 py-3">{{ formatNumber(dt.price) }}</td>
                       <td class="px-6 py-3">
                         <div class="flex gap-2 items-center justify-around">
                           <BaseButton @click="changeQty('min',dt.id)" color="black" :icon="mdiMinus" small :rounded-full="true" />
@@ -266,9 +366,9 @@ function deleteItem(id){
                           <BaseButton @click="changeQty('plus',dt.id)" color="black" :icon="mdiPlus" small :rounded-full="true" />
                         </div>
                       </td>
-                      <td class="px-6 py-3">{{dt.disc_percent}}</td>
-                      <td class="px-6 py-3">{{ dt.disc_amount }}</td>
-                      <td class="px-6 py-3">{{ dt.sub_total }}</td>
+                      <td class="px-6 py-3">{{formatNumber(dt.disc_percent)}}</td>
+                      <td class="px-6 py-3">{{ formatNumber(dt.disc_amount) }}</td>
+                      <td class="px-6 py-3">{{ formatNumber(dt.sub_total) }}</td>
 
                       <td class="px-6 py-3">
                         <BaseButtons type="justify-center" no-wrap>
@@ -290,7 +390,7 @@ function deleteItem(id){
                   <span>List Order</span>
                 </div>
                 <div>
-                  <span>Kamis, 14 Oktober 2024</span>
+                  <span>{{formattedDate}}</span>
                 </div>
               </div>
               <div class="flex flex-col border-b">

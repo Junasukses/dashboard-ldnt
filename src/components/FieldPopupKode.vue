@@ -132,7 +132,7 @@ function onRowClicked(val) {
   emit('update:valueFull', val);
 
   if (params.value && typeof params.value.input === 'function') {
-    params.value.input(val, params.value);
+    params.value?.input(val, params.value);
   }
 }
 
@@ -166,7 +166,7 @@ function onClear() {
   chosen.value = {};
   emit('input', null);
   emit('update:valueFull', null);
-  inputElement.value.focus();
+  inputElement.value?.focus();
 }
 
 function onReset() {

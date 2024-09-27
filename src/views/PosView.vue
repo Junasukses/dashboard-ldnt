@@ -272,24 +272,24 @@ const form = reactive({})
             <div class="grid grid-cols-12 gap-[12px]">
               <div class="col-span-2 space-y-[12px]">
                 <div
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   10.000
                 </div>
                 <div
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   50.000
                 </div>
 
                 <div
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   100.000
                 </div>
 
                 <div
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   500.000
                 </div>
@@ -297,75 +297,75 @@ const form = reactive({})
               <div class="grid grid-cols-3 gap-[12px] col-span-10">
                 <div
                   id="n7"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   7
                 </div>
                 <div
                   id="n8"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   8
                 </div>
                 <div
                   id="n9"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   9
                 </div>
                 <div
                   id="n4"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   4
                 </div>
                 <div
                   id="n5"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   5
                 </div>
                 <div
                   id="n6"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   6
                 </div>
                 <div
                   id="n1"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   1
                 </div>
                 <div
                   id="n2"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   2
                 </div>
                 <div
                   id="n3"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   3
                 </div>
 
                 <div
                   id="equal"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg operator"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg operator"
                 >
                   C
                 </div>
 
                 <div
                   id="n0"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg"
                 >
                   0
                 </div>
                 <div
                   id="equal"
-                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-[#c6d8da] hover:text-white transition duration-300 rounded-md outline-none py-4 text-lg operator"
+                  class="flex items-center justify-center cursor-pointer text-center bg-white font-semibold border border-[#c6d8da] text-[#484848] hover:bg-blue-700 hover:text-white transition duration-150 rounded-md outline-none py-4 text-lg operator"
                 >
                   <BaseIcon :path="mdiBackspace" />
                 </div>

@@ -158,8 +158,10 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #5897fb;
   --vs-dropdown-option--active-color: #000000;
+  --vs-search-input-placeholder-color: #6b7280;
+
   --vs-font-size: 0.875rem;
-  --vs-line-height: 1.8rem;
+  --vs-line-height: 1.25rem;
   --vs-border-radius: 0.5rem;
 }
 </style>

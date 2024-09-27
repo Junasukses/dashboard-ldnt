@@ -9,7 +9,7 @@
       :placeholder="placeholder"
       v-bind="bind"
       :readonly="bind.readonly || params"
-      class="max-h-8.6 w-full bg-white py-2.5 rounded-lg input-target outline-none md:!text-sm transition-all duration-300 pr-9.5 border border-gray-700"
+      class="max-h-8 w-full bg-white py-2.5 rounded-lg input-target outline-none md:!text-sm transition-all duration-300 pr-9.5 border border-gray-700"
       :class="{
         '!bg-gray-100': bind.readonly,
         'pr-10': check && !params,

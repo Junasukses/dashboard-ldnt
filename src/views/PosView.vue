@@ -216,10 +216,11 @@ const form = reactive({})
                   @click="activeTabIndex = 0"
                 >
                   <div
-                    class="w-full h-full flex items-center justify-center p-3"
+                    class="w-full h-full flex flex-col items-center justify-center p-1"
                     :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 0 }"
                   >
                     <BaseIcon :path="mdiCash" size="80" />
+                    <span class="font-normal">Cash</span>
                   </div>
                 </button>
                 <button
@@ -228,10 +229,11 @@ const form = reactive({})
                   @click="activeTabIndex = 1"
                 >
                   <div
-                    class="w-full h-full flex items-center justify-center bg-none p-3 hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
+                    class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1 hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
                     :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 1 }"
                   >
                     <BaseIcon :path="mdiCreditCard" size="80" />
+                    <span class="font-normal">Card</span>
                   </div>
                 </button>
                 <button
@@ -240,10 +242,11 @@ const form = reactive({})
                   @click="activeTabIndex = 2"
                 >
                   <div
-                    class="w-full h-full flex items-center justify-center bg-none p-3"
+                    class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1"
                     :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 2 }"
                   >
                     <BaseIcon :path="mdiLineScan" />
+                    <span class="font-normal">E-Wallet</span>
                   </div>
                 </button>
               </div>

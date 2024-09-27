@@ -97,12 +97,12 @@ const form = reactive({})
               <div class="flex items-center justify-between font-semibold mb-6">
                 <div class="flex items-center space-x-2">
                   <h1>Kode Item</h1>
-                  <FormControl v-model="form.name" class="w-[50%] !h-[10%]" />
+                  <FormControl v-model="form.name" class="w-[50%]" />
                 </div>
 
                 <div class="flex items-center space-x-2">
                   <h1>Pilih Member</h1>
-                  <FormControl v-model="form.name" class="w-[50%] !h-[10%]" />
+                  <FormControl v-model="form.name" class="w-[50%]" />
                 </div>
 
                 <div class="flex items-center space-x-2">
@@ -324,7 +324,7 @@ const form = reactive({})
               </div>
 
               <BaseButton
-                label="Trigger"
+                label="Pembayaran"
                 to="/pos"
                 color="success"
                 small

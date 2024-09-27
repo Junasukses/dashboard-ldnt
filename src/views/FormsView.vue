@@ -268,7 +268,7 @@ const landing = reactive({
   padding-bottom: 0;
   max-width: 100%;
   width: 100%;
-  height: 40px;
+  height: 32px;
   border-radius: 0.5rem;
   border: 1px solid #374151;
   font-size: 0.875rem;

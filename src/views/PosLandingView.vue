@@ -1,25 +1,13 @@
 <script setup>
 import BaseIcon from '@/components/BaseIcon.vue'
 import CardBox from '@/components/CardBox.vue'
-import FormCheckRadio from '@/components/FormCheckRadio.vue'
-import FormControl from '@/components/FormControl.vue'
-import IconRounded from '@/components/IconRounded.vue'
 import NavBar from '@/components/NavBar.vue'
-import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import {
-  mdiAccountGroup,
   mdiAccountGroupOutline,
-  mdiBackspace,
-  mdiBallotOutline,
   mdiCash,
-  mdiContentSave,
-  mdiCreditCard,
-  mdiLineScan,
   mdiListBoxOutline,
   mdiMinus,
-  mdiNote,
   mdiPlus,
-  mdiPrinter,
   mdiSaleOutline,
   mdiTrashCan
 } from '@mdi/js'
@@ -27,10 +15,65 @@ import { ref, reactive } from 'vue'
 import menuNavBar from '@/menuNavBar.js'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
+import FieldPopupKode from '@/components/FieldPopupKode.vue'
 
-const activeTabIndex = ref(0)
+const baseUrl = ref(import.meta.env.VITE_API_URL);
+const token = ref(localStorage.getItem('authToken'));
+const activeTabIndex = ref(0);
+const barcodeInput = ref();
+const values = reactive({barcode: ''});
+const form = reactive({});
+const item = reactive({group_data: []});
 
-const form = reactive({})
+function newDataItem(newData){
+  const isData = item.group_data.filter(dt => dt.id === newData.id);
+  if(isData.length === 0){
+    item.group_data = [...item.group_data, {...newData, qty: 1, disc_percent: 0, disc_amount: 0, sub_total: newData.price}];
+  } else {
+    item.group_data = item.group_data.map(dt => {
+      if(dt.id === newData.id){
+        return {...dt, qty: dt.qty + 1, sub_total: dt.price * (dt.qty + 1)}
+      } else {
+        return dt;
+      }
+    })
+  }
+}
+
+function onEnterBarcode(data) {
+  console.log('Before Reset:', barcodeInput.value); // Debug
+  newDataItem(data);
+  setTimeout(() => {
+    if (barcodeInput.value) {
+      barcodeInput.value.onReset();
+    }
+    values.barcode = '';
+  }, 200);
+}
+
+function changeQty(type, id){
+  item.group_data = item.group_data.map(dt => {
+    if(dt.id === id){
+        if(type === 'plus'){
+          return {...dt, qty: dt.qty + 1, sub_total: dt.price * (dt.qty + 1)}
+        } else if (type === 'min'){
+          return {...dt, qty: dt.qty - 1, sub_total: dt.price * (dt.qty - 1)}
+        } else {
+          return dt;
+        }
+      } else {
+        return dt;
+      }
+  })
+
+  item.group_data = item.group_data.filter(dt => dt.qty > 0);
+}
+
+function deleteItem(id){
+  item.group_data = item.group_data.filter(dt => dt.id !== id)
+}
+
+
 </script>
 <style scoped>
 @tailwind base;
@@ -132,7 +175,50 @@ const form = reactive({})
               <div class="flex items-center justify-between font-semibold mb-6">
                 <div class="flex justify-between items-center space-x-6">
                   <h2 style="text-wrap: nowrap;">Kode Item</h2>
-                  <FieldX :value="form.name"  @input="v => form.name = v" class="!mt-0" :check="false"/>
+                  <FieldPopupKode 
+                  ref="barcodeInput"
+                  :value="values.barcode" @input="(v)=>values.barcode=v"
+                  :check="false"
+                  @update:valueFull="onEnterBarcode"
+                  valueField="id" displayField="barcode"
+                  :api="{
+                    url: `${baseUrl}/operation/v_item_catalog`,
+                    headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token}`},
+                    params: {
+                      simplest:true,
+                      searchfield: 'this.item_code, this.item_name, this.barcode'
+                    }
+                  }"
+                  :columns="[{
+                    headerName: 'No',
+                    valueGetter:(p)=>p.node.rowIndex + 1,
+                    width: 60,
+                    sortable: false, resizable: false, filter: false,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  }, {
+                    headerName: 'Kode',
+                    field: 'item_code',
+                    width: 60,
+                    flex: 1,
+                    sortable: true, resizable: true, filter: true,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  }, {
+                    headerName: 'Nama',
+                    field: 'item_name',
+                    width: 60,
+                    flex: 1,
+                    sortable: true, resizable: true, filter: true,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  }, {
+                    headerName: 'Barcode',
+                    field: 'barcode',
+                    width: 60,
+                    flex: 1,
+                    sortable: true, resizable: true, filter: true,
+                    cellClass: ['justify-center', 'bg-gray-50']
+                  },
+                  ]"
+                  class="!mt-0" />
                 </div>
 
                 <div class="flex items-center space-x-6">
@@ -165,112 +251,28 @@ const form = reactive({})
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="bg-white border-b dark:border-gray-700">
-                      <td class="px-6 py-3">1</td>
-                      <td class="px-6 py-3">Beras 5Kg</td>
-                      <td class="px-6 py-3">60.000</td>
-                      <td class="px-6 py-3">
-                        <div class="flex items-center justify-around">
-                          <BaseButton color="black" :icon="mdiMinus" small :rounded-full="true" />
-                          <span>1</span>
-
-                          <BaseButton color="black" :icon="mdiPlus" small :rounded-full="true" />
-                        </div>
-                      </td>
-                      <td class="px-6 py-3">5%</td>
-                      <td class="px-6 py-3">3000</td>
-                      <td class="px-6 py-3">57.000</td>
-
-                      <td class="px-6 py-3">
-                        <BaseButtons type="justify-center" no-wrap>
-                          <BaseButton color="danger" :icon="mdiTrashCan" small />
-                        </BaseButtons>
-                      </td>
+                    <tr v-if="item.group_data.length === 0">
+                      <td colspan="8" class="h-20 w-full flex items-center justify-center !text-center">Belum ada item yang ditambahkan</td>
                     </tr>
-                    <tr class="bg-white border-b dark:border-gray-700">
-                      <td class="px-6 py-3">2</td>
-                      <td class="px-6 py-3">Minyak Goreng 2L</td>
-                      <td class="px-6 py-3">30.000</td>
+                    <tr v-for="(dt, i) in item.group_data" :key="i" class="bg-white border-b dark:border-gray-700">
+                      <td class="px-6 py-3">{{ i + 1 }}</td>
+                      <td class="px-6 py-3">{{dt.item_name}}</td>
+                      <td class="px-6 py-3">{{ dt.price }}</td>
                       <td class="px-6 py-3">
-                        <div class="flex items-center justify-around">
-                          <BaseButton color="black" :icon="mdiMinus" small :rounded-full="true" />
-                          <span>1</span>
+                        <div class="flex gap-2 items-center justify-around">
+                          <BaseButton @click="changeQty('min',dt.id)" color="black" :icon="mdiMinus" small :rounded-full="true" />
+                          <span>{{ dt.qty }}</span>
 
-                          <BaseButton color="black" :icon="mdiPlus" small :rounded-full="true" />
+                          <BaseButton @click="changeQty('plus',dt.id)" color="black" :icon="mdiPlus" small :rounded-full="true" />
                         </div>
                       </td>
-                      <td class="px-6 py-3">2%</td>
-                      <td class="px-6 py-3">600</td>
-                      <td class="px-6 py-3">29.400</td>
+                      <td class="px-6 py-3">{{dt.disc_percent}}</td>
+                      <td class="px-6 py-3">{{ dt.disc_amount }}</td>
+                      <td class="px-6 py-3">{{ dt.sub_total }}</td>
 
                       <td class="px-6 py-3">
                         <BaseButtons type="justify-center" no-wrap>
-                          <BaseButton color="danger" :icon="mdiTrashCan" small />
-                        </BaseButtons>
-                      </td>
-                    </tr>
-                    <tr class="bg-white border-b dark:border-gray-700">
-                      <td class="px-6 py-3">3</td>
-                      <td class="px-6 py-3">Deterjen Bubuk 1Kg</td>
-                      <td class="px-6 py-3">15.000</td>
-                      <td class="px-6 py-3">
-                        <div class="flex items-center justify-around">
-                          <BaseButton color="black" :icon="mdiMinus" small :rounded-full="true" />
-                          <span>2</span>
-                          <BaseButton color="black" :icon="mdiPlus" small :rounded-full="true" />
-                        </div>
-                      </td>
-                      <td class="px-6 py-3">0</td>
-                      <td class="px-6 py-3">0</td>
-                      <td class="px-6 py-3">30.000</td>
-                      <td class="px-6 py-3">
-                        <BaseButtons type="justify-center" no-wrap>
-                          <BaseButton color="danger" :icon="mdiTrashCan" small />
-                        </BaseButtons>
-                      </td>
-                    </tr>
-
-                    <tr class="bg-white border-b dark:border-gray-700">
-                      <td class="px-6 py-3">4</td>
-                      <td class="px-6 py-3">Susu UHT 1L</td>
-                      <td class="px-6 py-3">20.000</td>
-                      <td class="px-6 py-3">
-                        <div class="flex items-center justify-around">
-                          <BaseButton color="black" :icon="mdiMinus" small :rounded-full="true" />
-                          <span>4</span>
-
-                          <BaseButton color="black" :icon="mdiPlus" small :rounded-full="true" />
-                        </div>
-                      </td>
-                      <td class="px-6 py-3">2%</td>
-                      <td class="px-6 py-3">400</td>
-                      <td class="px-6 py-3">79.600</td>
-
-                      <td class="px-6 py-3">
-                        <BaseButtons type="justify-center" no-wrap>
-                          <BaseButton color="danger" :icon="mdiTrashCan" small />
-                        </BaseButtons>
-                      </td>
-                    </tr>
-                    <tr class="bg-white border-b dark:border-gray-700">
-                      <td class="px-6 py-3">5</td>
-                      <td class="px-6 py-3">Pasta Gigi 120gr</td>
-                      <td class="px-6 py-3">20.000</td>
-                      <td class="px-6 py-3">
-                        <div class="flex items-center justify-around">
-                          <BaseButton color="black" :icon="mdiMinus" small :rounded-full="true" />
-                          <span>2</span>
-
-                          <BaseButton color="black" :icon="mdiPlus" small :rounded-full="true" />
-                        </div>
-                      </td>
-                      <td class="px-6 py-3">0</td>
-                      <td class="px-6 py-3">0</td>
-                      <td class="px-6 py-3">40.000</td>
-
-                      <td class="px-6 py-3">
-                        <BaseButtons type="justify-center" no-wrap>
-                          <BaseButton color="danger" :icon="mdiTrashCan" small />
+                          <BaseButton @click="deleteItem(dt.id)" color="danger" :icon="mdiTrashCan" small />
                         </BaseButtons>
                       </td>
                     </tr>

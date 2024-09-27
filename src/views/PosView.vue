@@ -22,7 +22,7 @@ import BaseButton from '@/components/BaseButton.vue'
 
 const activeTabIndex = ref(0)
 
-const form = reactive({})
+const form = reactive({name: ''})
 </script>
 
 <template>
@@ -193,7 +193,7 @@ const form = reactive({})
 
               <div class="flex space-x-[18%] items-center">
                 <h1>Masukan Donasi</h1>
-                <FormCheckRadio v-model="form.radio" />
+                <FormCheckRadio v-model="form.radio" name="form radio" inputValue="tes"/>
               </div>
 
               <div class="flex justify-between items-center gap-4">

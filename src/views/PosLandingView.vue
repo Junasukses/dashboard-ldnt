@@ -132,17 +132,17 @@ const form = reactive({})
               <div class="flex items-center justify-between font-semibold mb-6">
                 <div class="flex justify-between items-center space-x-6">
                   <h2 style="text-wrap: nowrap;">Kode Item</h2>
-                  <FieldX :value="form.name" class="!mt-0" :check="false"/>
+                  <FieldX :value="form.name"  @input="v => form.name = v" class="!mt-0" :check="false"/>
                 </div>
 
                 <div class="flex items-center space-x-6">
                   <h2 style="text-wrap: nowrap;">Pilih Member</h2>
-                  <FieldX :value="form.name" class="!mt-0" :check="false"/>
+                  <FieldX :value="form.name"  @input="v => form.name = v" class="!mt-0" :check="false"/>
                 </div>
 
                 <div class="flex items-center space-x-6">
                   <h2 style="text-wrap: nowrap;">Grand Total</h2>
-                  <FieldX :value="form.name" class="!mt-0" :check="false"/>
+                  <FieldX :value="form.name"  @input="v => form.name = v" class="!mt-0" :check="false"/>
                 </div>
               </div>
 

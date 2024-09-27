@@ -169,27 +169,26 @@ const form = reactive({})
 
           <CardBox class="col-span-3 row-span-2">
             <div class="flex flex-col text-[13px] gap-2">
-              <div class="flex justify-between items-center">
-                <h1>Total Belanja</h1>
-                <FormControl v-model="form.name" class="w-[50%] !h-[10%]" />
+              <div class="flex justify-between items-center gap-4">
+                <h1 style="text-wrap: nowrap;">Total Belanja</h1>
+                <FieldX :value="form.name" @input="v => form.name = v" :check="false" class="w-1/2 !mt-0"/>
               </div>
-
-              <div class="flex justify-between items-center">
-                <h1>Diskon</h1>
-                <FormControl v-model="form.diskon" class="w-[50%] !h-[10%]" />
+              <div class="flex justify-between items-center gap-4">
+                <h1 style="text-wrap: nowrap;">Diskon</h1>
+                <FieldX :value="form.name" @input="v => form.name = v" :check="false" class="w-1/2 !mt-0"/>
               </div>
               <div class="font-bold">
                 <h1>Total Yang Harus Dibayarkan</h1>
                 <h1 class="text-2xl">Rp. 236.300</h1>
               </div>
 
-              <div class="flex justify-between items-center">
-                <h1>Jml Bayar</h1>
-                <FormControl v-model="form.diskon" class="w-[50%] !h-[10%]" />
+              <div class="flex justify-between items-center gap-4">
+                <h1 style="text-wrap: nowrap;">Jml Bayar</h1>
+                <FieldX :value="form.name" @input="v => form.name = v" :check="false" class="w-1/2 !mt-0"/>
               </div>
-              <div class="flex justify-between items-center">
-                <h1>Sisa</h1>
-                <FormControl v-model="form.diskon" class="w-[50%] !h-[10%]" />
+              <div class="flex justify-between items-center gap-4">
+                <h1 style="text-wrap: nowrap;">Sisa</h1>
+                <FieldX :value="form.name" @input="v => form.name = v" :check="false" class="w-1/2 !mt-0"/>
               </div>
 
               <div class="flex space-x-[18%] items-center">
@@ -197,21 +196,22 @@ const form = reactive({})
                 <FormCheckRadio v-model="form.radio" />
               </div>
 
-              <div class="flex justify-between items-center">
-                <h1>Jml Donasi</h1>
-                <FormControl v-model="form.diskon" class="w-[50%] !h-[10%]" />
+              <div class="flex justify-between items-center gap-4">
+                <h1 style="text-wrap: nowrap;">Jml Donasi</h1>
+                <FieldX :value="form.name" @input="v => form.name = v" :check="false" class="w-1/2 !mt-0"/>
               </div>
-              <div class="flex justify-between items-center">
-                <h1>Kembali</h1>
-                <FormControl v-model="form.diskon" class="w-[50%] !h-[10%]" />
+              <div class="flex justify-between items-center gap-4">
+                <h1 style="text-wrap: nowrap;">Kembali</h1>
+                <FieldX :value="form.name" @input="v => form.name = v" :check="false" class="w-1/2 !mt-0"/>
               </div>
 
               <div class="flex justify-between items-center mt-2">
                 <h1 class="font-semibold">Pilih Metode Pembayaran</h1>
               </div>
-              <div class="flex items-stretch text-sm">
+              <div class="flex items-stretch text-sm bg-[#f4f4f4] gap-2 rounded-lg">
                 <button
-                  class="w-full flex items-center justify-center bg-[#f4f4f4] rounded-tl-lg text-gray-600 hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
+                  class="w-full flex items-center justify-center text-gray-600 hover:bg-[#086968] rounded-lg duration-300 
+                  hover:text-white"
                   :class="{ ' text-white font-bold': activeTabIndex === 0 }"
                   @click="activeTabIndex = 0"
                 >
@@ -229,7 +229,7 @@ const form = reactive({})
                   @click="activeTabIndex = 1"
                 >
                   <div
-                    class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1 hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
+                    class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1 hover:bg-[#086968] rounded-lg duration-300 hover:text-white"
                     :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 1 }"
                   >
                     <BaseIcon :path="mdiCreditCard" size="80" />
@@ -237,7 +237,7 @@ const form = reactive({})
                   </div>
                 </button>
                 <button
-                  class="w-full flex items-center justify-center border-b-2 bg-[#f4f4f4] rounded-tr-lg hover:bg-[#086968] hover:rounded-lg duration-300 hover:text-white"
+                  class="w-full flex items-center justify-center border-b-2 bg-[#f4f4f4] rounded-tr-lg hover:bg-[#086968] rounded-lg duration-300 hover:text-white"
                   :class="{ 'text-white font-bold': activeTabIndex === 2 }"
                   @click="activeTabIndex = 2"
                 >

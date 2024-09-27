@@ -22,10 +22,13 @@ import BaseButton from '@/components/BaseButton.vue'
 
 const activeTabIndex = ref(0)
 
+const isOpenPopup = ref(true)
+
 const form = reactive({name: ''})
 </script>
 
 <template>
+  
   <div class="overflow-hidden lg:overflow-visible">
     <div
       class="lg:ml-0 pt-14 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100"

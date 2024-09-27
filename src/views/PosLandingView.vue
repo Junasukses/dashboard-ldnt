@@ -16,6 +16,7 @@
   import BaseButtons from '@/components/BaseButtons.vue'
   import BaseButton from '@/components/BaseButton.vue'
   import FieldPopupKode from '@/components/FieldPopupKode.vue'
+  import PaymentPopup from '@/components/PaymentPopup.vue'
 
   const baseUrl = ref(import.meta.env.VITE_API_URL);
   const token = ref(localStorage.getItem('authToken'));
@@ -26,6 +27,7 @@
   const form = reactive({});
   const item = reactive({group_data: []});
   const data = reactive({netto: 0});
+  const paymentPopup = ref()
 
   function formatNumber(amount, decimals = 2) {
     if (isNaN(amount)) {
@@ -100,6 +102,12 @@
     const total = item.group_data.reduce(((a, b) => a + Number(b.sub_total)), 0)
     data.netto = parseFloat(total);
     return data.netto;
+  })
+
+  const amt_disc = computed(()=>{
+    const total = item.group_data.reduce(((a, b) => a + Number(b.disc_amount)), 0)
+    data.amt_disc = parseFloat(total);
+    return data.amt_disc;
   })
 
   function changeQty(type, id){
@@ -462,10 +470,11 @@
 
               <BaseButton
                 label="Pembayaran"
-                to="/pos"
+                @click="paymentPopup?.open()"
                 small
                 class="!text-white w-full mt-4 py-2 !bg-[#086968] hover:!bg-[#075e5d]"
               />
+              <PaymentPopup ref="paymentPopup" :data="data"/>
             </CardBox>
           </div>
         </div>

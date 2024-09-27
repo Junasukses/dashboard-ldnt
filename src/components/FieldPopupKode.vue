@@ -14,7 +14,7 @@
         '!bg-gray-100': bind.readonly,
         'pr-10': check && !params,
         'pl-10': Boolean(faIcon),
-        'pl-2.2': !Boolean(faIcon),
+        'pl-2.2': !Boolean(faIcon)
       }"
       @focus="isFocus = true"
       @blur="isFocus = false"
@@ -24,18 +24,16 @@
     <icon
       v-if="faIcon"
       :fa="faIcon"
-      :class="`absolute -left-1 fa-fw ${isFocus ? '!text-blue-500 animated animate-head-shake' : 'text-gray-600'}`"
+      :class="`absolute -left-1 fa-fw ${
+        isFocus ? '!text-blue-500 animated animate-head-shake' : 'text-gray-600'
+      }`"
     />
-    <icon
-      v-else-if="check && !params"
-      fa="check"
-      class="absolute right-2 text-green-400"
-    />
+    <icon v-else-if="check && !params" fa="check" class="absolute right-2 text-green-400" />
     <icon
       v-show="false"
       :class="{
         'right-5.5': errorText || (!valueModelId && valueModel),
-        'right-2': !errorText,
+        'right-2': !errorText
       }"
       title="Buka Pilihan"
       fa="search"
@@ -46,7 +44,7 @@
       v-show="valueModel && !bind.readonly"
       :class="{
         '!right-3': errorText || (!valueModelId && valueModel),
-        'right-7': !errorText,
+        'right-7': !errorText
       }"
       title="Clear Selected"
       fa="times"
@@ -100,79 +98,82 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick, watch, computed } from 'vue';
-import TableApi from '../components/forms/TableApi.vue';
-import Popper from 'vue3-popper';
+import { ref, reactive, onMounted, nextTick, watch, computed } from 'vue'
+import TableApi from '../components/forms/TableApi.vue'
+import Popper from 'vue3-popper'
 
-const inputElement = ref(null);
-const params = ref(null);
-const isFocus = ref(false);
-const valueModel = ref(null);
-const valueModelId = ref(null);
-const valueModelFull = ref(null);
-const isOpenPopup = ref(false);
-const chosen = reactive({});
-const baseUrl = ref(import.meta.env.VITE_API_URL);
-const token = ref(localStorage.getItem('authToken'));
+const inputElement = ref(null)
+const params = ref(null)
+const isFocus = ref(false)
+const valueModel = ref(null)
+const valueModelId = ref(null)
+const valueModelFull = ref(null)
+const isOpenPopup = ref(false)
+const chosen = reactive({})
+const baseUrl = ref(import.meta.env.VITE_API_URL)
+const token = ref(localStorage.getItem('authToken') ?? import.meta.env.VITE_AUTH_TOKEN)
 
 function onEscape() {
   if (!params.value) {
-    isOpenPopup.value = false;
+    isOpenPopup.value = false
   }
 }
 
-const emit = defineEmits(['input', 'update:valueFull']);
+const emit = defineEmits(['input', 'update:valueFull'])
 
 function onRowClicked(val) {
-  isOpenPopup.value = false;
-  chosen.value = val;
-  valueModel.value = val[prop.displayField];
-  valueModelId.value = val[prop.valueField];
-  emit('input', valueModelId.value);
-  emit('update:valueFull', val);
+  isOpenPopup.value = false
+  chosen.value = val
+  valueModel.value = val[prop.displayField]
+  valueModelId.value = val[prop.valueField]
+  emit('input', valueModelId.value)
+  emit('update:valueFull', val)
 
   if (params.value && typeof params.value.input === 'function') {
-    params.value?.input(val, params.value);
+    params.value?.input(val, params.value)
   }
 }
 
 async function onEnter() {
-  if (params.value) return;
+  if (params.value) return
 
-  const data = await fetch(`${baseUrl.value}/operation/v_item_catalog/get_by_barcode?barcode=${valueModel.value}`, {
-    headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token.value}` },
-  }).then((res) => res.json());
+  const data = await fetch(
+    `${baseUrl.value}/operation/v_item_catalog/get_by_barcode?barcode=${valueModel.value}`,
+    {
+      headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token.value}` }
+    }
+  ).then((res) => res.json())
 
   if (data.code === 200) {
-    valueModel.value = data.data[prop.displayField];
-    valueModelFull.value = data.data;
-    valueModelId.value = data.data.id;
-    emit('update:valueFull', data.data);
+    valueModel.value = data.data[prop.displayField]
+    valueModelFull.value = data.data
+    valueModelId.value = data.data.id
+    emit('update:valueFull', data.data)
   } else {
-    isOpenPopup.value = true;
+    isOpenPopup.value = true
   }
 }
 
 function onInput(e) {
   if (e && e.target) {
-    valueModelId.value = null;
-    valueModel.value = e.target.value;
+    valueModelId.value = null
+    valueModel.value = e.target.value
   }
 }
 
 function onClear() {
-  valueModel.value = null;
-  valueModelId.value = null;
-  chosen.value = {};
-  emit('input', null);
-  emit('update:valueFull', null);
-  inputElement.value?.focus();
+  valueModel.value = null
+  valueModelId.value = null
+  chosen.value = {}
+  emit('input', null)
+  emit('update:valueFull', null)
+  inputElement.value?.focus()
 }
 
 function onReset() {
-  valueModel.value = null;
-  valueModelId.value = null;
-  valueModelFull.value = null;
+  valueModel.value = null
+  valueModelId.value = null
+  valueModelFull.value = null
 }
 
 const prop = defineProps({
@@ -192,86 +193,86 @@ const prop = defineProps({
   labeled: { type: Boolean, default: false },
   classes: { type: String, default: '' },
   info: { type: String, default: '' },
-  hints: { type: Array, default: () => [] },
-});
+  hints: { type: Array, default: () => [] }
+})
 
 function getValue() {
-  return valueModelId.value;
+  return valueModelId.value
 }
 
 function getValues() {
-  return valueModelFull.value;
+  return valueModelFull.value
 }
 
 defineExpose({
   getValue,
   getValues,
   onEnter,
-  onReset,
-});
+  onReset
+})
 
 onMounted(() => {
-  params.value = prop.params;
+  params.value = prop.params
   nextTick(() => {
     if (params.value) {
-      valueModelId.value = params.value.value;
+      valueModelId.value = params.value.value
     } else {
-      valueModelId.value = prop.value;
+      valueModelId.value = prop.value
       setTimeout(() => {
         if (!valueModel.value && valueModelId.value) {
           loadById(valueModelId.value, (dt) => {
-            chosen.value = dt;
-            valueModel.value = dt[prop.displayField];
-          });
+            chosen.value = dt
+            valueModel.value = dt[prop.displayField]
+          })
         }
-      }, 100);
+      }, 100)
     }
-  });
-});
+  })
+})
 
 watch(prop, (vProp) => {
   if (vProp && valueModelId.value !== vProp.value) {
-    valueModelId.value = vProp.value;
+    valueModelId.value = vProp.value
     if (valueModelId.value && !isNaN(valueModelId.value - 1)) {
       loadById(valueModelId.value, (dt) => {
-        chosen.value = dt;
-        valueModel.value = dt[params.value ? params.value.displayField : prop.displayField];
-      });
+        chosen.value = dt
+        valueModel.value = dt[params.value ? params.value.displayField : prop.displayField]
+      })
     } else {
-      valueModel.value = null;
+      valueModel.value = null
     }
   }
-});
+})
 
 async function loadById(id, callback = () => {}) {
-  const api = prop.api;
-  api.headers.CLIENT_PURPOSE = 'integration';
-  const url = `${api.url}/${id}`;
-  const apiParams = { ...api.params } || {};
+  const api = prop.api
+  api.headers.CLIENT_PURPOSE = 'integration'
+  const url = `${api.url}/${id}`
+  const apiParams = { ...api.params } || {}
 
   try {
     const result = await fetch(`${url}?${new URLSearchParams(apiParams)}`, {
       headers: api.headers,
-      cache: api.cacheById || api.cache || (prop.bind.readonly ? 'force-cache' : 'reload'),
-    });
+      cache: api.cacheById || api.cache || (prop.bind.readonly ? 'force-cache' : 'reload')
+    })
 
     if (result.ok) {
-      let responseJson = await result.json();
-      const successFunction = api.onsuccess;
+      let responseJson = await result.json()
+      const successFunction = api.onsuccess
       if (typeof successFunction === 'function') {
-        responseJson = successFunction(responseJson, id);
+        responseJson = successFunction(responseJson, id)
       }
-      callback(responseJson.data);
+      callback(responseJson.data)
     } else {
-      throw new Error('Failed to connect to server');
+      throw new Error('Failed to connect to server')
     }
   } catch (err) {
-    const failedFunction = api.onerror;
+    const failedFunction = api.onerror
     if (typeof failedFunction === 'function') {
-      failedFunction(err);
+      failedFunction(err)
     }
   }
 }
 
-const idInput = computed(() => prop.placeholder || Math.random() - false);
+const idInput = computed(() => prop.placeholder || Math.random() - false)
 </script>

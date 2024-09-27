@@ -31,19 +31,14 @@ import router from '@/router'
 
 const route = useRoute()
 const baseUrl = ref(import.meta.env.VITE_API_URL)
-const token = ref(
-  localStorage.getItem('authToken')
-)
+const token = ref(localStorage.getItem('authToken') ?? import.meta.env.VITE_AUTH_TOKEN)
 const endpointApi = 'm_unit'
 
 const mainStore = useMainStore()
 const apiTable = ref()
 const actionText = ref(route.params.id === 'create' ? 'Create' : route.query.action)
 const formErrors = reactive({})
-const values = reactive({
-
-});
-
+const values = reactive({})
 </script>
 
 <template>
@@ -55,59 +50,59 @@ const values = reactive({
         <FormField>
           <div class="grid grid-cols-2 gap-8">
             <div>
-            <label class="block font-bold mb-2">Business Unit</label>
-            <FieldX
-              :bind="{ readonly: true }"
-              class="w-full !mt-0"
-              :value="values['m_bu.code']"
-              :errorText="formErrors.m_bu_id ? 'failed' : ''"
-              :check="false"
-              placeholder=""
-            />
+              <label class="block font-bold mb-2">Business Unit</label>
+              <FieldX
+                :bind="{ readonly: true }"
+                class="w-full !mt-0"
+                :value="values['m_bu.code']"
+                :errorText="formErrors.m_bu_id ? 'failed' : ''"
+                :check="false"
+                placeholder=""
+              />
+            </div>
+            <div>
+              <label class="block font-bold mb-2">Kode</label>
+              <FieldX
+                :bind="{ readonly: true }"
+                class="w-full !mt-0"
+                :value="values['code']"
+                :errorText="formErrors.code ? 'failed' : ''"
+                :check="false"
+                placeholder=""
+              />
+            </div>
+            <div>
+              <label class="block font-bold mb-2">Nama</label>
+              <FieldX
+                :bind="{ readonly: false }"
+                class="w-full !mt-0"
+                :value="values['name']"
+                :errorText="formErrors.name ? 'failed' : ''"
+                :check="false"
+                placeholder=""
+              />
+            </div>
+            <div>
+              <label class="block font-bold mb-2">Deskripsi</label>
+              <FieldX
+                :bind="{ readonly: false }"
+                class="w-full !mt-0"
+                :value="values['name']"
+                :errorText="formErrors.name ? 'failed' : ''"
+                :check="false"
+                type="textarea"
+                placeholder=""
+              />
+            </div>
+            <FormField label="Status">
+              <FormCheckRadio
+                v-model="values.is_active"
+                type="switch"
+                :options="{ true: 1, false: 0 }"
+              />
+              <div>{{ values.is_active }}</div>
+            </FormField>
           </div>
-          <div>
-            <label class="block font-bold mb-2">Kode</label>
-            <FieldX
-              :bind="{ readonly: true }"
-              class="w-full !mt-0"
-              :value="values['code']"
-              :errorText="formErrors.code ? 'failed' : ''"
-              :check="false"
-              placeholder=""
-            />
-          </div>
-          <div>
-            <label class="block font-bold mb-2">Nama</label>
-            <FieldX
-              :bind="{ readonly: false }"
-              class="w-full !mt-0"
-              :value="values['name']"
-              :errorText="formErrors.name ? 'failed' : ''"
-              :check="false"
-              placeholder=""
-            />
-          </div>
-          <div>
-            <label class="block font-bold mb-2">Deskripsi</label>
-            <FieldX
-              :bind="{ readonly: false }"
-              class="w-full !mt-0"
-              :value="values['name']"
-              :errorText="formErrors.name ? 'failed' : ''"
-              :check="false"
-              type="textarea"
-              placeholder=""
-            />
-          </div>
-          <FormField label="Status">
-          <FormCheckRadio
-            v-model="values.is_active"
-            type="switch"
-            :options="{ true: 1, false: 0 }"
-          />
-          <div>{{ values.is_active }}</div>
-        </FormField>
-        </div>
         </FormField>
       </CardBox>
     </SectionMain>

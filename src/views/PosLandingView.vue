@@ -77,7 +77,7 @@ const form = reactive({})
       <SectionMain class="!py-0 overflow-hidden">
         <div class="grid grid-cols-12 gap-[12px]">
           <div class="col-span-9">
-            <h1 class="ml-2 mb-6 font-bold text-2xl">Selamat Datang Admin</h1>
+            <h1 class="!ml-2 !mb-4 !font-bold !text-2xl">Selamat Datang Admin</h1>
             <div class="flex flex-wrap items-center space-x-4">
               <div
                 class="flex items-center p-2 rounded-lg font-semibold shadow-md cursor-pointer duration-300 transition"
@@ -130,19 +130,19 @@ const form = reactive({})
             </div>
             <CardBox class="mt-4">
               <div class="flex items-center justify-between font-semibold mb-6">
-                <div class="flex items-center space-x-2">
-                  <h1>Kode Item</h1>
-                  <FormControl v-model="form.name" class="w-[50%]" />
+                <div class="flex justify-between items-center space-x-6">
+                  <h2 style="text-wrap: nowrap;">Kode Item</h2>
+                  <FieldX :value="form.name" class="!mt-0" :check="false"/>
                 </div>
 
-                <div class="flex items-center space-x-2">
-                  <h1>Pilih Member</h1>
-                  <FormControl v-model="form.name" class="w-[50%]" />
+                <div class="flex items-center space-x-6">
+                  <h2 style="text-wrap: nowrap;">Pilih Member</h2>
+                  <FieldX :value="form.name" class="!mt-0" :check="false"/>
                 </div>
 
-                <div class="flex items-center space-x-2">
-                  <h1>Grand Total</h1>
-                  <FormControl v-model="form.name" class="w-[50%] !h-[10%]" />
+                <div class="flex items-center space-x-6">
+                  <h2 style="text-wrap: nowrap;">Grand Total</h2>
+                  <FieldX :value="form.name" class="!mt-0" :check="false"/>
                 </div>
               </div>
 

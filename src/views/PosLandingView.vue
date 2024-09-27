@@ -32,7 +32,42 @@ const activeTabIndex = ref(0)
 
 const form = reactive({})
 </script>
+<style scoped>
+@tailwind base;
 
+@layer base {
+  tr {
+    @apply max-w-full  border-b-4 border-gray-100 bg-white
+       lg:border-b-0 dark:border-slate-800 text-center;
+  }
+
+  tr:last-child {
+    @apply border-b-0;
+  }
+  td {
+    @apply justify-between text-center py-3 px-4 align-top border-b border-gray-100
+    table-cell lg:text-left lg:align-middle lg:border-b-0 dark:border-slate-800;
+  }
+
+  td:last-child {
+    @apply border-b-0;
+  }
+
+  tbody tr,
+  tbody tr:nth-child(odd) {
+    @apply lg:hover:bg-gray-100 lg:dark:hover:bg-slate-700/70;
+  }
+
+  tbody tr:nth-child(odd) {
+    @apply lg:bg-gray-100/50 lg:dark:bg-slate-800/50;
+  }
+
+  td:before {
+    content: attr(data-label);
+    @apply font-semibold pr-3 text-left lg:hidden;
+  }
+}
+</style>
 <template>
   <div class="overflow-hidden lg:overflow-visible">
     <div
@@ -326,9 +361,8 @@ const form = reactive({})
               <BaseButton
                 label="Pembayaran"
                 to="/pos"
-                color="success"
                 small
-                class="w-full mt-4 py-2 !bg-[#086968] hover:!bg-[#075e5d]"
+                class="!text-white w-full mt-4 py-2 !bg-[#086968] hover:!bg-[#075e5d]"
               />
             </CardBox>
           </div>

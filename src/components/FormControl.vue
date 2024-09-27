@@ -2,6 +2,8 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainStore } from '@/stores/main'
 import FormControlIcon from '@/components/FormControlIcon.vue'
+import { mdiCalendarMonth } from '@mdi/js'
+import BaseIcon from './BaseIcon.vue'
 
 const props = defineProps({
   name: {
@@ -85,6 +87,8 @@ const selectEl = ref(null)
 
 const textareaEl = ref(null)
 
+const dateEl = ref(null)
+
 const inputEl = ref(null)
 
 onMounted(() => {
@@ -92,6 +96,8 @@ onMounted(() => {
     emit('setRef', selectEl.value)
   } else if (textareaEl.value) {
     emit('setRef', textareaEl.value)
+  } else if (dateEl.value) {
+    emit('setRef', dateEl.value)
   } else {
     emit('setRef', inputEl.value)
   }
@@ -123,6 +129,49 @@ if (props.ctrlKFocus) {
 }
 </script>
 
+<style scoped>
+.datePickerCustomCalender {
+  font-size: 0.8rem;
+}
+.datePickerCustomCell {
+  width: 30px;
+  height: 20px;
+  font-size: 0.8rem;
+}
+
+.datePickerCustomMenu {
+  font-size: 0.8rem;
+}
+
+.datePickerCustom {
+  padding-top: 0;
+  padding-bottom: 0;
+  max-width: 100%;
+  width: 100%;
+  height: 32px;
+  border-radius: 0.5rem;
+  border: 1px solid #374151;
+  font-size: 0.875rem;
+  background-color: white;
+  transition: all 300ms;
+  outline: none;
+}
+.datePickerCustom::placeholder {
+  color: #6b7280;
+}
+.datePickerCustom:hover {
+  border: 1px solid #374151 !important;
+}
+.datePickerCustomMenu:hover ~ .datePickerCustom,
+.datePickerCustomMenu:focus-within ~ .datePickerCustom {
+  border-color: #3b82f6 !important;
+}
+.datePickerCustom:focus-within,
+.dp__input_focus {
+  border: 1px solid #3b82f6 !important;
+  box-shadow: 0 0 0 1px #3b82f6; /* Efek seperti ring */
+}
+</style>
 <template>
   <div class="relative">
     <textarea
@@ -135,6 +184,29 @@ if (props.ctrlKFocus) {
       :placeholder="placeholder"
       :required="required"
     />
+
+    <VueDatePicker
+      v-else-if="computedType === 'date'"
+      :ui="{
+        input: 'datePickerCustom',
+        calender: 'datePickerCustomCalendar',
+        calendarCell: 'datePickerCustomCell',
+        menu: 'datePickerCustomMenu'
+      }"
+      v-model="computedValue"
+      format="yyyy/dd/MM"
+      :enable-time-picker="false"
+      :placeholder="placeholder"
+    >
+      <template #input-icon>
+        <BaseIcon
+          :path="mdiCalendarMonth"
+          w="w-10"
+          h="h-10"
+          class="pointer-events-none text-gray-500 dark:text-slate-400 mr-5"
+        />
+      </template>
+    </VueDatePicker>
     <input
       v-else
       :id="id"

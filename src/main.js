@@ -25,6 +25,7 @@ import FieldUpload from '@/components/forms/FieldUpload.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
+import FieldX from '@/components/forms/FieldX.vue'
 
 // Init Pinia
 const pinia = createPinia()
@@ -49,6 +50,7 @@ app.component('Icon', Icon)
 app.component('ColFilter', ColFilter)
 app.component('VueFinalModal', VueFinalModal)
 app.component('VueDatePicker', VueDatePicker)
+app.component('FieldX', FieldX)
 
 app.use(vClickOutside)
 app.mount('#app')

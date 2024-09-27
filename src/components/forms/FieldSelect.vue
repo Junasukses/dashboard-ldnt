@@ -162,6 +162,6 @@ onMounted(() => {
 
   --vs-font-size: 0.875rem;
   --vs-line-height: 1.25rem;
-  --vs-border-radius: 0.5rem;
+  --vs-border-radius: 0.25rem;
 }
 </style>

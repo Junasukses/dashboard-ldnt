@@ -276,6 +276,9 @@ const landing = reactive({
   transition: all 300ms;
   outline: none;
 }
+.datePickerCustom::placeholder {
+  color: #6b7280;
+}
 .datePickerCustom:hover {
   border: 1px solid #374151 !important;
 }
@@ -298,44 +301,50 @@ const landing = reactive({
         <FormField>
           <div>
             <label class="block font-bold mb-2">Grouped with icons</label>
-            <FormControl v-model="form.name" :icon="mdiAccount" />
+            <FieldX
+              :bind="{ readonly: false }"
+              class="w-full !mt-0"
+              :value="form.note"
+              :errorText="formErrors.note ? 'failed' : ''"
+              @input="(v) => (form.note = v)"
+              :hints="formErrors.note"
+              :check="false"
+              label="Catatan"
+              range
+              placeholder="Tuliskan Sesuatu"
+            />
           </div>
           <div>
             <label class="block font-bold mb-2">Inline with icons</label>
-            <FormControl v-model="form.email" type="email" :icon="mdiMail" />
+
+            <FieldX
+              :bind="{ readonly: false }"
+              class="w-full !mt-0"
+              :value="form.note"
+              :errorText="formErrors.note ? 'failed' : ''"
+              @input="(v) => (form.note = v)"
+              :hints="formErrors.note"
+              :check="false"
+              label="Catatan"
+              range
+              placeholder="Tuliskan Sesuatu"
+            />
           </div>
         </FormField>
 
-        <FormField help="Do not enter the leading zero">
-          <div>
-            <label class="block font-bold mb-2">With help line</label>
-            <FormControl v-model="form.phone" type="tel" placeholder="Your phone number" />
-          </div>
-          <div>
-            <label class="block font-bold mb-2">Date</label>
-
-            <VueDatePicker
-              :ui="{
-                input: 'datePickerCustom',
-                calender: 'datePickerCustomCalendar',
-                calendarCell: 'datePickerCustomCell',
-                menu: 'datePickerCustomMenu'
-              }"
-              v-model="form.date"
-              format="yyyy/dd/MM"
-              :enable-time-picker="false"
-              placeholder="Select Date"
-            >
-              <template #input-icon>
-                <BaseIcon
-                  :path="mdiCalendarMonth"
-                  w="w-10"
-                  h="h-10"
-                  class="pointer-events-none text-gray-500 dark:text-slate-400 mr-5"
-                />
-              </template>
-            </VueDatePicker>
-          </div>
+        <FormField help="Do not enter the leading zero" label="Date">
+          <FieldX
+            :bind="{ readonly: false }"
+            class="!w-full !mt-0"
+            :value="form.note"
+            :errorText="formErrors.note ? 'failed' : ''"
+            @input="(v) => (form.note = v)"
+            :hints="formErrors.note"
+            :check="false"
+            label="Catatan"
+            type="date"
+            placeholder="Tuliskan Sesuatu"
+          />
         </FormField>
         <FormField>
           <div>
@@ -475,7 +484,18 @@ const landing = reactive({
         <BaseDivider />
 
         <FormField label="Question" help="Your question. Max 255 characters">
-          <FormControl type="textarea" placeholder="Explain how we can help you" />
+          <FieldX
+            :bind="{ readonly: false }"
+            class="!w-full !mt-0"
+            :value="form.note"
+            :errorText="formErrors.note ? 'failed' : ''"
+            @input="(v) => (form.note = v)"
+            :hints="formErrors.note"
+            :check="false"
+            label="Catatan"
+            type="textarea"
+            placeholder="Tuliskan Sesuatu"
+          />
         </FormField>
 
         <BaseDivider />

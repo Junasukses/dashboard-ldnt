@@ -452,31 +452,52 @@ const landing = reactive({
         <FormField>
           <div>
             <label class="block font-bold mb-2">Dropdown Static</label>
+
             <FieldSelect
-              v-model="form.department"
-              :options="selectOptions"
-              display-key="label"
-              value-key="id"
+              :bind="{ disabled: false, clearable: true }"
+              class="w-full !mt-3"
+              :value="form.taxable"
+              @input="(v) => (form.taxable = v)"
+              :errorText="formErrors.taxable ? 'failed' : ''"
+              :hints="formErrors.taxable"
+              valueField="id"
+              displayField="key"
+              :options="[
+                { id: 1, key: 'Ya' },
+                { id: 0, key: 'Tidak' }
+              ]"
+              placeholder="Pilih Taxable"
+              label="Taxable"
+              :check="false"
             />
           </div>
           <div>
             <label class="block font-bold mb-2">Dropdown Api</label>
+
             <FieldSelect
-              v-model="form.apiDept"
-              display-key="name"
-              value-key="id"
+              :bind="{ disabled: false, clearable: true }"
+              class="w-full !mt-3"
+              :value="form.m_cust_group_id"
+              @input="(v) => (form.m_cust_group_id = v)"
+              :errorText="formErrors.m_cust_group_id ? 'failed' : ''"
+              :hints="formErrors.m_cust_group_id"
+              valueField="id"
+              displayField="name"
               :api="{
-                url: `${baseUrl}/operation/m_supp`,
+                url: `${baseUrl}/operation/m_cust_group`,
                 headers: {
                   'Content-Type': 'Application/json',
                   Authorization: `Bearer ${token}`
                 },
                 params: {
                   simplest: true,
-                  where: 'this.is_active = true',
-                  searchfield: 'this.name,this.email,this.phone_1,city.value1'
+                  transform: false,
+                  join: false
                 }
               }"
+              placeholder="Pilih Group Customer"
+              label="Group Customer"
+              :check="false"
             />
           </div>
         </FormField>

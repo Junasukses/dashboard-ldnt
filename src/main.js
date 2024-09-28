@@ -27,6 +27,8 @@ import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import FieldX from '@/components/forms/FieldX.vue'
 import FieldNumber from '@/components/forms/FieldNumber.vue'
+import IconTimes from '@/components/IconTimes.vue'
+import IconSearch from '@/components/IconSearch.vue'
 
 // Init Pinia
 const pinia = createPinia()
@@ -53,6 +55,8 @@ app.component('VueFinalModal', VueFinalModal)
 app.component('VueDatePicker', VueDatePicker)
 app.component('FieldX', FieldX)
 app.component('FieldNumber', FieldNumber)
+app.component('iconTimes', IconTimes)
+app.component('iconSearch', IconSearch)
 
 app.use(vClickOutside)
 app.mount('#app')

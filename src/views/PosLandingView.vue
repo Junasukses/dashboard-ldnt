@@ -225,8 +225,8 @@ function deleteItem(id) {
               </button>
 
               <FieldPopupKode
+                :clickedRow="false"
                 ref="listItem"
-                @update:valueFull="onEnterBarcode"
                 :check="false"
                 :api="{
                   url: `${baseUrl}/operation/v_item_catalog`,

@@ -122,7 +122,9 @@ function onEscape() {
 const emit = defineEmits(['input', 'update:valueFull'])
 
 function onRowClicked(val) {
-  isOpenPopup.value = false
+  if (prop.clickedRow) {
+    isOpenPopup.value = false
+  }
   chosen.value = val
   valueModel.value = val[prop.displayField]
   valueModelId.value = val[prop.valueField]
@@ -182,6 +184,7 @@ const prop = defineProps({
   columns: { type: Array, default: () => [] },
   bind: { type: Object, default: () => ({}) },
   faIcon: { type: String, default: '' },
+  clickedRow: { type: Boolean, default: true },
   placeholder: { type: String, default: '' },
   errorText: { type: String, default: '' },
   value: { type: [String, Number], default: null },

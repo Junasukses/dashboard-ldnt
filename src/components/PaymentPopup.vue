@@ -371,6 +371,7 @@ const countAmtPay = (v) => {
   const total = v - prop.data?.netto
   data.amt_pay = v
   data.change = parseFloat(total)
+  changeAmtDonation(0)
 }
 const changeAmtDonation = (v) => {
   const total = data.change - v

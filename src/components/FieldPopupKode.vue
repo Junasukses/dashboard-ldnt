@@ -138,7 +138,7 @@ async function onEnter() {
   if (params.value) return
 
   const data = await fetch(
-    `${baseUrl.value}/operation/v_item_catalog/get_by_barcode?barcode=${valueModel.value}`,
+    `${baseUrl.value}/operation/v_item_catalog/get_by_barcode?barcode=${valueModel.value ?? 0}`,
     {
       headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token.value}` }
     }

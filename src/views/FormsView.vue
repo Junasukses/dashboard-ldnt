@@ -455,7 +455,7 @@ const landing = reactive({
 
             <FieldSelect
               :bind="{ disabled: false, clearable: true }"
-              class="w-full !mt-3"
+              class="w-full !mt-0"
               :value="form.taxable"
               @input="(v) => (form.taxable = v)"
               :errorText="formErrors.taxable ? 'failed' : ''"
@@ -476,7 +476,7 @@ const landing = reactive({
 
             <FieldSelect
               :bind="{ disabled: false, clearable: true }"
-              class="w-full !mt-3"
+              class="w-full !mt-0"
               :value="form.m_cust_group_id"
               @input="(v) => (form.m_cust_group_id = v)"
               :errorText="formErrors.m_cust_group_id ? 'failed' : ''"

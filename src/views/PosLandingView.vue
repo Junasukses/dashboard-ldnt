@@ -226,6 +226,7 @@ function deleteItem(id) {
 
               <FieldPopupKode
                 ref="listItem"
+                @update:valueFull="onEnterBarcode"
                 :check="false"
                 :api="{
                   url: `${baseUrl}/operation/v_item_catalog`,
@@ -236,15 +237,6 @@ function deleteItem(id) {
                   }
                 }"
                 :columns="[
-                  {
-                    headerName: 'No',
-                    valueGetter: (p) => p.node.rowIndex + 1,
-                    width: 60,
-                    sortable: false,
-                    resizable: false,
-                    filter: false,
-                    cellClass: ['justify-center', 'bg-gray-50']
-                  },
                   {
                     headerName: 'No',
                     valueGetter: (p) => p.node.rowIndex + 1,

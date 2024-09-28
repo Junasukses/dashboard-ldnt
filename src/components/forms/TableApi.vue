@@ -1033,7 +1033,7 @@ defineExpose({
 }
 
 .ag-api .ag-header-row-column-filter {
-  @apply !flex items-center justify-center !h-[40px];
+  @apply !flex items-center justify-center !h-[40px] !mt-[4px];
 }
 
 .ag-api .ag-header-cell.ag-floating-filter {
@@ -1047,9 +1047,9 @@ defineExpose({
 .ag-api .ag-header-cell.ag-floating-filter .ag-input-field {
   @apply !px-0.5;
 }
-.ag-api .ag-header.ag-focus-managed.ag-pivot-off {
+/* .ag-api .ag-header.ag-focus-managed.ag-pivot-off {
   @apply !min-h-[75px];
-}
+} */
 
 .ag-api .ag-floating-filter-full-body {
   @apply items-start pt-1;

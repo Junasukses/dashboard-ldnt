@@ -21,8 +21,8 @@
         '!rounded': !topSearch,
         'top-search': topSearch,
         '!text-black': searchText || value,
-        '!text-gray-400': !(searchText || value) && !isFocus,
-        'border-black': !errorText,
+        '!text-gray-500': !(searchText || value) && !isFocus,
+        'border-[#6b7280]': !errorText,
         inline: params,
         multiple: bind.multiple,
         'multiple-empty': (bind.multiple && !valueModel) || (valueModel && valueModel.length === 0),
@@ -712,9 +712,9 @@ export default {
   @apply !h-[90vh] !max-h-[90vh];
 }
 
-.focus-mobile .vs__search {
+/*.focus-mobile .vs__search {
   @apply !text-gray-400;
-}
+}*/
 
 .vs__dropdown-menu::-webkit-scrollbar {
   width: 6.5px !important;

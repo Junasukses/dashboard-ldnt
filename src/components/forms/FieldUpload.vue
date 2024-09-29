@@ -8,7 +8,7 @@
       :placeholder="placeholder"
       v-bind="bind"
       readonly
-      class="max-h-8 w-full bg-white py-2.5 rounded input-target outline-none md:!text-sm transition-all duration-300 pr-9.5 border border-gray-700"
+      class="max-h-8 w-full bg-white py-2.5 rounded input-target outline-none md:!text-sm transition-all duration-300 pr-9.5 border border-[#6b7280]"
       :class="{
         '!bg-gray-100': bind.readonly,
         'pr-12': check && !params,
@@ -162,7 +162,7 @@ const isRequesting = ref(false)
 const imgSrc = ref(null)
 const popupElement = ref(null)
 const clicked = ref(null)
-const download = inject('download')
+// const download = inject('download')
 
 function onEscape() {
   isOpenPopup.value = false

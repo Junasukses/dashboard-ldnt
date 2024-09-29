@@ -85,6 +85,9 @@ export const useStore = defineStore({
   actions: {
     commit(command, val) {
       this[val[0]] = val[1]
+    },
+    setRequesting(status) {
+      this.isRequesting = status
     }
   }
 })

@@ -22,6 +22,7 @@ import CardBoxClient from '@/components/CardBoxClient.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import SectionBannerStarOnGitHub from '@/components/SectionBannerStarOnGitHub.vue'
+import { useStore } from '@/stores/app'
 
 const chartData = ref(null)
 
@@ -38,12 +39,29 @@ const mainStore = useMainStore()
 const clientBarItems = computed(() => mainStore.clients.slice(0, 4))
 
 const transactionBarItems = computed(() => mainStore.history)
+
+const store = useStore()
+
+const simulateLoading = () => {
+  store.setRequesting(true)
+
+  setTimeout(() => {
+    store.setRequesting(false)
+  }, 3000)
+}
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Overview" main>
+        <BaseButton
+          class="ml-auto"
+          :icon="mdiReload"
+          color="whiteDark"
+          @click="simulateLoading"
+          label="Loader"
+        />
       </SectionTitleLineWithButton>
 
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">

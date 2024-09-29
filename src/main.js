@@ -11,8 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import Popper from 'vue3-popper'
-import VueDatePicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
 
 import './css/main.css'
 import Icon from './components/Icon.vue'
@@ -52,7 +50,6 @@ app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.component('Icon', Icon)
 app.component('ColFilter', ColFilter)
 app.component('VueFinalModal', VueFinalModal)
-app.component('VueDatePicker', VueDatePicker)
 app.component('FieldX', FieldX)
 app.component('FieldNumber', FieldNumber)
 app.component('iconTimes', IconTimes)

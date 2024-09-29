@@ -11,6 +11,7 @@ import NavBar from '@/components/NavBar.vue'
 import NavBarItemPlain from '@/components/NavBarItemPlain.vue'
 import AsideMenu from '@/components/AsideMenu.vue'
 import FooterBar from '@/components/FooterBar.vue'
+import { useStore } from '@/stores/app'
 
 // const layoutAsidePadding = 'xl:pl-60'
 
@@ -23,6 +24,7 @@ const props = defineProps({
 const darkModeStore = useDarkModeStore()
 
 const router = useRouter()
+const store = useStore()
 
 const isAsideMobileExpanded = ref(false)
 const isAsideLgActive = ref(false)
@@ -44,7 +46,13 @@ const menuClick = (event, item) => {
   }
 
   if (item.isLogout) {
-    //
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+
+    store.token = null
+    store.user = null
+
+    router.push({ name: 'login' })
   }
 }
 </script>

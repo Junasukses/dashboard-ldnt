@@ -22,7 +22,7 @@ export const useStore = defineStore({
     isRequesting: false,
     templates: {},
     styles: {},
-    server: null,
+    server: import.meta.env.VITE_API_URL,
     isOnline: false,
     authenticate_every_page: false,
     loadedLandingTable: {},

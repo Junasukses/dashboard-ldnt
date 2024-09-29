@@ -79,7 +79,7 @@
         '!bg-gray-100': bind.readonly,
         'pr-10': check && !params,
         'pl-10': Boolean(faIcon),
-        'pl-2.2': !Boolean(faIcon),
+        'pl-2': !Boolean(faIcon),
         'pr-3': !check || params,
         '!border-red-500': errorText,
         'cursor-pointer': type === 'range'
@@ -93,7 +93,7 @@
       v-if="faIcon || isPasswordShow"
       :fa="isPasswordShow ? 'unlock-alt' : faIcon"
       :class="
-        'absolute -left-1 fa-fw ' +
+        'absolute left-2 fa-fw ' +
         (isFocus ? '!text-blue-500' : 'text-gray-600') +
         (isFocus ? ' animated animate-head-shake ' : '')
       "

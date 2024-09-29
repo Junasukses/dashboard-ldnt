@@ -21,9 +21,10 @@ import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import FieldPopupKode from '@/components/FieldPopupKode.vue'
 import PaymentPopup from '@/components/PaymentPopup.vue'
+import { useStore } from '@/stores/app'
 
-const baseUrl = ref(import.meta.env.VITE_API_URL)
-const token = ref(localStorage.getItem('authToken') ?? import.meta.env.VITE_AUTH_TOKEN)
+const store = useStore()
+const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const activeTabIndex = ref(0)
 const listItem = ref()
 const barcodeInput = ref()
@@ -228,7 +229,7 @@ function deleteItem(id) {
               ref="listItem"
               :check="false"
               :api="{
-                url: `${baseUrl}/operation/v_item_catalog`,
+                url: `${store.server}/operation/v_item_catalog`,
                 headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token}` },
                 params: {
                   simplest: true,
@@ -361,7 +362,7 @@ function deleteItem(id) {
                   valueField="id"
                   displayField="barcode"
                   :api="{
-                    url: `${baseUrl}/operation/v_item_catalog`,
+                    url: `${store.server}/operation/v_item_catalog`,
                     headers: {
                       'Content-Type': 'Application/json',
                       authorization: `Bearer ${token}`

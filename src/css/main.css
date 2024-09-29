@@ -9,6 +9,11 @@
 
 @import 'styles/_basic.css';
 @import 'styles/_white.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
 
 :root {
   --popper-theme-background-color: #333333;

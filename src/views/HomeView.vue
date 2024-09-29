@@ -8,7 +8,10 @@ import {
   mdiMonitorCellphone,
   mdiReload,
   mdiGithub,
-  mdiChartPie
+  mdiChartPie,
+  mdiNotificationClearAll,
+  mdiBell,
+  mdiBellOutline
 } from '@mdi/js'
 import * as chartConfig from '@/components/Charts/chart.config.js'
 import LineChart from '@/components/Charts/LineChart.vue'
@@ -49,19 +52,36 @@ const simulateLoading = () => {
     store.setRequesting(false)
   }, 3000)
 }
+
+const testAlert = () => {
+  alertify.success('Hallo Senin Rabu Jumat Doa Pagi')
+}
+
+const testDialogAlert = () => {
+  alertify.confirm(
+    'Perhatian',
+    `Anda yakin tidak mau ikut doa?`,
+    () => {
+      alertify.success('Ok')
+    },
+    () => {}
+  )
+}
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Overview" main>
-        <BaseButton
-          class="ml-auto"
-          :icon="mdiReload"
-          color="whiteDark"
-          @click="simulateLoading"
-          label="Loader"
-        />
+        <div class="ml-auto space-x-4">
+          <BaseButton :icon="mdiReload" color="whiteDark" @click="simulateLoading" label="Loader" />
+          <BaseButton
+            :icon="mdiBellOutline"
+            color="whiteDark"
+            @click="testDialogAlert"
+            label="Alertify"
+          />
+        </div>
       </SectionTitleLineWithButton>
 
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">

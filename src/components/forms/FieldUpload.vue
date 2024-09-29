@@ -199,6 +199,8 @@ function onChangeFile(e) {
   }
   size.value = parseFloat((e.target.files[0].size / 1000 / 1000).toFixed(2)) // MB
   if (size.value > prop.maxSize) {
+    alertify.error(`File tidak boleh melebihi ${prop.maxSize} MB`)
+    return
     // swal.fire({
     //   icon: 'error',
     //   text: `File tidak boleh melebihi ${prop.maxSize} MB`
@@ -346,10 +348,11 @@ function onPaste(evt) {
   }
   size.value = parseFloat((file.size / 1000 / 1000).toFixed(2)) // MB
   if (size.value > prop.maxSize) {
-    swal.fire({
-      icon: 'error',
-      text: `File tidak boleh melebihi ${prop.maxSize} MB`
-    })
+    alertify.error(`File tidak boleh melebihi ${prop.maxSize} MB`)
+    // swal.fire({
+    //   icon: 'error',
+    //   text: `File tidak boleh melebihi ${prop.maxSize} MB`
+    // })
     return
   }
   if (prop.directUpload) {
@@ -400,6 +403,7 @@ function doUpload(file) {
           //
         }
 
+        alertify.error(responseText ?? 'Berhasil Upload')
         emit('uploaded', responseText)
       } else {
         valueModel.value = null
@@ -410,6 +414,8 @@ function doUpload(file) {
         } catch (e) {
           errorTextInternal.value = responseText
         }
+
+        alertify.error(responseText ?? 'Kesalahan Saat Upload File')
         emit('error', responseText)
       }
       if (params.value) {

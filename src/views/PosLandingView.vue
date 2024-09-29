@@ -498,12 +498,18 @@ function deleteItem(id) {
 
                     <td class="px-6 py-3">
                       <BaseButtons type="justify-center" no-wrap>
-                        <BaseButton
+                        <button
+                          @click="deleteItem(dt.id)"
+                          class="bg-transparent hover:text-gray-800 inline-flex transition-colors duration-200"
+                        >
+                          <BaseIcon :path="mdiTrashCan"></BaseIcon>
+                        </button>
+                        <!-- <BaseButton
                           @click="deleteItem(dt.id)"
                           color="danger"
                           :icon="mdiTrashCan"
                           small
-                        />
+                        /> -->
                       </BaseButtons>
                     </td>
                   </tr>
@@ -515,8 +521,8 @@ function deleteItem(id) {
 
         <div class="row-span-2 col-span-3 text-[12px] h-full">
           <CardBox class="!h-[full]">
-            <h1 class="font-bold text-center text-xl">Detail Nota</h1>
-            <div class="flex justify-between items-center py-2 border-t border-b my-4">
+            <h1 class="font-bold text-center !text-xl">Detail Nota</h1>
+            <div class="flex flex-col justify-center items-center py-2 border-t border-b mt-2 mb-4">
               <div>
                 <span>List Order</span>
               </div>

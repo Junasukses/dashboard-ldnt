@@ -28,6 +28,10 @@ import FieldNumber from '@/components/forms/FieldNumber.vue'
 import IconTimes from '@/components/IconTimes.vue'
 import IconSearch from '@/components/IconSearch.vue'
 
+// Alertify
+import alertify from 'alertifyjs'
+window.alertify = alertify
+
 // Init Pinia
 const pinia = createPinia()
 

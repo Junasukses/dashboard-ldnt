@@ -148,10 +148,10 @@
   </div>
 </template>
 <script>
-import 'vue-datepicker-next/locale/id'
 import DatePicker from 'vue-datepicker-next'
 import 'vue-datepicker-next/index.css'
 import { useStore } from '@/stores/app'
+import 'vue-datepicker-next/locale/id.es'
 
 export default {
   emits: ['input', 'update:value', 'update:errorText', 'change', 'focus'],

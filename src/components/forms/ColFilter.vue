@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import 'vue-datepicker-next/locale/id'
+import 'vue-datepicker-next/locale/id.es'
 import DatePicker from 'vue-datepicker-next'
 import 'vue-datepicker-next/index.css'
 export default {

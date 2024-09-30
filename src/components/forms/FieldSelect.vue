@@ -4,6 +4,7 @@
     :class="classes + (label && !params ? ' mt-6 <md:mt-7' : '')"
   >
     <v-select
+      :lang="id"
       :loading="isRequesting"
       :inputId="idInput"
       ref="input"
@@ -122,6 +123,7 @@ import vSelect from 'vue-select'
 import { ref, onMounted } from 'vue'
 import 'vue-select/dist/vue-select.css'
 import { useStore } from '@/stores/app'
+import id from 'vue-datepicker-next/locale/id.es'
 
 export default {
   emits: [

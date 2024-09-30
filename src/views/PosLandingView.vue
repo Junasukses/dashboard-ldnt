@@ -532,22 +532,21 @@ function openCloseDaily() {
                     <td class="px-6 py-3 text-right">{{ formatNumber(dt.disc_amount) }}</td>
                     <td class="px-6 py-3 text-right">{{ formatNumber(dt.subtotal) }}</td>
 
-                      <td class="px-6 py-3">
-                        <BaseButtons type="justify-center" no-wrap>
-                          <BaseButton
-                            @click="deleteItem(dt.id)"
-                            color="danger"
-                            :icon="mdiTrashCan"
-                            small
-                          />
-                        </BaseButtons>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </CardBox>
-          </div>
+                    <td class="px-6 py-3">
+                      <BaseButtons type="justify-center" no-wrap>
+                        <BaseButton
+                          @click="deleteItem(dt.id)"
+                          color="danger"
+                          :icon="mdiTrashCan"
+                          small
+                        />
+                      </BaseButtons>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </CardBox>
 
           <div class="row-span-2 col-span-3 text-[12px] h-full">
             <CardBox class="!h-[full]">
@@ -664,7 +663,7 @@ function openCloseDaily() {
           </CardBox>
           <PaymentPopup ref="paymentPopup" :data="data" />
         </div>
-      </div>
+      </SectionMain>
     </div>
   </div>
 </template>

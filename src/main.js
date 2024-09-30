@@ -86,7 +86,7 @@ const mainStore = useMainStore(pinia)
 // }
 
 // Default title tag
-const defaultDocumentTitle = 'Admin One Vue 3 Tailwind'
+const defaultDocumentTitle = 'POS - PERSADA'
 
 // Set document title from route meta
 router.afterEach((to) => {

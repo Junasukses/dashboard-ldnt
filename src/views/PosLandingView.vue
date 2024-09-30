@@ -21,6 +21,7 @@ import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import FieldPopupKode from '@/components/FieldPopupKode.vue'
 import PaymentPopup from '@/components/PaymentPopup.vue'
+import OpenCloseDaily from '@/components/OpenCloseDaily.vue'
 import { useStore } from '@/stores/app'
 
 const store = useStore()
@@ -33,6 +34,7 @@ const form = reactive({})
 const item = reactive({ group_data: [] })
 const data = reactive({ netto: 0 })
 const paymentPopup = ref()
+const openCLoseDailyPopup = ref()
 
 function formatNumber(amount, decimals = 2) {
   if (isNaN(amount)) {
@@ -137,6 +139,10 @@ function changeQty(type, id) {
 
 function deleteItem(id) {
   item.group_data = item.group_data.filter((dt) => dt.id !== id)
+}
+
+function openCloseDaily() {
+  openCLoseDailyPopup.value?.open()
 }
 </script>
 <style scoped>
@@ -499,18 +505,12 @@ function deleteItem(id) {
 
                     <td class="px-6 py-3">
                       <BaseButtons type="justify-center" no-wrap>
-                        <button
-                          @click="deleteItem(dt.id)"
-                          class="bg-transparent hover:text-gray-800 inline-flex transition-colors duration-200"
-                        >
-                          <BaseIcon :path="mdiTrashCan"></BaseIcon>
-                        </button>
-                        <!-- <BaseButton
+                        <BaseButton
                           @click="deleteItem(dt.id)"
                           color="danger"
                           :icon="mdiTrashCan"
                           small
-                        /> -->
+                        />
                       </BaseButtons>
                     </td>
                   </tr>
@@ -518,6 +518,64 @@ function deleteItem(id) {
               </table>
             </div>
           </CardBox>
+
+          <div class="row-span-2 col-span-3 text-[12px] h-full">
+            <CardBox class="!h-[full]">
+              <h1 class="font-bold text-center text-xl">Detail Nota</h1>
+              <div class="flex justify-between items-center py-2 border-t border-b my-4">
+                <div>
+                  <span>List Order</span>
+                </div>
+                <div>
+                  <span>{{ formattedDate }}</span>
+                </div>
+              </div>
+              <div v-for="(dt, i) in item.group_data" class="flex flex-col border-b">
+                <div class="flex justify-between font-semibold">
+                  <h1>{{ dt.item_name }}</h1>
+                  <h1>{{ formatNumber(dt.subtotal) }}</h1>
+                </div>
+                <div class="flex my-2">
+                  <h1 class="mr-2">x{{ formatNumber(dt.qty) }}</h1>
+                  <h1>@{{ formatNumber(dt.price) }}</h1>
+                </div>
+              </div>
+
+              <div class="flex flex-col border-b py-2 space-y-2">
+                <div class="flex justify-between font-semibold">
+                  <h1>Sub Total</h1>
+                  <h1>{{ formatNumber(data.netto) }}</h1>
+                </div>
+                <div class="flex justify-between font-semibold">
+                  <h1>Discount</h1>
+                  <h1>{{ formatNumber(0) }}</h1>
+                </div>
+                <div class="flex justify-between font-semibold">
+                  <h1>Pajak</h1>
+                  <h1>{{ formatNumber(0) }}</h1>
+                </div>
+              </div>
+
+              <div class="flex flex-col space-y-2">
+                <div class="flex justify-between font-semibold">
+                  <h1>Total</h1>
+                  <h1>{{ formatNumber(data.netto) }}</h1>
+                </div>
+
+                <div class="flex justify-between font-semibold">
+                  <h1>Bayar</h1>
+                  <h1>-</h1>
+                </div>
+
+                <div class="flex justify-between font-semibold">
+                  <h1>Kembali</h1>
+                  <h1>-</h1>
+                </div>
+              </div>
+            </CardBox>
+            <PaymentPopup ref="paymentPopup" :data="data" />
+            <OpenCloseDaily ref="openCLoseDailyPopup" :data="data" />
+          </div>
         </div>
 
         <div class="row-span-2 col-span-3 text-[12px] h-full">

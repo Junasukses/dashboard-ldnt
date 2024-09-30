@@ -335,6 +335,10 @@ const prop = defineProps({
   data: {
     type: Object,
     default: () => {}
+  },
+  payment: {
+    type: Array,
+    default: () => []
   }
 })
 

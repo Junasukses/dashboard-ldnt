@@ -15,7 +15,7 @@ import {
   mdiSaleOutline,
   mdiTrashCan
 } from '@mdi/js'
-import { ref, reactive, nextTick, computed } from 'vue'
+import { ref, reactive, nextTick, computed, onMounted } from 'vue'
 import menuNavBar from '@/menuNavBar.js'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
@@ -23,18 +23,19 @@ import FieldPopupKode from '@/components/FieldPopupKode.vue'
 import PaymentPopup from '@/components/PaymentPopup.vue'
 import OpenCloseDaily from '@/components/OpenCloseDaily.vue'
 import { useStore } from '@/stores/app'
+import axios from 'axios'
 
 const store = useStore()
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const activeTabIndex = ref(0)
 const listItem = ref()
 const barcodeInput = ref()
-const values = reactive({ barcode: '', list_item: '' })
-const form = reactive({})
 const item = reactive({ group_data: [] })
 const data = reactive({ netto: 0 })
 const paymentPopup = ref()
 const openCLoseDailyPopup = ref()
+const arrayPayment = ref([])
+let initalValues
 
 function formatNumber(amount, decimals = 2) {
   if (isNaN(amount)) {
@@ -102,7 +103,7 @@ function onEnterBarcode(data) {
   newDataItem(data)
   nextTick(() => {
     barcodeInput.value?.onReset()
-    values.barcode = ''
+    data.barcode = ''
   })
 }
 
@@ -113,9 +114,11 @@ const grand_total = computed(() => {
 })
 
 const resetAll = () => {
-  let result = confirm('Lanjutkan reset data ?')
-  if (result) {
-    item.group_data = []
+  if (data.isOpen) {
+    let result = confirm('Lanjutkan reset data ?')
+    if (result) {
+      item.group_data = []
+    }
   }
 }
 
@@ -141,9 +144,60 @@ function deleteItem(id) {
   item.group_data = item.group_data.filter((dt) => dt.id !== id)
 }
 
-function openCloseDaily() {
-  openCLoseDailyPopup.value?.open()
+const getDaily = async () => {
+  try {
+    const response = await axios.get('/operation/t_daily/status')
+
+    if (response.status !== 200) throw new Error('Failed when trying to read data')
+    const dataDaily = response.data
+    data.isOpen = dataDaily.data.is_open
+    if (data.isOpen) {
+      console.log('masuk', dataDaily.data)
+      for (const key in dataDaily.data) {
+        data[key] = dataDaily.data[key]
+      }
+      console.log(data)
+    }
+  } catch (err) {
+    const errorMessage = err.response?.data || 'Failed to get data.'
+    alertify.error(errorMessage)
+  }
 }
+
+const getPayment = async () => {
+  try {
+    const response = await axios.get('/operation/m_payment_type', {
+      params: {
+        selectfield: 'this.id,this.name'
+      }
+    })
+
+    if (response.status !== 200) throw new Error('Failed when trying to read data')
+    arrayPayment.value = response.data.data.map((item) => ({
+      m_payment_type_id: item.id,
+      name: item.name,
+      close_saldo: 0
+    }))
+    console.log(arrayPayment.value)
+  } catch (err) {
+    const errorMessage = err.response?.data || 'Failed to get data.'
+    alertify.error(errorMessage)
+  }
+}
+
+onMounted(async () => {
+  try {
+    //
+    await getDaily()
+    await getPayment()
+  } catch (err) {
+    const errorMessage = err.response?.data || 'Failed to get data.'
+    alertify.error(errorMessage)
+  }
+  for (const key in initalValues) {
+    data[key] = initialValues[key]
+  }
+})
 </script>
 <style scoped>
 @tailwind base;
@@ -198,17 +252,24 @@ function openCloseDaily() {
             <div
               style="cursor: pointer"
               class="!justify-end space-x-6 bg-gray-600 hover:bg-gray-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+              @click="openCLoseDailyPopup?.open()"
             >
               <button class="flex flex-col items-center justify-center bg-red-500 text-white">
                 <BaseIcon :path="mdiFunction" size="20" />Open Close Daily
               </button>
             </div>
             <div
-              style="cursor: pointer"
-              class="!justify-end space-x-6 bg-purple-600 hover:bg-purple-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+              class="space-x-6 text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
               @click="resetAll()"
+              :class="{
+                'bg-gray-300 bg-opacity-50 cursor-default': !data.isOpen,
+                'bg-purple-600 hover:bg-purple-700 text-white cursor-pointer': data.isOpen
+              }"
             >
-              <button class="flex flex-col items-center justify-center bg-red-500 text-white">
+              <button
+                class="flex flex-col items-center justify-center bg-red-500 text-white"
+                :disabled="!data.isOpen"
+              >
                 <BaseIcon :path="mdiClose" size="20" />Reset
               </button>
             </div>
@@ -344,10 +405,11 @@ function openCloseDaily() {
             </div>
             <div class="flex items-center space-x-6">
               <FieldX
+                :bind="{ readonly: !data.isOpen }"
                 label="Member"
                 placeholder="Cari Member"
-                :value="form.name"
-                @input="(v) => (form.name = v)"
+                :value="data.name"
+                @input="(v) => (data.name = v)"
                 class="!mt-0"
                 :check="false"
               />
@@ -360,9 +422,10 @@ function openCloseDaily() {
               <div class="flex justify-between items-center space-x-6">
                 <BaseIcon :path="mdiBarcode" size="35" />
                 <FieldPopupKode
+                  :bind="{ readonly: !data.isOpen }"
                   ref="barcodeInput"
-                  :value="values.barcode"
-                  @input="(v) => (values.barcode = v)"
+                  :value="data.barcode"
+                  @input="(v) => (data.barcode = v)"
                   :check="false"
                   @update:valueFull="onEnterBarcode"
                   valueField="id"
@@ -433,7 +496,7 @@ function openCloseDaily() {
                 />
               </div>
 
-              <div class="flex items-center space-x-6">
+              <div class="flex items-center space-x-6" :class="{ 'ml-auto': !data.isOpen }">
                 <h2 class="!text-md" style="text-wrap: nowrap">Grand Total</h2>
                 <span
                   @click="paymentPopup?.open()"
@@ -573,8 +636,13 @@ function openCloseDaily() {
                 </div>
               </div>
             </CardBox>
-            <PaymentPopup ref="paymentPopup" :data="data" />
-            <OpenCloseDaily ref="openCLoseDailyPopup" :data="data" />
+            <PaymentPopup ref="paymentPopup" :data="data" :payment="arrayPayment" />
+            <OpenCloseDaily
+              ref="openCLoseDailyPopup"
+              :data="data"
+              @saveSuccess="getDaily"
+              :payment="arrayPayment"
+            />
           </div>
         </div>
 

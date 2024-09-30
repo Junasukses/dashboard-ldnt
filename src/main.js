@@ -39,8 +39,8 @@ const pinia = createPinia()
 // Create Vue app
 library.add(fas, fab)
 const app = createApp(App)
-app.use(router)
 app.use(pinia)
+app.use(router)
 
 app.component('CardBox', CardBox)
 app.component('SectionMain', SectionMain)

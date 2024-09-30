@@ -14,53 +14,99 @@
         <div class="grid gap-y-2">
           <div class="flex gap-x-2">
             <button
-              class="w-full flex items-center justify-center bg-[#f4f4f4] text-gray-600 duration-300"
-              :class="{ 'text-white font-bold': activeTabIndex === 1 }"
-              @click="activeTabIndex = 1"
+              class="w-full flex items-center justify-center border-b-2 rounded-tr-lg rounded-lg duration-300"
+              :class="{
+                'text-white font-bold bg-[#086968] opacity-100': !prop.data.isOpen,
+                'bg-gray-300 bg-opacity-50': prop.data.isOpen
+              }"
+              :disabled="prop.data.isOpen"
             >
               <div
-                class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1 hover:bg-[#086968] rounded-lg duration-300 hover:text-white"
-                :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 1 }"
+                class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1"
+                :class="{ 'rounded-lg bg-[#086968]': !prop.data.isOpen }"
               >
                 <BaseIcon :path="mdiLineScan" size="80" />
                 <span class="font-normal">OPEN</span>
               </div>
             </button>
             <button
-              class="w-full flex items-center justify-center border-b-2 bg-[#f4f4f4] rounded-tr-lg hover:bg-[#086968] rounded-lg duration-300 hover:text-white"
-              :class="{ 'text-white font-bold': activeTabIndex === 2 }"
-              @click="activeTabIndex = 2"
+              class="w-full flex items-center justify-center border-b-2 rounded-tr-lg rounded-lg duration-300"
+              :class="{
+                'text-white font-bold bg-[#086968] opacity-100': prop.data.isOpen,
+                'bg-gray-300 bg-opacity-50': !prop.data.isOpen
+              }"
+              :disabled="!prop.data.isOpen"
             >
               <div
                 class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1"
-                :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 2 }"
+                :class="{ 'rounded-lg bg-[#086968]': prop.data.isOpen }"
               >
                 <BaseIcon :path="mdiLineScan" />
                 <span class="font-normal">CLOSE</span>
               </div>
             </button>
           </div>
-          <div class="flex">
-            <label class="w-[230px]">Kasir</label>
-            <FieldX
-              :bind="{ readonly: true }"
-              :value="'Budi Santoso'"
+          <div class="grid grid-cols-5 gap-2" v-if="!prop.data.isOpen">
+            <label class="col-span-2">Shift</label>
+            <FieldSelect
+              :bind="{ disabled: false, clearable: false }"
+              class="w-full !mt-0 col-span-3"
+              :value="data.shift"
+              @input="(v) => (data.shift = v)"
+              :errorText="formErrors.shift ? 'failed' : ''"
+              :hints="formErrors.shift"
+              :options="['1', '2', '3']"
+              placeholder="Pilih Shift"
+              label=""
               :check="false"
-              class="w-1/2 !mt-0"
+            />
+            <label class="col-span-2">Open Saldo Kasir</label>
+            <FieldNumber
+              :bind="{ readonly: false }"
+              :value="data.open_saldo"
+              @input="(v) => (data.open_saldo = v)"
+              :errorText="formErrors.open_saldo ? 'failed' : ''"
+              :hints="formErrors.open_saldo"
+              :check="false"
+              class="w-1/2 !mt-0 col-span-3"
+              placeholder="Masukan Open Saldo"
+              label=""
             />
           </div>
-          <div class="flex" v-if="activeTabIndex === 1">
-            <label class="w-[230px]">Open Saldo Kasir</label>
-            <FieldNumber :bind="{ readonly: false }" :check="false" class="w-1/2 !mt-0" />
-          </div>
-          <div class="flex" v-else>
-            <label class="w-[230px]">Close Saldo Kasir</label>
-            <FieldNumber :bind="{ readonly: false }" :check="false" class="w-1/2 !mt-0" />
+          <div class="grid grid-cols-5 gap-2" v-else>
+            <label class="col-span-2">Shift</label>
+            <FieldSelect
+              :bind="{ disabled: true, clearable: false }"
+              class="w-full !mt-0 col-span-3"
+              :value="prop.data.shift"
+              @input="(v) => (prop.data.shift = v)"
+              :options="['1', '2', '3']"
+              placeholder="Pilih Shift"
+              label=""
+              :check="false"
+            />
+            <div
+              v-for="(item, index) in detailArr"
+              :key="index"
+              class="col-span-5 grid grid-cols-5 gap-2"
+            >
+              <label class="col-span-2">{{ item.name }}</label>
+              <FieldNumber
+                :bind="{ readonly: false }"
+                class="w-full !mt-0 col-span-3"
+                :value="item.close_saldo"
+                @input="(v) => (item.close_saldo = v)"
+                placeholder="Masukan Close Saldo"
+                label=""
+                :check="false"
+              />
+            </div>
           </div>
           <div class="flex">
             <div
               style="cursor: pointer"
-              class="bg-blue-600 hover:bg-[#086968] text-white w-full h-full text-center py-2 text-[13px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+              class="bg-blue-600 hover:bg-blue-700 duration-200 transition text-white w-full h-full text-center py-2 text-[13px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+              @click="onsave"
             >
               Simpan
             </div>
@@ -72,80 +118,67 @@
 </template>
 <script setup>
 import BaseIcon from '@/components/BaseIcon.vue'
-import CardBox from '@/components/CardBox.vue'
-import FormCheckRadio from '@/components/FormCheckRadio.vue'
-import FormControl from '@/components/FormControl.vue'
-import IconRounded from '@/components/IconRounded.vue'
-import NavBar from '@/components/NavBar.vue'
-import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import {
-  mdiBackspace,
-  mdiBallotOutline,
-  mdiCash,
-  mdiContentSave,
-  mdiCreditCard,
-  mdiLineScan,
-  mdiPrinter
-} from '@mdi/js'
-import { ref, reactive, readonly, computed } from 'vue'
-import menuNavBar from '@/menuNavBar.js'
-import BaseButtons from '@/components/BaseButtons.vue'
-import BaseButton from '@/components/BaseButton.vue'
+import { mdiLineScan } from '@mdi/js'
+import { ref, reactive, defineEmits, readonly, computed, watch } from 'vue'
+import alertify from 'alertifyjs'
+import axios from 'axios'
 
 const isOpenPopup = ref(false)
-const isDonasiManual = ref(false)
-const activeTabIndex = ref(0)
+const formErrors = ref({})
 
-const data = reactive({})
-
+const emit = defineEmits(['saveSuccess'])
 const prop = defineProps({
   data: {
     type: Object,
     default: () => {}
+  },
+  payment: {
+    type: Array,
+    default: () => []
   }
 })
 
+const data = reactive({})
+const detailArr = ref([...prop.payment])
+
+watch(
+  () => prop.payment,
+  (newPayment) => {
+    detailArr.value = [...newPayment]
+  }
+)
 function open() {
   isOpenPopup.value = true
+}
+
+const onsave = async () => {
+  try {
+    if (prop.data.isOpen) {
+      data.t_daily_d = detailArr.value
+    } else {
+      data.open_saldo = data.open_saldo ?? 0
+    }
+    const response = await axios.post('/operation/t_daily/send_daily', data)
+
+    alertify.success(response.data.message)
+    emit('saveSuccess')
+    isOpenPopup.value = false
+  } catch (err) {
+    const { response } = err
+    const errorMessage =
+      response?.data?.errors?.[0] ||
+      response?.data?.message ||
+      'Oops, sesuatu yang salah terjadi. Coba kembali nanti.'
+
+    formErrors.value = response?.data?.errors || {}
+    console.log(formErrors.value)
+    alertify.error(errorMessage)
+  }
 }
 
 defineExpose({
   open
 })
-const changeKeypad = (v) => {
-  if (v == 'C') {
-    countAmtPay(0)
-  }
-
-  let last_val = data?.amt_pay ?? 0
-  if (v == 'clear') {
-    let last_val_str = last_val?.toString()?.slice(0, -1)
-    countAmtPay(Number(last_val_str))
-  }
-  if (v != 'clear' && v != 'C') {
-    let last_val_str = last_val?.toString() + v
-    countAmtPay(Number(last_val_str))
-  }
-}
-const changeAmtMoney = (v) => {
-  if (prop.data.netto > v) return
-  countAmtPay(v)
-}
-const changeAmtPay = (v) => {
-  countAmtPay(v)
-}
-const countAmtPay = (v) => {
-  const total = v - prop.data?.netto
-  data.amt_pay = v
-  data.change = parseFloat(total)
-  changeAmtDonation(0)
-}
-const changeAmtDonation = (v) => {
-  const total = data.change - v
-  data.amt_donation = v
-  data.amt_change = total
-}
-
 function formatNumber(amount, decimals = 2) {
   if (isNaN(amount)) {
     return ''

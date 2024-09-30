@@ -21,6 +21,7 @@ import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import FieldPopupKode from '@/components/FieldPopupKode.vue'
 import PaymentPopup from '@/components/PaymentPopup.vue'
+import OpenCloseDaily from '@/components/OpenCloseDaily.vue'
 
 const baseUrl = ref(import.meta.env.VITE_API_URL)
 const token = ref(localStorage.getItem('authToken') ?? import.meta.env.VITE_AUTH_TOKEN)
@@ -32,6 +33,7 @@ const form = reactive({})
 const item = reactive({ group_data: [] })
 const data = reactive({ netto: 0 })
 const paymentPopup = ref()
+const openCLoseDailyPopup = ref()
 
 function formatNumber(amount, decimals = 2) {
   if (isNaN(amount)) {
@@ -137,6 +139,10 @@ function changeQty(type, id) {
 function deleteItem(id) {
   item.group_data = item.group_data.filter((dt) => dt.id !== id)
 }
+
+function openCloseDaily() {
+  openCLoseDailyPopup.value?.open()
+}
 </script>
 <style scoped>
 @tailwind base;
@@ -192,6 +198,7 @@ function deleteItem(id) {
               <div
                 style="cursor: pointer"
                 class="!justify-end space-x-6 bg-gray-600 hover:bg-gray-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+                @click="openCloseDaily"
               >
                 <button class="flex flex-col items-center justify-center bg-red-500 text-white">
                   <BaseIcon :path="mdiFunction" size="20" />Open Close Daily
@@ -569,6 +576,7 @@ function deleteItem(id) {
               </div>
             </CardBox>
             <PaymentPopup ref="paymentPopup" :data="data" />
+            <OpenCloseDaily ref="openCLoseDailyPopup" :data="data" />
           </div>
         </div>
       </SectionMain>

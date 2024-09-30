@@ -96,45 +96,42 @@ const landing = reactive({
     {
       icon: 'trash',
       class: 'bg-red-600 text-slate-100',
-      title: 'Hapus'
+      title: 'Hapus',
       // show: () => store.user.data.username==='developer',
-      // click(row) {
-      //   swal
-      //     .fire({
-      //       icon: 'warning',
-      //       text: 'Hapus Data Terpilih?',
-      //       confirmButtonText: 'Yes',
-      //       showDenyButton: true
-      //     })
-      //     .then(async (result) => {
-      //       if (result.isConfirmed) {
-      //         try {
-      //           const dataURL = `${baseUrl.value}/operation/${endpointApi}/${row.id}`
-      //           isRequesting.value = true
-      //           const res = await fetch(dataURL, {
-      //             method: 'DELETE',
-      //             headers: {
-      //               'Content-Type': 'Application/json',
-      //               Authorization: `Bearer ${token.value}`
-      //             }
-      //           })
-      //           if (!res.ok) {
-      //             const resultJson = await res.json()
-      //             throw resultJson.message || 'Failed when trying to remove data'
-      //           }
-      //           apiTable.value.reload()
-      //           // const resultJson = await res.json()
-      //         } catch (err) {
-      //           isBadForm.value = true
-      //           swal.fire({
-      //             icon: 'error',
-      //             text: err
-      //           })
-      //         }
-      //         isRequesting.value = false
-      //       }
-      //     })
-      // }
+      click(row) {
+        swal
+          .fire({
+            icon: 'warning',
+            text: 'Hapus Data Terpilih?',
+            confirmButtonText: 'Yes',
+            showDenyButton: true
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              try {
+                const dataURL = `${baseUrl.value}/operation/${endpointApi}/${row.id}`
+                isRequesting.value = true
+                const res = await fetch(dataURL, {
+                  method: 'DELETE',
+                  headers: {
+                    'Content-Type': 'Application/json',
+                    Authorization: `Bearer ${token.value}`
+                  }
+                })
+                if (!res.ok) {
+                  const resultJson = await res.json()
+                  throw resultJson.message || 'Failed when trying to remove data'
+                }
+                apiTable.value.reload()
+                // const resultJson = await res.json()
+              } catch (err) {
+                isBadForm.value = true
+                alertify.error(err ?? 'Terjadi kesalahan saat menghapus data')
+              }
+              isRequesting.value = false
+            }
+          })
+      }
     },
     {
       icon: 'eye',
@@ -439,7 +436,9 @@ const landing = reactive({
                 headers: { Authorization: `Bearer ${token}` },
                 params: { field: 'file' },
                 onsuccess: (response) => response,
-                onerror: (error) => {}
+                onerror: (error) => {
+                  console.log(error)
+                }
               }"
               placeholder="Pilih File"
               fa-icon="upload"

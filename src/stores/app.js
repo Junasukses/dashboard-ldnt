@@ -22,7 +22,7 @@ export const useStore = defineStore({
     isRequesting: false,
     templates: {},
     styles: {},
-    server: null,
+    server: import.meta.env.VITE_API_URL,
     isOnline: false,
     authenticate_every_page: false,
     loadedLandingTable: {},
@@ -85,6 +85,9 @@ export const useStore = defineStore({
   actions: {
     commit(command, val) {
       this[val[0]] = val[1]
+    },
+    setRequesting(status) {
+      this.isRequesting = status
     }
   }
 })

@@ -185,7 +185,7 @@ if (props.ctrlKFocus) {
       :required="required"
     />
 
-    <VueDatePicker
+    <!-- <VueDatePicker
       v-else-if="computedType === 'date'"
       :ui="{
         input: 'datePickerCustom',
@@ -206,7 +206,7 @@ if (props.ctrlKFocus) {
           class="pointer-events-none text-gray-500 dark:text-slate-400 mr-5"
         />
       </template>
-    </VueDatePicker>
+    </VueDatePicker> -->
     <input
       v-else
       :id="id"

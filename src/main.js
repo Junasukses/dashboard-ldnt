@@ -11,8 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import Popper from 'vue3-popper'
-import VueDatePicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
 
 import './css/main.css'
 import Icon from './components/Icon.vue'
@@ -29,6 +27,11 @@ import FieldX from '@/components/forms/FieldX.vue'
 import FieldNumber from '@/components/forms/FieldNumber.vue'
 import IconTimes from '@/components/IconTimes.vue'
 import IconSearch from '@/components/IconSearch.vue'
+import '@/plugins/helper.js'
+import { useStore } from '@/stores/app'
+// Alertify
+import alertify from 'alertifyjs'
+window.alertify = alertify
 
 // Init Pinia
 const pinia = createPinia()
@@ -52,7 +55,6 @@ app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.component('Icon', Icon)
 app.component('ColFilter', ColFilter)
 app.component('VueFinalModal', VueFinalModal)
-app.component('VueDatePicker', VueDatePicker)
 app.component('FieldX', FieldX)
 app.component('FieldNumber', FieldNumber)
 app.component('iconTimes', IconTimes)
@@ -62,12 +64,13 @@ app.use(vClickOutside)
 app.mount('#app')
 app.provide('icon', icon)
 app.provide('download', downloadBlob)
+app.provide('store', useStore())
 // Init main store
 const mainStore = useMainStore(pinia)
 
 // Fetch sample data
-mainStore.fetchSampleClients()
-mainStore.fetchSampleHistory()
+// mainStore.fetchSampleClients()
+// mainStore.fetchSampleHistory()
 
 // Dark mode
 // Uncomment, if you'd like to restore persisted darkMode setting, or use `prefers-color-scheme: dark`. Make sure to uncomment localStorage block in src/stores/darkMode.js

@@ -1,26 +1,40 @@
 <script setup>
-import { reactive } from 'vue'
+import { reactive, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import SectionFullScreen from '@/components/SectionFullScreen.vue'
 import CardBox from '@/components/CardBox.vue'
 import FormCheckRadio from '@/components/FormCheckRadio.vue'
 import FormField from '@/components/FormField.vue'
-import FormControl from '@/components/FormControl.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
+import axios from 'axios'
 
-const form = reactive({
-  login: 'john.doe',
-  pass: 'highly-secure-password-fYjUw-',
-  remember: true
-})
+const form = reactive({})
 
 const router = useRouter()
+const store = inject('store')
 
-const submit = () => {
-  router.push('/')
+const submit = async () => {
+  try {
+    const response = await axios.post('/login', {
+      email: form.email,
+      password: form.password
+    })
+
+    const userValue = response.data
+
+    localStorage.setItem('user', userValue)
+    // window.localStorage.user = JSON.stringify(userValue)
+    localStorage.setItem('token', userValue.token)
+    store.user = userValue.data
+    store.token = userValue.token
+
+    router.push('/')
+  } catch (error) {
+    const errorMessage = error.response?.data || 'Login failed. Please try again.'
+    alertify.error(errorMessage)
+  }
 }
 </script>
 
@@ -29,31 +43,29 @@ const submit = () => {
     <SectionFullScreen v-slot="{ cardClass }" bg="purplePink">
       <CardBox :class="cardClass" is-form @submit.prevent="submit">
         <FormField label="Login" help="Please enter your login">
-          <FormControl
-            v-model="form.login"
-            :icon="mdiAccount"
-            name="login"
-            autocomplete="username"
+          <FieldX
+            :bind="{ readonly: false }"
+            class="!mt-0"
+            :value="form.email"
+            @input="(v) => (form.email = v)"
+            placeholder="Email / Username"
+            fa-icon="user"
+            :check="false"
           />
         </FormField>
 
         <FormField label="Password" help="Please enter your password">
-          <FormControl
-            v-model="form.pass"
-            :icon="mdiAsterisk"
+          <FieldX
+            :bind="{ readonly: false }"
             type="password"
-            name="password"
-            autocomplete="current-password"
+            class="!mt-0"
+            :value="form.password"
+            @input="(v) => (form.password = v)"
+            placeholder="Password"
+            fa-icon="lock"
+            :check="false"
           />
         </FormField>
-
-        <FormCheckRadio
-          v-model="form.remember"
-          name="remember"
-          label="Remember"
-          :input-value="true"
-        />
-
         <template #footer>
           <BaseButtons>
             <BaseButton type="submit" color="info" label="Login" small />

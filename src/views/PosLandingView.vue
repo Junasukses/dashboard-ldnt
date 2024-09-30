@@ -186,7 +186,7 @@ function deleteItem(id) {
           <h1 class="!ml-2 !font-bold !text-md">Kasir Shift II</h1>
           <h1 class="!ml-2 !font-bold !text-md">PERSADA POS</h1>
           <h1 class="!ml-2 !mb-4 !font-semibold !text-sm">
-            Jl. MT. Haryono No.11, Dinoyo, Kec. Lowokwaru, Kota Malang, Jawa Timur 65144
+            {{ 'Jl. MT. Haryono No.11, Dinoyo, Kec. Lowokwaru, Kota Malang, Jawa Timur 65144' }}
           </h1>
           <div class="flex flex-row justify-end space-x-2 w-full">
             <div

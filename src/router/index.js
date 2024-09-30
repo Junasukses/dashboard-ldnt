@@ -102,7 +102,7 @@ router.beforeEach(async (to, from, next) => {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (to.name === 'login') {
-        return next({ name: 'home' })
+        return next({ name: 'dashboard' })
       }
     } catch (error) {
       localStorage.removeItem('token')

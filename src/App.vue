@@ -14,21 +14,9 @@ watch(
     isLoading.value = newValue
   }
 )
-
-router.beforeEach((to, from, next) => {
-  store.setRequesting(true)
-  next()
-})
-
-router.afterEach(() => {
-  setTimeout(() => {
-    store.setRequesting(false)
-  }, 2800)
-})
 </script>
 
 <template>
-  <LoadingSpinner v-model:modelValue="isLoading">
-    <RouterView />
-  </LoadingSpinner>
+  <LoadingSpinner v-model:modelValue="isLoading" />
+  <RouterView />
 </template>

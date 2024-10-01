@@ -122,6 +122,7 @@ import { mdiLineScan } from '@mdi/js'
 import { ref, reactive, defineEmits, readonly, computed, watch } from 'vue'
 import alertify from 'alertifyjs'
 import axios from 'axios'
+import { useStore } from '@/stores/app'
 
 const isOpenPopup = ref(false)
 const formErrors = ref({})
@@ -140,6 +141,7 @@ const prop = defineProps({
 
 const data = reactive({})
 const detailArr = ref([...prop.payment])
+const store = useStore()
 
 watch(
   () => prop.payment,
@@ -153,6 +155,7 @@ function open() {
 
 const onsave = async () => {
   try {
+    store.setRequesting(true)
     if (prop.data.isOpen) {
       data.t_daily_d = detailArr.value
     } else {
@@ -174,6 +177,7 @@ const onsave = async () => {
     console.log(formErrors.value)
     alertify.error(errorMessage)
   }
+  store.setRequesting(false)
 }
 
 defineExpose({

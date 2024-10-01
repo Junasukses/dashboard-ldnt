@@ -188,6 +188,8 @@ const getPayment = async () => {
 onMounted(async () => {
   try {
     //
+
+    store.setRequesting(true)
     await getDaily()
     await getPayment()
   } catch (err) {
@@ -197,6 +199,8 @@ onMounted(async () => {
   for (const key in initalValues) {
     data[key] = initialValues[key]
   }
+
+  store.setRequesting(false)
 })
 </script>
 <style scoped>

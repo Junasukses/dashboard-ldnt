@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, nextTick } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
@@ -84,6 +84,12 @@ const mainStore = useMainStore(pinia)
 // ) {
 //   darkModeStore.set(true)
 // }
+nextTick(() => {
+  setTimeout(() => {
+    document.getElementById('splash-screen-bg')?.remove()
+    document.getElementById('splash-screen')?.remove()
+  }, 1300) // Delay for 1.3 seconds, adjust as needed
+})
 
 // Default title tag
 const defaultDocumentTitle = 'POS - PERSADA'

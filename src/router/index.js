@@ -82,6 +82,22 @@ const routes = [
     meta: {
       title: 'Satuan Barang'
     }
+  },
+  {
+    path: '/master-diskon',
+    name: 'master-diskon',
+    component: () => import('@/views/master/diskon/Index.vue'),
+    meta: {
+      title: 'Master Diskon'
+    }
+  },
+  {
+    path: '/master-diskon/:id',
+    name: 'master-diskon-id',
+    component: () => import('@/views/master/diskon/Form.vue'),
+    meta: {
+      title: 'Master Diskon'
+    }
   }
 ]
 

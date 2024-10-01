@@ -30,10 +30,8 @@ import BaseIcon from '@/components/BaseIcon.vue'
 
 const route = useRoute()
 const baseUrl = ref(import.meta.env.VITE_API_URL)
-const token = ref(
-  localStorage.getItem('authToken') ??
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMzRmOTJiN2Y5ZWQ2NTljMjRkYzY1ODAyODg4OWUxNTk5ZDZiY2M2ZmM3YjJjN2VlMmU0YWI3YWVlYTdiMTU3MWY1ZDRmYjM4OGUyNjZlZjAiLCJpYXQiOjE3MjY4ODAzMTAuMzc2MjQ3LCJuYmYiOjE3MjY4ODAzMTAuMzc2MjUxLCJleHAiOjE3NTg0MTYzMTAuMzcwNDY5LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.rQ13lQsgWyehnxe0UMphZl3iMGvTo5NVc0DQFQBupbdn0foOu70b-8R7sUyonRrxqa691iv9Xuqd2jpIvCA3YTHJalf-75UbtM4c4mfUm4tpzuMFtUZMjYaSrccvnc45nMmAMFJgmmCd8rVZCID1fFPnLdOHMqii9kluIscOZwC29g-Qsl-4IIUeWTERUWKdFIz8I_wzNMFC7Km_1cNQ-vFHMtuLe-JL5PqR9BwTWKgrDeG41t8S52YXKPZrDDkTeWtDqwSmKkVU7nmDynFbH2lBslMuN_w9rd2kesdSTIg8_RoVvGKxoqJ0dcuVtF3DRli5tKv50qzPzAibCH53hYOqLNhOim7O8v4r-uwLw2betSdJoQn_xXFYsmW2O6sJDRP3Rk-mXzOKPs-uBjsrTNGkdX0y91NqeXKMQ2qUsVprPXMv71Felgz5YsmthUwu0vYQXf62wAbzWJS-U_sR-m0V_PiE5TfTSlmJHcWAzP3BSFye9RjOhOwknV0dkFgD9mTpxhbc-E0PfQW74ZXoFRj_obpbnQXBNLMXumPgHAS5DShI0zp3UKLIKGPFS73bByBjMdAg5hwTzjKa2MsnarkeDt0g8QT6MHES14mcEPz_HXOTfqahU-_5MzhLDczZhYxiVGq9OCoO1sRLBKZfz0I3V0UfwSCnNyuZEn17n8Q'
-)
+
+const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const endpointApi = 'm_approval'
 
 const selectOptions = [
@@ -483,7 +481,7 @@ const landing = reactive({
               valueField="id"
               displayField="name"
               :api="{
-                url: `${baseUrl}/operation/m_cust_group`,
+                url: `${baseUrl}/operation/m_payment_type`,
                 headers: {
                   'Content-Type': 'Application/json',
                   Authorization: `Bearer ${token}`

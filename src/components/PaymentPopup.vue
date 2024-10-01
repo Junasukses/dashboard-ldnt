@@ -226,7 +226,7 @@
                 />
               </div>
               <div class="flex">
-                <label class="w-[100px]">Kembali</label>
+                <label class="w-[200px]">Kembali</label>
                 <FieldNumber
                   :bind="{ readonly: true }"
                   :value="data.amt_change"
@@ -234,54 +234,42 @@
                   class="w-1/2 !mt-0"
                 />
               </div>
-              <div class="flex justify-between items-center mt-2">
-                <h1 class="font-semibold">Pilih Metode Pembayaran</h1>
-              </div>
-              <div class="flex items-stretch text-sm bg-[#f4f4f4] gap-2 rounded-lg">
-                <button
-                  class="w-full flex items-center justify-center text-gray-600 hover:bg-[#086968] rounded-lg duration-300 hover:text-white"
-                  :class="{ ' text-white font-bold': activeTabIndex === 0 }"
-                  @click="activeTabIndex = 0"
-                >
-                  <div
-                    class="w-full h-full flex flex-col items-center justify-center p-1"
-                    :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 0 }"
-                  >
-                    <BaseIcon :path="mdiCash" size="80" />
-                    <span class="font-normal">Cash</span>
-                  </div>
-                </button>
-                <button
-                  class="w-full flex items-center justify-center bg-[#f4f4f4] text-gray-600 duration-300"
-                  :class="{ 'text-white font-bold': activeTabIndex === 1 }"
-                  @click="activeTabIndex = 1"
-                >
-                  <div
-                    class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1 hover:bg-[#086968] rounded-lg duration-300 hover:text-white"
-                    :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 1 }"
-                  >
-                    <BaseIcon :path="mdiCreditCard" size="80" />
-                    <span class="font-normal">Card</span>
-                  </div>
-                </button>
-                <button
-                  class="w-full flex items-center justify-center border-b-2 bg-[#f4f4f4] rounded-tr-lg hover:bg-[#086968] rounded-lg duration-300 hover:text-white"
-                  :class="{ 'text-white font-bold': activeTabIndex === 2 }"
-                  @click="activeTabIndex = 2"
-                >
-                  <div
-                    class="w-full h-full flex flex-col space-y-1 items-center justify-center bg-none p-1"
-                    :class="{ 'rounded-lg bg-[#086968]': activeTabIndex == 2 }"
-                  >
-                    <BaseIcon :path="mdiLineScan" />
-                    <span class="font-normal">E-Wallet</span>
-                  </div>
-                </button>
+
+              <div class="flex">
+                <label class="w-[200px]">Metode Pembayaran</label>
+                <FieldSelect
+                  :bind="{ disabled: false, clearable: false }"
+                  :value="data.pay_type_id"
+                  @input="(v) => (data.pay_type_id = v)"
+                  :check="false"
+                  @update:valueFull="
+                    (e) => {
+                      if (e) {
+                        data.pay_type = e.name
+                      }
+                    }
+                  "
+                  valueField="id"
+                  displayField="name"
+                  :api="{
+                    url: `${store.server}/operation/m_payment_type`,
+                    headers: {
+                      'Content-Type': 'Application/json',
+                      Authorization: `Bearer ${token}`
+                    },
+                    params: {
+                      simplest: true
+                    }
+                  }"
+                  placeholder="Pilih Type"
+                  class="w-1/2 !mt-0"
+                />
               </div>
               <div class="flex items-center space-x-2 mt-3">
                 <div
                   style="cursor: pointer"
                   class="bg-blue-600 hover:bg-[#086968] text-white w-full h-full text-center py-2 text-[13px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+                  @click="onSave"
                 >
                   <button class="flex flex-col items-center justify-center">
                     <BaseIcon :path="mdiContentSave" size="20" />Simpan
@@ -305,12 +293,7 @@
 </template>
 <script setup>
 import BaseIcon from '@/components/BaseIcon.vue'
-import CardBox from '@/components/CardBox.vue'
 import FormCheckRadio from '@/components/FormCheckRadio.vue'
-import FormControl from '@/components/FormControl.vue'
-import IconRounded from '@/components/IconRounded.vue'
-import NavBar from '@/components/NavBar.vue'
-import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import {
   mdiBackspace,
   mdiBallotOutline,
@@ -320,25 +303,19 @@ import {
   mdiLineScan,
   mdiPrinter
 } from '@mdi/js'
-import { ref, reactive, readonly, computed } from 'vue'
+import { ref, reactive, readonly, computed, watch } from 'vue'
 import menuNavBar from '@/menuNavBar.js'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
+import { useStore } from '@/stores/app'
+import axios from 'axios'
 
 const isOpenPopup = ref(false)
 const isDonasiManual = ref(false)
-const activeTabIndex = ref(0)
+const store = useStore()
+const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 
 const data = reactive({})
-
-function onReset() {
-  console.log(data)
-  Object.keys(data).forEach((key) => {
-    delete data[key]
-  })
-  console.log(data)
-}
-
 const prop = defineProps({
   data: {
     type: Object,
@@ -347,11 +324,65 @@ const prop = defineProps({
   payment: {
     type: Array,
     default: () => []
+  },
+  arrDetail: {
+    type: Array,
+    default: () => []
   }
 })
 
+const emit = defineEmits(['saveSuccess'])
+const detailArr = ref([...prop.payment])
+const formErrors = ref({})
+
+watch(
+  () => prop.payment,
+  (newPayment) => {
+    detailArr.value = [...newPayment]
+  }
+)
+
+const clickPayment = (idx) => {}
+
+function onReset() {
+  console.log(data)
+  Object.keys(data).forEach((key) => {
+    delete data[key]
+  })
+}
+
 function open() {
   isOpenPopup.value = true
+}
+
+const onSave = async () => {
+  try {
+    store.setRequesting(true)
+    Object.assign(data, {
+      amt: prop.data?.netto,
+      amt_disc: prop.data?.amt_disc,
+      dpp: prop.data?.netto,
+      netto: prop.data?.netto,
+      t_pos_d: prop.arrDetail
+    })
+    const response = await axios.post('/operation/t_pos', data)
+    alertify.success(response.data.message)
+    emit('saveSuccess')
+    isOpenPopup.value = false
+    onReset()
+    formErrors.value = {}
+  } catch (err) {
+    const { response } = err
+    const errorMessage =
+      response?.data?.errors?.[0] ||
+      response?.data?.message ||
+      'Oops, sesuatu yang salah terjadi. Coba kembali nanti.'
+
+    formErrors.value = response?.data?.errors || {}
+    console.log(formErrors.value)
+    alertify.error(errorMessage)
+  }
+  store.setRequesting(false)
 }
 
 defineExpose({

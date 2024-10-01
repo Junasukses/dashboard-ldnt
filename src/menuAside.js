@@ -25,6 +25,17 @@ export default [
     label: 'POS'
   },
   {
+    label: 'Setting Transaksi',
+    icon: mdiViewList,
+    menu: [
+      {
+        to: '/master-diskon',
+        label: 'Diskon',
+        icon: mdiSquareEditOutline
+      }
+    ]
+  },
+  {
     label: 'Overview',
     icon: mdiViewList,
     menu: [

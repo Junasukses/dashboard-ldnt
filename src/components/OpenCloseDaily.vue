@@ -166,6 +166,7 @@ const onsave = async () => {
     alertify.success(response.data.message)
     emit('saveSuccess')
     isOpenPopup.value = false
+    formErrors.value = {}
   } catch (err) {
     const { response } = err
     const errorMessage =
@@ -177,6 +178,7 @@ const onsave = async () => {
     console.log(formErrors.value)
     alertify.error(errorMessage)
   }
+  delete data.open_saldo
   store.setRequesting(false)
 }
 

@@ -35,6 +35,7 @@ const data = reactive({ netto: 0 })
 const paymentPopup = ref()
 const openCLoseDailyPopup = ref()
 const arrayPayment = ref([])
+const arrayPayment2 = ref([])
 let initalValues
 
 function formatNumber(amount, decimals = 2) {
@@ -86,12 +87,24 @@ function newDataItem(newData) {
   if (isData.length === 0) {
     item.group_data = [
       ...item.group_data,
-      { ...newData, qty: 1, disc_percent: 0, disc_amount: 0, subtotal: newData.price }
+      {
+        ...newData,
+        qty: 1,
+        disc_percent: 0,
+        disc_amount: 0,
+        subtotal: newData.price,
+        netto: newData.price
+      }
     ]
   } else {
     item.group_data = item.group_data.map((dt) => {
       if (dt.id === newData.id) {
-        return { ...dt, qty: dt.qty + 1, subtotal: dt.price * (dt.qty + 1) }
+        return {
+          ...dt,
+          qty: dt.qty + 1,
+          subtotal: dt.price * (dt.qty + 1),
+          netto: dt.price * (dt.qty + 1)
+        }
       } else {
         return dt
       }
@@ -129,20 +142,51 @@ const resetAll = () => {
 }
 
 function changeQty(type, id) {
-  item.group_data = item.group_data.map((dt) => {
-    if (dt.id === id) {
-      if (type === 'plus') {
-        return { ...dt, qty: dt.qty + 1, subtotal: dt.price * (dt.qty + 1) }
-      } else if (type === 'min') {
-        return { ...dt, qty: dt.qty - 1, subtotal: dt.price * (dt.qty - 1) }
-      } else {
-        return dt
+  if (type === 'plus') {
+    // Menambahkan kuantitas
+    item.group_data = item.group_data.map((dt) => {
+      if (dt.id === id) {
+        return {
+          ...dt,
+          qty: dt.qty + 1,
+          subtotal: dt.price * (dt.qty + 1),
+          netto: dt.price * (dt.qty + 1)
+        }
       }
-    } else {
       return dt
-    }
-  })
+    })
+  } else if (type === 'min') {
+    // Mengurangi kuantitas dengan prompt password
+    alertify
+      .prompt(
+        'Masukan Bypass Password',
+        '',
+        (evt, value) => {
+          if (value === '12345') {
+            // Jika password benar
+            item.group_data = item.group_data.map((dt) => {
+              if (dt.id === id) {
+                return {
+                  ...dt,
+                  qty: dt.qty - 1,
+                  subtotal: dt.price * (dt.qty - 1),
+                  netto: dt.price * (dt.qty - 1)
+                }
+              }
+              return dt
+            })
+            alertify.success('Qty Berhasil Dikurangi')
+          } else {
+            // Jika password salah
+            alertify.error('Bypass Password Salah')
+          }
+        },
+        () => {}
+      )
+      .set('type', 'password')
+  }
 
+  // Menghapus item dengan qty <= 0
   item.group_data = item.group_data.filter((dt) => dt.qty > 0)
 }
 
@@ -158,12 +202,29 @@ const getDaily = async () => {
     const dataDaily = response.data
     data.isOpen = dataDaily.data.is_open
     if (data.isOpen) {
-      console.log('masuk', dataDaily.data)
       for (const key in dataDaily.data) {
         data[key] = dataDaily.data[key]
       }
-      console.log(data)
     }
+  } catch (err) {
+    const errorMessage = err.response?.data || 'Failed to get data.'
+    alertify.error(errorMessage)
+  }
+}
+
+const successPayment = async () => {
+  try {
+    const response = await axios.get('/operation/t_daily/status')
+
+    if (response.status !== 200) throw new Error('Failed when trying to read data')
+    const dataDaily = response.data
+    data.isOpen = dataDaily.data.is_open
+    if (data.isOpen) {
+      for (const key in dataDaily.data) {
+        data[key] = dataDaily.data[key]
+      }
+    }
+    item.group_data = []
   } catch (err) {
     const errorMessage = err.response?.data || 'Failed to get data.'
     alertify.error(errorMessage)
@@ -181,10 +242,8 @@ const getPayment = async () => {
     if (response.status !== 200) throw new Error('Failed when trying to read data')
     arrayPayment.value = response.data.data.map((item) => ({
       m_payment_type_id: item.id,
-      name: item.name,
-      close_saldo: 0
+      name: item.name
     }))
-    console.log(arrayPayment.value)
   } catch (err) {
     const errorMessage = err.response?.data || 'Failed to get data.'
     alertify.error(errorMessage)
@@ -448,6 +507,15 @@ onMounted(async () => {
                     params: {
                       simplest: true,
                       searchfield: 'this.item_code, this.item_name, this.barcode'
+                    },
+                    onsuccess: (response) => {
+                      response.data = [...response.data].map((dt) => {
+                        dt['m_item_price_id'] = dt['id']
+                        return dt
+                      })
+                      response.page = response.current_page
+                      response.hasNext = response.has_next
+                      return response
                     }
                   }"
                   :columns="[
@@ -526,6 +594,7 @@ onMounted(async () => {
                   <tr>
                     <th scope="col" class="px-6 py-3 w-[5%]">No</th>
                     <th scope="col" class="px-6 py-3">Nama Item</th>
+                    <th scope="col" class="px-6 py-3">Unit</th>
                     <th scope="col" class="px-6 py-3 text-right">Harga</th>
                     <th scope="col" class="px-6 py-3">Qty</th>
                     <th scope="col" class="px-6 py-3">Disc (%)</th>
@@ -550,6 +619,7 @@ onMounted(async () => {
                   >
                     <td class="px-6 py-3">{{ i + 1 }}</td>
                     <td class="px-6 py-3">{{ dt.item_name }}</td>
+                    <td class="px-6 py-3">{{ dt.unit }}</td>
                     <td class="px-6 py-3 text-right">{{ formatNumber(dt.price) }}</td>
                     <td class="px-6 py-3 text-right">
                       <div class="flex gap-2 items-center justify-around">
@@ -602,7 +672,7 @@ onMounted(async () => {
                   <span>{{ formattedDate }}</span>
                 </div>
               </div>
-              <div v-for="(dt, i) in item.group_data" class="flex flex-col border-b">
+              <div v-for="(dt, i) in item.group_data" class="flex flex-col border-b" :key="i">
                 <div class="flex justify-between font-semibold">
                   <h1>{{ dt.item_name }}</h1>
                   <h1>{{ formatNumber(dt.subtotal) }}</h1>
@@ -645,7 +715,13 @@ onMounted(async () => {
                 </div>
               </div>
             </CardBox>
-            <PaymentPopup ref="paymentPopup" :data="data" :payment="arrayPayment" />
+            <PaymentPopup
+              ref="paymentPopup"
+              :data="data"
+              :payment="arrayPayment"
+              :arr-detail="item.group_data"
+              @saveSuccess="successPayment"
+            />
             <OpenCloseDaily
               ref="openCLoseDailyPopup"
               :data="data"
@@ -709,7 +785,6 @@ onMounted(async () => {
               </div>
             </div>
           </CardBox>
-          <PaymentPopup ref="paymentPopup" :data="data" />
         </div>
       </div>
     </div>

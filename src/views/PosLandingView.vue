@@ -115,10 +115,16 @@ const grand_total = computed(() => {
 
 const resetAll = () => {
   if (data.isOpen) {
-    let result = confirm('Lanjutkan reset data ?')
-    if (result) {
-      item.group_data = []
-    }
+    alertify.confirm(
+      'Perhatian',
+      `Lanjutkan reset data?`,
+      () => {
+        item.group_data = []
+        paymentPopup.value?.onReset()
+        alertify.success('Data berhasil di reset')
+      },
+      () => {}
+    )
   }
 }
 
@@ -426,7 +432,7 @@ onMounted(async () => {
               <div class="flex justify-between items-center space-x-6">
                 <BaseIcon :path="mdiBarcode" size="35" />
                 <FieldPopupKode
-                  :bind="{ readonly: false }"
+                  :bind="{ readonly: !data.isOpen }"
                   ref="barcodeInput"
                   @input="(v) => (data.barcode = v)"
                   :check="false"

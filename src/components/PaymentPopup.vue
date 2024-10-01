@@ -331,6 +331,14 @@ const activeTabIndex = ref(0)
 
 const data = reactive({})
 
+function onReset() {
+  console.log(data)
+  Object.keys(data).forEach((key) => {
+    delete data[key]
+  })
+  console.log(data)
+}
+
 const prop = defineProps({
   data: {
     type: Object,
@@ -347,7 +355,8 @@ function open() {
 }
 
 defineExpose({
-  open
+  open,
+  onReset
 })
 const changeKeypad = (v) => {
   if (v == 'C') {

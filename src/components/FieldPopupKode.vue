@@ -173,9 +173,9 @@ function onClear() {
 }
 
 function onReset() {
-  valueModel.value = null
-  valueModelId.value = null
-  valueModelFull.value = null
+  delete valueModel.value
+  delete valueModelId.value
+  delete valueModelFull.value
 }
 
 const prop = defineProps({

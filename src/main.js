@@ -88,7 +88,7 @@ nextTick(() => {
   setTimeout(() => {
     document.getElementById('splash-screen-bg')?.remove()
     document.getElementById('splash-screen')?.remove()
-  }, 1300) // Delay for 1.3 seconds, adjust as needed
+  }, 1000)
 })
 
 // Default title tag

@@ -103,7 +103,7 @@ function onEnterBarcode(data) {
   newDataItem(data)
   nextTick(() => {
     barcodeInput.value?.onReset()
-    data.barcode = ''
+    delete data.barcode
   })
 }
 
@@ -426,9 +426,8 @@ onMounted(async () => {
               <div class="flex justify-between items-center space-x-6">
                 <BaseIcon :path="mdiBarcode" size="35" />
                 <FieldPopupKode
-                  :bind="{ readonly: !data.isOpen }"
+                  :bind="{ readonly: false }"
                   ref="barcodeInput"
-                  :value="data.barcode"
                   @input="(v) => (data.barcode = v)"
                   :check="false"
                   @update:valueFull="onEnterBarcode"

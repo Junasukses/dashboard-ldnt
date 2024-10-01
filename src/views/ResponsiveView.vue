@@ -1,77 +1,76 @@
 <template>
-  <div id="app">
-    <h1>MQTT Client</h1>
-    <div id="status">{{ status }}</div>
-    <button @click="connect">Connect</button>
+  <div>
+    <h1>Send PDF to MQTT Server</h1>
+    <button @click="sendPdfToMQTT">Send PDF</button>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { Client } from 'paho-mqtt' // Import Paho MQTT Client
+import { Client, Message } from 'paho-mqtt'
+import pdfFile from '@/sample.pdf'
 
 export default {
-  name: 'App',
   setup() {
-    const status = ref('Disconnected') // Status koneksi
-    const host = 'vps.qqltech.com' // Ganti dengan host broker kamu
-    const port = 7011 // Port untuk WebSocket
-    const username = 'superDollar' // Ganti dengan username kamu
-    const password = 'superDoll4r' // Ganti dengan password kamu
-    const clientId = 'clientId_' + Math.random().toString(16).substr(2, 8) // ID unik untuk klien MQTT
-    let client = null // Instance dari Paho MQTT Client
+    const host = 'vps.qqltech.com'
+    const port = 7011
+    // const topic = 'directPrint/output'
+    const topic = 'directPrint/convert'
+    const clientId = `client-${Math.random().toString(16).substr(2, 8)}`
+    const username = 'superDollar' // Ganti dengan username MQTT Anda
+    const password = 'superDoll4r' // Ganti dengan password MQTT Anda
 
-    const connect = () => {
-      // Membuat instance client MQTT
-      client = new Client(host, port, clientId)
+    const client = new Client(host, port, clientId)
 
-      // Fungsi callback saat koneksi berhasil
-      const onConnect = () => {
-        console.log('Connected to MQTT broker')
-        status.value = 'Connected to MQTT broker'
-
-        // Langganan ke topik
-        client.subscribe('topic/test', { qos: 0 })
-        console.log('Subscribed to topic/test')
-      }
-
-      // Fungsi callback saat koneksi gagal
-      const onFailure = (responseObject) => {
-        console.error('Connection failed: ' + responseObject.errorMessage)
-        status.value = 'Connection failed: ' + responseObject.errorMessage
-      }
-
-      // Menangani pesan yang diterima
-      client.onMessageArrived = (message) => {
-        console.log('Message received: ' + message.payloadString)
-      }
-
-      // Menghubungkan dengan opsi otentikasi
-      client.connect({
-        userName: username,
-        password: password,
-        onSuccess: onConnect,
-        onFailure: onFailure,
-        useSSL: true // Pastikan SSL digunakan
+    // Fungsi untuk menghubungkan ke MQTT server dengan opsi autentikasi
+    const connectMQTT = () => {
+      return new Promise((resolve, reject) => {
+        client.connect({
+          userName: username,
+          password: password,
+          onSuccess: () => {
+            console.log('Connected to MQTT with authentication')
+            resolve()
+          },
+          onFailure: (error) => {
+            console.log('Failed to connect', error)
+            reject(error)
+          },
+          useSSL: true // Pastikan SSL digunakan
+        })
       })
     }
 
+    // Fungsi untuk mengirim PDF ke MQTT server
+    const sendPdfToMQTT = async () => {
+      try {
+        // Ambil file PDF dari folder src menggunakan URL import
+        const response = await fetch(pdfFile)
+        const blob = await response.blob()
+
+        // Convert PDF blob ke base64 string
+        const reader = new FileReader()
+        reader.readAsDataURL(blob)
+        reader.onloadend = async () => {
+          const pdfData = reader.result
+
+          // Hubungkan ke broker MQTT
+          await connectMQTT()
+
+          const message = new Message(pdfData)
+          message.destinationName = topic
+
+          client.send(message) // Kirim pesan
+          console.log('PDF sent to MQTT')
+        }
+      } catch (error) {
+        console.error('Error sending PDF to MQTT', error)
+      }
+    }
+
     return {
-      status,
-      connect
+      sendPdfToMQTT
     }
   }
 }
 </script>
-
-<style>
-#app {
-  text-align: center;
-  padding: 20px;
-}
-
-#status {
-  margin: 20px 0;
-  font-weight: bold;
-}
-</style>

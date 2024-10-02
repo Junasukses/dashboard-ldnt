@@ -759,6 +759,8 @@ onMounted(async () => {
                   <h1>Kembali</h1>
                   <h1>-</h1>
                 </div>
+
+                <h1 class="!text-[10px]">*Harga diatas sudah termasuk PPN</h1>
               </div>
             </CardBox>
             <PaymentPopup
@@ -825,6 +827,8 @@ onMounted(async () => {
                 <h1>Kembali</h1>
                 <h1>-</h1>
               </div>
+
+              <h1 class="!text-[10px]">*Harga diatas sudah termasuk PPN</h1>
             </div>
           </CardBox>
         </div>

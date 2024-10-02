@@ -469,7 +469,7 @@ const handleKeyDown = (event) => {
   }
 }
 
-onMounted(() => {
-  window.addEventListener('keydown', handleKeyDown)
-})
+// onMounted(() => {
+//   window.addEventListener('keydown', handleKeyDown)
+// })
 </script>

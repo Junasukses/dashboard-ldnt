@@ -23,6 +23,8 @@ import { useMainStore } from '@/stores/main'
 import BaseIcon from '@/components/BaseIcon.vue'
 import router from '@/router'
 import { useStore } from '@/stores/app'
+import alertify from 'alertifyjs'
+import axios from 'axios'
 
 const route = useRoute()
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
@@ -33,12 +35,47 @@ const apiTable = ref()
 const data = reactive({
   discount_type: 'REGULER'
 })
+const changeDiscType = () => {
+  if (data.discount_type) {
+    landing.api.params.where = `this.discount_type='${data.discount_type}'`
+  }
+
+  apiTable.value.reload()
+}
 const landing = reactive({
   actions: [
     {
       icon: 'trash',
       class: 'bg-red-600 text-slate-100',
-      title: 'Hapus'
+      title: 'Hapus',
+      click(row) {
+        alertify.confirm(
+          'Perhatian',
+          `Hapus Data Terpilih?`,
+          async () => {
+            try {
+              store.setRequesting(true)
+              const response = await axios({
+                method: 'delete',
+                url: `/operation/${endpointApi}/${row.id}`,
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`
+                }
+              })
+              const resultJson = response.data
+              alertify.success(resultJson.message || 'Success remove data')
+              apiTable.value.reload()
+            } catch (err) {
+              console.log(err)
+              alertify.error(err.message || 'Failed when trying to remove data')
+            }
+
+            store.setRequesting(false)
+          },
+          () => {}
+        )
+      }
     },
     {
       icon: 'eye',
@@ -73,7 +110,8 @@ const landing = reactive({
     },
     params: {
       simplest: true,
-      searchfield: 'this.id, this.discount_type, this.name, this.desc, this.status'
+      searchfield: 'this.id, this.discount_type, this.name, this.desc, this.status',
+      where: `this.discount_type='${data.discount_type}'`
     },
     onsuccess(response) {
       response.page = response.current_page
@@ -158,6 +196,7 @@ onActivated(() => {
                   :bind="{ disabled: false, clearable: false }"
                   :value="data.discount_type"
                   @input="(v) => (data.discount_type = v)"
+                  @update:valueFull="(e) => changeDiscType()"
                   :check="false"
                   :options="['REGULER', 'PROGRESIF', 'GLOBAL']"
                   placeholder="Pilih Discount Type"

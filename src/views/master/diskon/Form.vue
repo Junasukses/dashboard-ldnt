@@ -75,6 +75,17 @@ function onDetailAdd(rows) {
   detailArr.value = [...detailArr.value, rows]
 }
 
+function onDetailAddReguler(rows) {
+  const data = [...detailArr.value]
+  rows.forEach((row) => {
+    row.seq = detailArr.value?.length + 1
+    row.type = data.discount_type !== 'GLOBAL' ? 'ITEM' : null
+    data.push(row)
+  })
+
+  detailArr.value = data
+}
+
 const removeDetail = (index) => {
   detailArr.value.splice(index, 1)
   updateSequence()
@@ -159,6 +170,19 @@ const onSave = async () => {
       <CardBox>
         <FormField>
           <div class="grid grid-cols-3 gap-8">
+            <div class="">
+              <label class="block font-bold mb-2 mr-4 w-[40%]">Discount Type :</label>
+              <FieldSelect
+                :bind="{ disabled: true, clearable: false }"
+                :value="data.discount_type"
+                @input="(v) => (data.discount_type = v)"
+                :check="false"
+                :options="['REGULER', 'PROGRESIF', 'GLOBAL']"
+                placeholder="Pilih Discount Type"
+                label=""
+                class="!mt-0"
+              />
+            </div>
             <div>
               <label class="block font-bold mb-2">Business Unit</label>
               <FieldSelect
@@ -508,17 +532,11 @@ const onSave = async () => {
             <BaseButton color="info" label="Add To List" small :icon="mdiPlus" />
           </FieldPopupBarang>
 
-          <FieldPopupBarang
+          <ButtonMultiSelect
             v-else-if="data.discount_type == 'REGULER'"
             ref="barcodeInput"
-            :check="false"
-            @update:valueFull="
-              (e) => {
-                onDetailAdd(e)
-              }
-            "
-            valueField="id"
-            displayField="barcode"
+            title="Add To List"
+            @add="onDetailAddReguler"
             :api="{
               url: `${store.server}/operation/m_item`,
               headers: {
@@ -553,13 +571,15 @@ const onSave = async () => {
             }"
             :columns="[
               {
+                checkboxSelection: true,
+                headerCheckboxSelection: true,
                 headerName: 'No',
-                valueGetter: (p) => p.node.rowIndex + 1,
+                valueGetter: (p) => '',
                 width: 60,
                 sortable: false,
-                resizable: false,
+                resizable: true,
                 filter: false,
-                cellClass: ['justify-center', 'bg-gray-50']
+                cellClass: ['justify-start', 'bg-gray-50', '!border-gray-200']
               },
               {
                 flex: 1,
@@ -592,7 +612,7 @@ const onSave = async () => {
             class="!mt-0 !ml-2"
           >
             <BaseButton color="info" label="Add To List" small :icon="mdiPlus" />
-          </FieldPopupBarang>
+          </ButtonMultiSelect>
           <BaseButton
             v-else-if="data.discount_type == 'PROGRESIF' && detailArr.length >= 1"
             color="info"
@@ -641,7 +661,10 @@ const onSave = async () => {
                 </td>
                 <td class="px-6 py-4">
                   <FieldSelect
-                    :bind="{ disabled: !actionText, clearable: false }"
+                    :bind="{
+                      disabled: !actionText || data.discount_type !== 'GLOBAL',
+                      clearable: false
+                    }"
                     class="w-full !mt-0"
                     :value="item.type"
                     @input="(v) => (item.type = v)"

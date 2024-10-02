@@ -35,9 +35,9 @@ const apiTable = ref()
 const data = reactive({
   discount_type: 'REGULER'
 })
-const changeDiscType = () => {
-  if (data.discount_type) {
-    landing.api.params.where = `this.discount_type='${data.discount_type}'`
+const changeDiscType = (e) => {
+  if (e) {
+    landing.api.params.where = `this.discount_type='${e}'`
   }
 
   apiTable.value.reload()
@@ -232,7 +232,7 @@ onActivated(() => {
                   :bind="{ disabled: false, clearable: false }"
                   :value="data.discount_type"
                   @input="(v) => (data.discount_type = v)"
-                  @update:valueFull="(e) => changeDiscType()"
+                  @update:valueFull="(e) => changeDiscType(e.text)"
                   :check="false"
                   :options="['REGULER', 'PROGRESIF', 'GLOBAL']"
                   placeholder="Pilih Discount Type"

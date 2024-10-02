@@ -100,6 +100,42 @@ const landing = reactive({
       click(row) {
         router.push(`${route.path}/${row.id}?action=Copy`)
       }
+    },
+
+    {
+      icon: 'location-arrow',
+      title: 'Post Data',
+      class: 'bg-rose-700 rounded-lg text-white',
+      show: (row) => row.status?.toUpperCase() === 'DRAFT',
+      async click(row) {
+        alertify.confirm(
+          'Perhatian',
+          `Post Data?`,
+          async () => {
+            try {
+              store.setRequesting(true)
+              const response = await axios({
+                method: 'post',
+                url: `/operation/${endpointApi}/post`,
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`
+                },
+                data: JSON.stringify({ id: row.id })
+              })
+              const resultJson = response.data
+              alertify.success(resultJson.message || 'Success Post data')
+              apiTable.value.reload()
+            } catch (err) {
+              console.log(err)
+              alertify.error(err.message || 'Failed when trying to post data')
+            }
+
+            store.setRequesting(false)
+          },
+          () => {}
+        )
+      }
     }
   ],
   api: {

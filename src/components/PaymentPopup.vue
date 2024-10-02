@@ -363,7 +363,11 @@ const onSave = async () => {
       amt_disc: prop.data?.amt_disc,
       dpp: prop.data?.netto,
       netto: prop.data?.netto,
-      t_pos_d: prop.arrDetail
+      t_pos_d: prop.arrDetail?.map((item) => ({
+        ...item,
+        m_item_price_id: item.id,
+        m_unit_id: item.unit_id
+      }))
     })
     const response = await axios.post('/operation/t_pos', data)
     alertify.success(response.data.message)

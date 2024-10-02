@@ -82,7 +82,7 @@ function openListItem() {
   })
 }
 
-function newDataItem(newData) {
+async function newDataItem(newData) {
   const isData = item.group_data.filter((dt) => dt.id === newData.id)
   if (isData.length === 0) {
     item.group_data = [
@@ -91,24 +91,22 @@ function newDataItem(newData) {
         ...newData,
         qty: 1,
         disc_percent: 0,
-        disc_amount: 0,
+        disc_amt: 0,
         subtotal: newData.price,
-        netto: newData.price
+        netto: newData.price_fix
       }
     ]
   } else {
-    item.group_data = item.group_data.map((dt) => {
-      if (dt.id === newData.id) {
-        return {
-          ...dt,
-          qty: dt.qty + 1,
-          subtotal: dt.price * (dt.qty + 1),
-          netto: dt.price * (dt.qty + 1)
+    // ngapi ketika data sama di plus dua qtynya
+    item.group_data = await Promise.all(
+      item.group_data.map(async (dt) => {
+        if (dt.id === id) {
+          const res = await getPriceQty(dt.m_item_id, dt.unit_id, dt.qty + 1)
+          return res
         }
-      } else {
         return dt
-      }
-    })
+      })
+    )
   }
 }
 
@@ -121,8 +119,13 @@ function onEnterBarcode(data) {
 }
 
 const grand_total = computed(() => {
-  const total = item.group_data.reduce((a, b) => a + Number(b.subtotal), 0)
-  data.netto = parseFloat(total)
+  const totalAmt = item.group_data.reduce((a, b) => a + Number(b.subtotal), 0)
+  const totalDisc = item.group_data.reduce((a, b) => a + Number(b.disc_amt), 0)
+  const totalNetto = item.group_data.reduce((a, b) => a + Number(b.price_fix), 0)
+  console.log(totalDisc)
+  data.amt = parseFloat(totalAmt)
+  data.amt_disc = parseFloat(totalDisc)
+  data.netto = parseFloat(totalNetto)
   return data.netto
 })
 
@@ -141,37 +144,58 @@ const resetAll = () => {
   }
 }
 
-function changeQty(type, id) {
-  if (type === 'plus') {
-    item.group_data = item.group_data.map((dt) => {
-      if (dt.id === id) {
-        return {
-          ...dt,
-          qty: dt.qty + 1,
-          subtotal: dt.price * (dt.qty + 1),
-          netto: dt.price * (dt.qty + 1)
-        }
+const getPriceQty = async (idItem, idUnit, qtyPar) => {
+  try {
+    const response = await axios.get('/operation/v_item_catalog/get_item_unit_qty', {
+      params: {
+        m_item_id: idItem,
+        unit_id: idUnit,
+        qty: qtyPar
       }
-      return dt
     })
+
+    if (response.status !== 200) throw new Error('Failed when trying to read data')
+    let tempData = response.data.data
+    tempData.subtotal = parseInt(tempData.price)
+    tempData.qty = parseInt(tempData.qty)
+    tempData.disc = parseInt(tempData.disc)
+    tempData.disc_amt = parseInt(tempData.disc_amt)
+    tempData.price = parseInt(tempData.price)
+    tempData.price_fix = parseInt(tempData.price_fix)
+    return tempData
+  } catch (err) {
+    const errorMessage = err.response?.data || 'Failed to get data.'
+    alertify.error(errorMessage)
+  }
+}
+async function changeQty(type, id) {
+  // Menambah qty
+  if (type === 'plus') {
+    item.group_data = await Promise.all(
+      item.group_data.map(async (dt) => {
+        if (dt.id === id) {
+          const res = await getPriceQty(dt.m_item_id, dt.unit_id, dt.qty + 1)
+          return res
+        }
+        return dt
+      })
+    )
   } else if (type === 'min') {
     alertify
       .prompt(
         'Masukan Bypass Password',
         '',
-        (evt, value) => {
+        async (evt, value) => {
           if (value === '12345') {
-            item.group_data = item.group_data.map((dt) => {
-              if (dt.id === id) {
-                return {
-                  ...dt,
-                  qty: dt.qty - 1,
-                  subtotal: dt.price * (dt.qty - 1),
-                  netto: dt.price * (dt.qty - 1)
+            item.group_data = await Promise.all(
+              item.group_data.map(async (dt) => {
+                if (dt.id === id) {
+                  const res = await getPriceQty(dt.m_item_id, dt.unit_id, dt.qty - 1)
+                  return res
                 }
-              }
-              return dt
-            })
+                return dt
+              })
+            )
             item.group_data = item.group_data.filter((dt) => dt.qty > 0)
             alertify.success('Qty Berhasil Dikurangi')
           } else {
@@ -426,6 +450,16 @@ onMounted(async () => {
                   resizable: true,
                   filter: true,
                   cellClass: ['justify-end', 'bg-gray-50']
+                },
+                {
+                  headerName: 'Harga Disc',
+                  field: 'price_fix',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-end', 'bg-gray-50']
                 }
               ]"
               class="!mt-0 hidden"
@@ -592,8 +626,8 @@ onMounted(async () => {
                     <th scope="col" class="px-6 py-3">Unit</th>
                     <th scope="col" class="px-6 py-3 text-right">Harga</th>
                     <th scope="col" class="px-6 py-3">Qty</th>
-                    <th scope="col" class="px-6 py-3">Disc (%)</th>
-                    <th scope="col" class="px-6 py-3">Disc (Rp)</th>
+                    <th scope="col" class="px-6 py-3">Disc</th>
+                    <th scope="col" class="px-6 py-3">Disc Total</th>
                     <th scope="col" class="px-6 py-3 text-right">Sub Total</th>
                     <th scope="col" class="px-6 py-3">Action</th>
                   </tr>
@@ -636,9 +670,11 @@ onMounted(async () => {
                         />
                       </div>
                     </td>
-                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.disc_percent) }}</td>
-                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.disc_amount) }}</td>
-                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.subtotal) }}</td>
+                    <td class="px-6 py-3 text-right">
+                      {{ formatNumber(dt.disc) + (dt.disc_type == '%' ? '%' : '') }}
+                    </td>
+                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.disc_amt) }}</td>
+                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.price_fix) }}</td>
 
                     <td class="px-6 py-3">
                       <BaseButtons type="justify-center" no-wrap>
@@ -681,15 +717,11 @@ onMounted(async () => {
               <div class="flex flex-col border-b py-2 space-y-2">
                 <div class="flex justify-between font-semibold">
                   <h1>Sub Total</h1>
-                  <h1>{{ formatNumber(data.netto) }}</h1>
+                  <h1>{{ formatNumber(data.amt) }}</h1>
                 </div>
                 <div class="flex justify-between font-semibold">
                   <h1>Discount</h1>
-                  <h1>{{ formatNumber(0) }}</h1>
-                </div>
-                <div class="flex justify-between font-semibold">
-                  <h1>Pajak</h1>
-                  <h1>{{ formatNumber(0) }}</h1>
+                  <h1>{{ formatNumber(data.amt_disc) }}</h1>
                 </div>
               </div>
 
@@ -751,15 +783,11 @@ onMounted(async () => {
             <div class="flex flex-col border-b py-2 space-y-2">
               <div class="flex justify-between font-semibold">
                 <h1>Sub Total</h1>
-                <h1>{{ formatNumber(data.netto) }}</h1>
+                <h1>{{ formatNumber(data.amt) }}</h1>
               </div>
               <div class="flex justify-between font-semibold">
                 <h1>Discount</h1>
-                <h1>{{ formatNumber(0) }}</h1>
-              </div>
-              <div class="flex justify-between font-semibold">
-                <h1>Pajak</h1>
-                <h1>{{ formatNumber(0) }}</h1>
+                <h1>{{ formatNumber(data.amt_disc) }}</h1>
               </div>
             </div>
 

@@ -168,6 +168,7 @@ const getPriceQty = async (idItem, idUnit, qtyPar) => {
     tempData.disc_amt = parseInt(tempData.disc_amt)
     tempData.price = parseInt(tempData.price)
     tempData.price_fix = parseInt(tempData.price_fix)
+    tempData.netto = parseInt(tempData.price_fix)
     return tempData
   } catch (err) {
     const errorMessage = err.response?.data || 'Failed to get data.'
@@ -216,7 +217,30 @@ async function changeQty(type, id) {
 }
 
 function deleteItem(id) {
-  item.group_data = item.group_data.filter((dt) => dt.id !== id)
+  alertify
+    .prompt(
+      'Masukan Bypass Password',
+      '',
+      async (evt, value) => {
+        if (value === '12345') {
+          item.group_data = await Promise.all(
+            item.group_data.map(async (dt) => {
+              if (dt.id === id) {
+                const res = await getPriceQty(dt.m_item_id, dt.unit_id, dt.qty - 1)
+                return res
+              }
+              return dt
+            })
+          )
+          item.group_data = item.group_data.filter((dt) => dt.id !== id)
+          alertify.success('Item Berhasil Dihapus')
+        } else {
+          alertify.error('Bypass Password Salah')
+        }
+      },
+      () => {}
+    )
+    .set('type', 'password')
 }
 
 const getDaily = async () => {
@@ -347,7 +371,7 @@ onMounted(async () => {
     <div
       class="lg:ml-0 pt-4 h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100 flex"
     >
-      <div class="grid grid-cols-12 gap-[12px] !py-0 overflow-hidden mx-6 w-full">
+      <div class="grid grid-cols-12 gap-[12px] !py-0 overflow-hidden mx-6">
         <div class="col-span-9">
           <h1 class="!ml-2 !font-bold !text-2xl">Selamat Datang Budi Santoso</h1>
           <h1 class="!ml-2 !font-bold !text-md">Kasir Shift II</h1>
@@ -533,185 +557,186 @@ onMounted(async () => {
             </div>
             <h2>Member: -</h2>
           </div>
+          <div class="overflow-scroll">
+            <CardBox class="mt-4 h-[1000px] overflow-auto">
+              <div class="flex items-center justify-between font-semibold mb-6">
+                <div class="flex justify-between items-center space-x-6">
+                  <BaseIcon :path="mdiBarcode" size="35" />
+                  <FieldPopupKode
+                    :bind="{ readonly: !data.isOpen }"
+                    ref="barcodeInput"
+                    @input="(v) => (data.barcode = v)"
+                    :check="false"
+                    @update:valueFull="onEnterBarcode"
+                    valueField="id"
+                    displayField="barcode"
+                    :api="{
+                      url: `${store.server}/operation/v_item_catalog`,
+                      headers: {
+                        'Content-Type': 'Application/json',
+                        authorization: `Bearer ${token}`
+                      },
+                      params: {
+                        simplest: true,
+                        searchfield: 'this.item_code, this.item_name, this.barcode'
+                      },
+                      onsuccess: (response) => {
+                        response.data = [...response.data].map((dt) => {
+                          dt['m_item_price_id'] = dt['id']
+                          return dt
+                        })
+                        response.page = response.current_page
+                        response.hasNext = response.has_next
+                        return response
+                      }
+                    }"
+                    :columns="[
+                      {
+                        headerName: 'No',
+                        valueGetter: (p) => p.node.rowIndex + 1,
+                        width: 60,
+                        sortable: false,
+                        resizable: false,
+                        filter: false,
+                        cellClass: ['justify-center', 'bg-gray-50']
+                      },
+                      {
+                        headerName: 'Barcode',
+                        field: 'barcode',
+                        width: 60,
+                        flex: 1,
+                        sortable: true,
+                        resizable: true,
+                        filter: true,
+                        cellClass: ['justify-center', 'bg-gray-50']
+                      },
+                      {
+                        headerName: 'Kode',
+                        field: 'item_code',
+                        width: 60,
+                        flex: 1,
+                        sortable: true,
+                        resizable: true,
+                        filter: true,
+                        cellClass: ['justify-center', 'bg-gray-50']
+                      },
+                      {
+                        headerName: 'Nama',
+                        field: 'item_name',
+                        width: 60,
+                        flex: 1,
+                        sortable: true,
+                        resizable: true,
+                        filter: true,
+                        cellClass: ['justify-center', 'bg-gray-50']
+                      },
+                      {
+                        headerName: 'Satuan',
+                        field: 'unit',
+                        width: 60,
+                        flex: 1,
+                        sortable: true,
+                        resizable: true,
+                        filter: true,
+                        cellClass: ['justify-center', 'bg-gray-50']
+                      }
+                    ]"
+                    class="!mt-0 !ml-2"
+                  />
+                </div>
 
-          <CardBox class="mt-4">
-            <div class="flex items-center justify-between font-semibold mb-6">
-              <div class="flex justify-between items-center space-x-6">
-                <BaseIcon :path="mdiBarcode" size="35" />
-                <FieldPopupKode
-                  :bind="{ readonly: !data.isOpen }"
-                  ref="barcodeInput"
-                  @input="(v) => (data.barcode = v)"
-                  :check="false"
-                  @update:valueFull="onEnterBarcode"
-                  valueField="id"
-                  displayField="barcode"
-                  :api="{
-                    url: `${store.server}/operation/v_item_catalog`,
-                    headers: {
-                      'Content-Type': 'Application/json',
-                      authorization: `Bearer ${token}`
-                    },
-                    params: {
-                      simplest: true,
-                      searchfield: 'this.item_code, this.item_name, this.barcode'
-                    },
-                    onsuccess: (response) => {
-                      response.data = [...response.data].map((dt) => {
-                        dt['m_item_price_id'] = dt['id']
-                        return dt
-                      })
-                      response.page = response.current_page
-                      response.hasNext = response.has_next
-                      return response
-                    }
-                  }"
-                  :columns="[
-                    {
-                      headerName: 'No',
-                      valueGetter: (p) => p.node.rowIndex + 1,
-                      width: 60,
-                      sortable: false,
-                      resizable: false,
-                      filter: false,
-                      cellClass: ['justify-center', 'bg-gray-50']
-                    },
-                    {
-                      headerName: 'Barcode',
-                      field: 'barcode',
-                      width: 60,
-                      flex: 1,
-                      sortable: true,
-                      resizable: true,
-                      filter: true,
-                      cellClass: ['justify-center', 'bg-gray-50']
-                    },
-                    {
-                      headerName: 'Kode',
-                      field: 'item_code',
-                      width: 60,
-                      flex: 1,
-                      sortable: true,
-                      resizable: true,
-                      filter: true,
-                      cellClass: ['justify-center', 'bg-gray-50']
-                    },
-                    {
-                      headerName: 'Nama',
-                      field: 'item_name',
-                      width: 60,
-                      flex: 1,
-                      sortable: true,
-                      resizable: true,
-                      filter: true,
-                      cellClass: ['justify-center', 'bg-gray-50']
-                    },
-                    {
-                      headerName: 'Satuan',
-                      field: 'unit',
-                      width: 60,
-                      flex: 1,
-                      sortable: true,
-                      resizable: true,
-                      filter: true,
-                      cellClass: ['justify-center', 'bg-gray-50']
-                    }
-                  ]"
-                  class="!mt-0 !ml-2"
-                />
-              </div>
-
-              <div class="flex items-center space-x-6" :class="{ 'ml-auto': !data.isOpen }">
-                <h2 class="!text-md" style="text-wrap: nowrap">Grand Total</h2>
-                <span
-                  @click="paymentPopup?.open()"
-                  style="cursor: pointer"
-                  class="text-3xl text-blue-900"
-                  >{{ formatNumber(grand_total) }}</span
-                >
-              </div>
-            </div>
-
-            <div class="relative overflow-x-auto">
-              <table
-                class="w-full text-left rtl:text-right text-gray-500 dark:text-gray-400 text-base"
-              >
-                <thead
-                  class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-                >
-                  <tr>
-                    <th scope="col" class="px-6 py-3 w-[5%]">No</th>
-                    <th scope="col" class="px-6 py-3">Nama Item</th>
-                    <th scope="col" class="px-6 py-3">Unit</th>
-                    <th scope="col" class="px-6 py-3 text-right">Harga</th>
-                    <th scope="col" class="px-6 py-3">Qty</th>
-                    <th scope="col" class="px-6 py-3">Disc</th>
-                    <th scope="col" class="px-6 py-3">Disc Total</th>
-                    <th scope="col" class="px-6 py-3 text-right">Sub Total</th>
-                    <th scope="col" class="px-6 py-3">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="item.group_data.length === 0">
-                    <td
-                      colspan="9"
-                      class="h-20 w-full flex items-center justify-center !text-center"
-                    >
-                      Belum ada item yang ditambahkan
-                    </td>
-                  </tr>
-                  <tr
-                    v-for="(dt, i) in item.group_data"
-                    :key="i"
-                    class="bg-white border-b dark:border-gray-700"
+                <div class="flex items-center space-x-6" :class="{ 'ml-auto': !data.isOpen }">
+                  <h2 class="!text-md" style="text-wrap: nowrap">Grand Total</h2>
+                  <span
+                    @click="paymentPopup?.open()"
+                    style="cursor: pointer"
+                    class="text-3xl text-blue-900"
+                    >{{ formatNumber(grand_total) }}</span
                   >
-                    <td class="px-6 py-3">{{ i + 1 }}</td>
-                    <td class="px-6 py-3">{{ dt.item_name }}</td>
-                    <td class="px-6 py-3">{{ dt.unit }}</td>
-                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.price) }}</td>
-                    <td class="px-6 py-3 text-right">
-                      <div class="flex gap-2 items-center justify-around">
-                        <BaseButton
-                          @click="changeQty('min', dt.id)"
-                          color="black"
-                          :icon="mdiMinus"
-                          small
-                          :rounded-full="true"
-                        />
-                        <span class="text-right">{{ dt.qty }}</span>
+                </div>
+              </div>
 
-                        <BaseButton
-                          @click="changeQty('plus', dt.id)"
-                          color="black"
-                          :icon="mdiPlus"
-                          small
-                          :rounded-full="true"
-                        />
-                      </div>
-                    </td>
-                    <td class="px-6 py-3 text-right">
-                      {{ formatNumber(dt.disc) + (dt.disc_type == '%' ? '%' : '') }}
-                    </td>
-                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.disc_amt) }}</td>
-                    <td class="px-6 py-3 text-right">{{ formatNumber(dt.price_fix) }}</td>
+              <div class="relative overflow-auto">
+                <table
+                  class="w-full max-h-[300px] text-left rtl:text-right text-gray-500 dark:text-gray-400 text-base overflow-auto block"
+                >
+                  <thead
+                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                  >
+                    <tr>
+                      <th scope="col" class="px-6 py-3 w-[5%]">No</th>
+                      <th scope="col" class="px-6 py-3">Nama Item</th>
+                      <th scope="col" class="px-6 py-3">Unit</th>
+                      <th scope="col" class="px-6 py-3 text-right">Harga</th>
+                      <th scope="col" class="px-6 py-3">Qty</th>
+                      <th scope="col" class="px-6 py-3">Disc</th>
+                      <th scope="col" class="px-6 py-3">Disc Total</th>
+                      <th scope="col" class="px-6 py-3 text-right">Sub Total</th>
+                      <th scope="col" class="px-6 py-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-if="item.group_data.length === 0">
+                      <td
+                        colspan="9"
+                        class="h-20 w-full flex items-center justify-center !text-center"
+                      >
+                        Belum ada item yang ditambahkan
+                      </td>
+                    </tr>
+                    <tr
+                      v-for="(dt, i) in item.group_data"
+                      :key="i"
+                      class="bg-white border-b dark:border-gray-700"
+                    >
+                      <td class="px-6 py-3">{{ i + 1 }}</td>
+                      <td class="px-6 py-3">{{ dt.item_name }}</td>
+                      <td class="px-6 py-3">{{ dt.unit }}</td>
+                      <td class="px-6 py-3 text-right">{{ formatNumber(dt.price) }}</td>
+                      <td class="px-6 py-3 text-right">
+                        <div class="flex gap-2 items-center justify-around">
+                          <BaseButton
+                            @click="changeQty('min', dt.id)"
+                            color="black"
+                            :icon="mdiMinus"
+                            small
+                            :rounded-full="true"
+                          />
+                          <span class="text-right">{{ dt.qty }}</span>
 
-                    <td class="px-6 py-3">
-                      <BaseButtons type="justify-center" no-wrap>
-                        <BaseButton
-                          @click="deleteItem(dt.id)"
-                          color="danger"
-                          :icon="mdiTrashCan"
-                          small
-                        />
-                      </BaseButtons>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </CardBox>
+                          <BaseButton
+                            @click="changeQty('plus', dt.id)"
+                            color="black"
+                            :icon="mdiPlus"
+                            small
+                            :rounded-full="true"
+                          />
+                        </div>
+                      </td>
+                      <td class="px-6 py-3 text-right">
+                        {{ formatNumber(dt.disc) + (dt.disc_type == '%' ? '%' : '') }}
+                      </td>
+                      <td class="px-6 py-3 text-right">{{ formatNumber(dt.disc_amt) }}</td>
+                      <td class="px-6 py-3 text-right">{{ formatNumber(dt.price_fix) }}</td>
 
-          <div class="row-span-2 col-span-3 text-[12px] h-full">
+                      <td class="px-6 py-3">
+                        <BaseButtons type="justify-center" no-wrap>
+                          <BaseButton
+                            @click="deleteItem(dt.id)"
+                            color="danger"
+                            :icon="mdiTrashCan"
+                            small
+                          />
+                        </BaseButtons>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </CardBox>
+          </div>
+
+          <!-- <div class="row-span-2 col-span-3 text-[12px] h-full">
             <CardBox class="!h-[full]">
               <h1 class="font-bold text-center text-xl">Detail Nota</h1>
               <div class="flex justify-between items-center py-2 border-t border-b my-4">
@@ -776,11 +801,11 @@ onMounted(async () => {
               @saveSuccess="getDaily"
               :payment="arrayPayment"
             />
-          </div>
+          </div> -->
         </div>
 
-        <div class="row-span-2 col-span-3 text-[12px] h-full">
-          <CardBox class="!h-[full]">
+        <div class="row-span-2 col-span-3 text-[12px] h-screen overflow-auto">
+          <CardBox class="!h-[full] overflow-auto">
             <h1 class="font-bold text-center !text-xl">Detail Nota</h1>
             <div class="flex flex-col justify-center items-center py-2 border-t border-b mt-2 mb-4">
               <div>

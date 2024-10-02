@@ -214,8 +214,9 @@
                       changeAmtDonation(0)
                     }
                   "
-                  name="form radio"
-                  inputValue="tes"
+                  name="form radio 2"
+                  :is-disabled="false"
+                  type="checkbox"
                 />
                 <FieldNumber
                   :bind="{ readonly: !isDonasiManual }"

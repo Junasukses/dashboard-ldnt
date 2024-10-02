@@ -303,12 +303,13 @@ import {
   mdiLineScan,
   mdiPrinter
 } from '@mdi/js'
-import { ref, reactive, readonly, computed, watch } from 'vue'
+import { ref, reactive, readonly, computed, watch, onMounted } from 'vue'
 import menuNavBar from '@/menuNavBar.js'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import { useStore } from '@/stores/app'
 import axios from 'axios'
+import { onBeforeUnmount } from 'vue'
 
 const isOpenPopup = ref(false)
 const isDonasiManual = ref(false)
@@ -438,4 +439,21 @@ function formatNumber(amount, decimals = 2) {
 
   return `${formattedIntegerPart}${decimalPart ? ',' + decimalPart : ''}`
 }
+
+const handleKeyDown = (event) => {
+  event.preventDefault()
+  const key = event?.key?.toLowerCase()
+  const keypadMap = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 0: 0 }
+
+  if (keypadMap[key] !== undefined) {
+    changeKeypad(keypadMap[key])
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>

@@ -15,7 +15,7 @@ import {
   mdiSaleOutline,
   mdiTrashCan
 } from '@mdi/js'
-import { ref, reactive, nextTick, computed, onMounted } from 'vue'
+import { ref, reactive, nextTick, computed, onMounted, onBeforeUnmount } from 'vue'
 import menuNavBar from '@/menuNavBar.js'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
@@ -131,16 +131,22 @@ const grand_total = computed(() => {
 
 const resetAll = () => {
   if (data.isOpen) {
-    alertify.confirm(
-      'Perhatian',
-      `Lanjutkan reset data?`,
-      () => {
-        item.group_data = []
-        paymentPopup.value?.onReset()
-        alertify.success('Data berhasil di reset')
-      },
-      () => {}
-    )
+    alertify
+      .prompt(
+        'Masukan Bypass Password',
+        '',
+        async (evt, value) => {
+          if (value === '12345') {
+            item.group_data = []
+            paymentPopup.value?.onReset()
+            alertify.success('Data berhasil di reset')
+          } else {
+            alertify.error('Bypass Password Salah')
+          }
+        },
+        () => {}
+      )
+      .set('type', 'password')
   }
 }
 
@@ -269,10 +275,20 @@ const getPayment = async () => {
   }
 }
 
+const handleKeyDown = (event) => {
+  if (data?.isOpen) {
+    if (event?.ctrlKey && event?.key?.toLowerCase() === 'enter') {
+      event.preventDefault()
+      paymentPopup.value?.open()
+    }
+  }
+}
+
 onMounted(async () => {
   try {
     //
 
+    window.addEventListener('keydown', handleKeyDown)
     store.setRequesting(true)
     await getDaily()
     await getPayment()
@@ -285,6 +301,9 @@ onMounted(async () => {
   }
 
   store.setRequesting(false)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeyDown)
 })
 </script>
 <style scoped>
@@ -635,7 +654,7 @@ onMounted(async () => {
                 <tbody>
                   <tr v-if="item.group_data.length === 0">
                     <td
-                      colspan="8"
+                      colspan="9"
                       class="h-20 w-full flex items-center justify-center !text-center"
                     >
                       Belum ada item yang ditambahkan

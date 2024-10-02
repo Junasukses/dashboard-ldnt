@@ -129,22 +129,7 @@
         'bottom-9/10': dynamicType === 'date'
       }"
       class="absolute z-5 w-full -left-4 px-4 animated animate-zoom-in animate-duration-100"
-    >
-      <ul class="bg-white border p-1.5 shadow-md">
-        <li
-          v-for="hint in hints"
-          :key="'hint-' + hint"
-          class="flex flex-row px-2 gap-3 place-items-center"
-        >
-          <icon
-            :class="errorText ? '!text-red-400' : '!text-yellow-500'"
-            :fa="errorText ? 'exclamation' : 'info'"
-            style="zoom: 90%"
-          />
-          <span class="text-gray-500 text-xs">{{ hint }}</span>
-        </li>
-      </ul>
-    </div>
+    ></div>
   </div>
 </template>
 <script>

@@ -143,7 +143,6 @@ const resetAll = () => {
 
 function changeQty(type, id) {
   if (type === 'plus') {
-    // Menambahkan kuantitas
     item.group_data = item.group_data.map((dt) => {
       if (dt.id === id) {
         return {
@@ -156,14 +155,12 @@ function changeQty(type, id) {
       return dt
     })
   } else if (type === 'min') {
-    // Mengurangi kuantitas dengan prompt password
     alertify
       .prompt(
         'Masukan Bypass Password',
         '',
         (evt, value) => {
           if (value === '12345') {
-            // Jika password benar
             item.group_data = item.group_data.map((dt) => {
               if (dt.id === id) {
                 return {
@@ -175,9 +172,9 @@ function changeQty(type, id) {
               }
               return dt
             })
+            item.group_data = item.group_data.filter((dt) => dt.qty > 0)
             alertify.success('Qty Berhasil Dikurangi')
           } else {
-            // Jika password salah
             alertify.error('Bypass Password Salah')
           }
         },
@@ -185,8 +182,6 @@ function changeQty(type, id) {
       )
       .set('type', 'password')
   }
-
-  // Menghapus item dengan qty <= 0
   item.group_data = item.group_data.filter((dt) => dt.qty > 0)
 }
 

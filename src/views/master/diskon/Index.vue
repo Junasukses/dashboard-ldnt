@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onActivated } from 'vue'
 import {
   mdiBallotOutline,
   mdiAccount,
@@ -15,12 +15,6 @@ import CardBox from '@/components/CardBox.vue'
 import FormCheckRadioGroup from '@/components/FormCheckRadioGroup.vue'
 import FormFilePicker from '@/components/FormFilePicker.vue'
 import FormField from '@/components/FormField.vue'
-import FormControl from '@/components/FormControl.vue'
-import BaseDivider from '@/components/BaseDivider.vue'
-import BaseButton from '@/components/BaseButton.vue'
-import BaseButtons from '@/components/BaseButtons.vue'
-import SectionTitle from '@/components/SectionTitle.vue'
-import ButtonMultiSelect from '@/components/forms/ButtonMultiSelect.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
@@ -28,18 +22,17 @@ import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/main'
 import BaseIcon from '@/components/BaseIcon.vue'
 import router from '@/router'
+import { useStore } from '@/stores/app'
 
 const route = useRoute()
-const baseUrl = ref(import.meta.env.VITE_API_URL)
-const token = ref(localStorage.getItem('authToken') ?? import.meta.env.VITE_AUTH_TOKEN)
-const endpointApi = 'm_unit'
+const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
+const endpointApi = 't_disc'
 
-const mainStore = useMainStore()
+const store = useStore()
 const apiTable = ref()
-const actionText = ref(route.params.id === 'create' ? 'Tambah' : route.query.action)
-const formErrors = ref({})
-const detailArr = ref(mainStore.clients)
-
+const data = reactive({
+  discount_type: 'REGULER'
+})
 const landing = reactive({
   actions: [
     {
@@ -73,14 +66,14 @@ const landing = reactive({
     }
   ],
   api: {
-    url: `${baseUrl.value}/operation/${endpointApi}`,
+    url: `${store.server}/operation/${endpointApi}`,
     headers: {
       'Content-Type': 'Application/json',
       authorization: `Bearer ${token.value}`
     },
     params: {
       simplest: true,
-      searchfield: 'this.id, this.code, this.name, this.desc, this.is_active'
+      searchfield: 'this.id, this.discount_type, this.name, this.desc, this.status'
     },
     onsuccess(response) {
       response.page = response.current_page
@@ -97,17 +90,6 @@ const landing = reactive({
       resizable: true,
       filter: true,
       cellClass: ['justify-center', 'bg-gray-50', 'border-r', '!border-gray-200']
-    },
-    {
-      field: 'code',
-      headerName: 'Kode',
-      filter: true,
-      sortable: true,
-      flex: 1,
-      filter: 'ColFilter',
-      resizable: true,
-      wrapText: true,
-      cellClass: ['border-r', '!border-gray-200', 'justify-start']
     },
     {
       field: 'name',
@@ -132,20 +114,33 @@ const landing = reactive({
       cellClass: ['border-r', '!border-gray-200', 'justify-start']
     },
     {
-      field: 'is_active',
+      field: 'discount_type',
+      headerName: 'Discount Type',
+      filter: true,
+      sortable: true,
+      flex: 1,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'status',
       headerName: 'Status',
       filter: true,
       filter: 'ColFilter',
       sortable: true,
       flex: 1,
-      cellClass: ['border-r', '!border-gray-200', 'justify-center'],
-      cellRenderer: ({ value }) => {
-        return value === true
-          ? `<span class="text-green-500 rounded-md text-xs font-medium px-4 py-1 inline-block capitalize">Active</span>`
-          : `<span class="text-gray-500 rounded-md text-xs font-medium px-4 py-1 inline-block capitalize">Inactive</span>`
-      }
+      cellClass: ['border-r', '!border-gray-200', 'justify-center']
     }
   ]
+})
+onActivated(() => {
+  if (apiTable.value) {
+    if (route.query.reload) {
+      apiTable.value.reload()
+    }
+  }
 })
 </script>
 <template>
@@ -155,14 +150,40 @@ const landing = reactive({
       </SectionTitleLineWithButton>
       <CardBox>
         <FormField>
-          <TableApi
-            ref="apiTable"
-            :api="landing.api"
-            :columns="landing.columns"
-            :actions="landing.actions"
-            class="max-h-[450px]"
-          >
-          </TableApi>
+          <div class="flex flex-col w-full col-span-2">
+            <div class="flex justify-between">
+              <div class="flex items-center w-[50%]">
+                <label class="block font-bold mb-2 mr-4 w-[40%]">Discount Type :</label>
+                <FieldSelect
+                  :bind="{ disabled: false, clearable: false }"
+                  :value="data.discount_type"
+                  @input="(v) => (data.discount_type = v)"
+                  :check="false"
+                  :options="['REGULER', 'PROGRESIF', 'GLOBAL']"
+                  placeholder="Pilih Discount Type"
+                  label=""
+                  class="!mt-0"
+                />
+              </div>
+
+              <div>
+                <RouterLink
+                  :to="`${route.path}/create?type=${data.discount_type}&${Date.parse(new Date())}`"
+                  class="border border-blue-600 text-blue-600 bg-white hover:bg-blue-600 hover:text-white duration-300 transform hover:-translate-y-0.5 rounded-md py-1 px-2"
+                >
+                  Create New
+                </RouterLink>
+              </div>
+            </div>
+            <TableApi
+              ref="apiTable"
+              :api="landing.api"
+              :columns="landing.columns"
+              :actions="landing.actions"
+              class="max-h-[450px]"
+            >
+            </TableApi>
+          </div>
         </FormField>
       </CardBox>
     </SectionMain>

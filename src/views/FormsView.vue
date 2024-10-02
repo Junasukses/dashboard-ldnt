@@ -369,15 +369,13 @@ const landing = reactive({
               :check="false"
               :columns="[
                 {
-                  checkboxSelection: true,
-                  headerCheckboxSelection: true,
                   headerName: 'No',
-                  valueGetter: (p) => '',
+                  valueGetter: (p) => p.node.rowIndex + 1,
                   width: 60,
                   sortable: false,
-                  resizable: true,
+                  resizable: false,
                   filter: false,
-                  cellClass: ['justify-center', 'bg-gray-50', '!border-gray-200']
+                  cellClass: ['justify-center', 'bg-gray-50']
                 },
                 {
                   flex: 1,

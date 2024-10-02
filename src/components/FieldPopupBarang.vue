@@ -1,76 +1,9 @@
 <template>
-  <div class="flex flex-col place-items-center justify-center w-full px-0 rounded relative">
-    <input
-      :id="idInput"
-      ref="inputElement"
-      :value="valueModel"
-      :name="Math.random() - false"
-      autocomplete="new-password"
-      :placeholder="placeholder"
-      v-bind="bind"
-      :readonly="bind.readonly || params"
-      class="max-h-8 w-full bg-white py-2.5 rounded input-target outline-none md:!text-sm transition-all duration-300 pr-9.5 border border-gray-700"
-      :class="{
-        '!bg-gray-100': bind.readonly,
-        'pr-10': check && !params,
-        'pl-10': Boolean(faIcon),
-        'pl-2.2': !Boolean(faIcon)
-      }"
-      @focus="isFocus = true"
-      @blur="isFocus = false"
-      @input="onInput"
-      @keydown.enter="onEnter"
-    />
-    <icon
-      v-if="faIcon"
-      :fa="faIcon"
-      :class="`absolute -left-1 fa-fw ${
-        isFocus ? '!text-blue-500 animated animate-head-shake' : 'text-gray-600'
-      }`"
-    />
-    <icon v-else-if="check && !params" fa="check" class="absolute right-2 text-green-400" />
-    <icon
-      v-show="false"
-      :class="{
-        'right-5.5': errorText || (!valueModelId && valueModel),
-        'right-2': !errorText
-      }"
-      title="Buka Pilihan"
-      fa="search"
-      class="absolute transition-all duration-100 fa-fw text-gray-500 hover:text-blue-600 cursor-pointer"
-      @click="isOpenPopup = true"
-    />
-    <icon
-      v-show="valueModel && !bind.readonly"
-      :class="{
-        '!right-3': errorText || (!valueModelId && valueModel),
-        'right-7': !errorText
-      }"
-      title="Clear Selected"
-      fa="times"
-      size="sm"
-      class="absolute transition-all duration-100 fa-fw text-gray-500 hover:text-red-600 cursor-pointer"
-      @click="onClear"
-    />
-    <div
-      v-show="isFocus && hints.length > 0"
-      class="absolute z-5 top-9/10 w-full -left-4 px-4 animated animate-zoom-in animate-duration-100"
-    >
-      <ul class="bg-white border border-yellow-500 rounded p-1.5 shadow-sm">
-        <li
-          v-for="hint in hints"
-          :key="'hint-' + hint"
-          class="flex flex-row px-2 gap-3 place-items-center"
-        >
-          <icon
-            :class="errorText ? '!text-red-400' : '!text-yellow-500'"
-            :fa="errorText ? 'exclamation' : 'info'"
-            style="zoom: 90%"
-          />
-          <span class="text-gray-500 text-xs">{{ hint }}</span>
-        </li>
-      </ul>
-    </div>
+  <div>
+    <button class="focus:( !outline-none) !text-xs rounded w-auto" @click="onClick">
+      <slot />
+    </button>
+
     <vue-final-modal v-model="isOpenPopup" attach="#app" :drag="true" :resize="true">
       <div
         v-if="isOpenPopup"
@@ -136,24 +69,8 @@ function onRowClicked(val) {
   }
 }
 
-async function onEnter() {
-  if (params.value) return
-
-  const data = await fetch(
-    `${baseUrl.value}/operation/v_item_catalog/get_by_barcode?barcode=${valueModel.value ?? 0}`,
-    {
-      headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token.value}` }
-    }
-  ).then((res) => res.json())
-
-  if (data.code === 200) {
-    valueModel.value = data.data[prop.displayField]
-    valueModelFull.value = data.data
-    valueModelId.value = data.data.id
-    emit('update:valueFull', data.data)
-  } else {
-    isOpenPopup.value = true
-  }
+function onClick() {
+  isOpenPopup.value = true
 }
 
 function onInput(e) {
@@ -210,7 +127,6 @@ function getValues() {
 defineExpose({
   getValue,
   getValues,
-  onEnter,
   onReset
 })
 

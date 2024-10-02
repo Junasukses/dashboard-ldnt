@@ -31,7 +31,7 @@ import router from '@/router'
 
 const route = useRoute()
 const baseUrl = ref(import.meta.env.VITE_API_URL)
-const token = ref(localStorage.getItem('authToken') ?? import.meta.env.VITE_AUTH_TOKEN)
+const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const endpointApi = 'm_unit'
 
 const mainStore = useMainStore()

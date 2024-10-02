@@ -290,7 +290,7 @@ const contextEl = ref(null)
 const contextMenuShow = ref(false)
 const mouseX = ref(null)
 const mouseY = ref(null)
-const token = ref(localStorage.getItem('authToken') ?? import.meta.env.VITE_AUTH_TOKEN)
+const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const env = ref(import.meta.env.VITE_API_URL)
 
 const prop = defineProps({

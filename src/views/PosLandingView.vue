@@ -288,7 +288,7 @@ onMounted(async () => {
   try {
     //
 
-    window.addEventListener('keydown', handleKeyDown)
+    // window.addEventListener('keydown', handleKeyDown)
     store.setRequesting(true)
     await getDaily()
     await getPayment()
@@ -302,9 +302,9 @@ onMounted(async () => {
 
   store.setRequesting(false)
 })
-onBeforeUnmount(() => {
-  window.removeEventListener('keydown', handleKeyDown)
-})
+// onBeforeUnmount(() => {
+//   window.removeEventListener('keydown', handleKeyDown)
+// })
 </script>
 <style scoped>
 @tailwind base;

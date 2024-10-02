@@ -472,7 +472,4 @@ const handleKeyDown = (event) => {
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
 })
-onBeforeUnmount(() => {
-  window.removeEventListener('keydown', handleKeyDown)
-})
 </script>

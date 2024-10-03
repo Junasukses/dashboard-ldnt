@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { mdiBallotOutline, mdiTrashCan } from '@mdi/js'
+import { mdiBallotOutline, mdiTrashCan, mdiArrowUp, mdiArrowDown } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
@@ -35,16 +35,18 @@ onBeforeMount(async () => {
         for (const [key, value] of Object.entries(resData.data)) {
             values[key] = value;
         }
+        detailArr.value = values.generate_code_d;
         values.is_active = values.is_active ? 1 : 0;
     } catch (err) {
-        alertify.error('Failed to get data')
+        alertify.error('Failed to get data');
+        router.replace(landing_path);
     }
 })
 
 async function onSave() {
     try {
         const hit_endpoint = `${baseUrl.value}/operation/${endpointApi}/${actionText.value === 'Edit' ? route.params.id : ''}`;
-        console.log(hit_endpoint);
+        values.generate_code_d = detailArr.value.map((dt, key) => ({ ...dt, seq: key + 1 }));
         const res = await axios({
             method: actionText.value === 'Edit' ? 'PUT' : 'POST',
             url: hit_endpoint,
@@ -89,6 +91,18 @@ const delRow = (key) => {
         },
         () => { }
     )
+}
+
+const upRow = (key) => {
+    const current = detailArr.value[key];
+    detailArr.value[key] = detailArr.value[key - 1];
+    detailArr.value[key - 1] = current;
+}
+
+const downRow = (key) => {
+    const current = detailArr.value[key];
+    detailArr.value[key] = detailArr.value[key + 1];
+    detailArr.value[key + 1] = current;
 }
 
 async function pratinjau() {
@@ -179,8 +193,10 @@ async function pratinjau() {
                     </SectionTitleLineWithButton>
                     <BaseButtons class="flex justify-end">
                         <BaseButton @click="pratinjau" type="button" color="warning" label="Pratinjau" small />
-                        <BaseButton @click="addRow" type="button" color="info" label="Tambah Baris" small />
-                        <BaseButton @click="delAllRow" type="button" color="danger" label="Hapus Semua" small />
+                        <BaseButton v-show="actionText" @click="addRow" type="button" color="info" label="Tambah Baris"
+                            small />
+                        <BaseButton v-show="actionText" @click="delAllRow" type="button" color="danger"
+                            label="Hapus Semua" small />
                     </BaseButtons>
                 </div>
 
@@ -197,7 +213,7 @@ async function pratinjau() {
                         <tbody>
                             <tr v-if="detailArr.length > 0"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                                v-for="(item, i) in detailArr" :key="item.id">
+                                v-for="(item, i) in detailArr.sort((a, b) => a.seq - b.seq)" :key="item.id">
                                 <td class="px-6 py-4">
                                     {{ i + 1 }}
                                 </td>
@@ -219,8 +235,7 @@ async function pratinjau() {
                                 </td>
                                 <td class="px-6 py-4">
                                     <FieldSelect :bind="{ disabled: true, clearable: true }" class="w-full !mt-0"
-                                        :value="item.generate_code_type_v"
-                                        @input="(v) => (item.generate_code_type_v = v)"
+                                        :value="item.generate_code_type_id"
                                         :errorText="formErrors.generate_code_type ? 'failed' : ''"
                                         :hints="formErrors.generate_code_type" valueField="id" displayField="value"
                                         :api="{
@@ -235,7 +250,10 @@ async function pratinjau() {
                                 </td>
                                 <td class="px-6 py-4">
                                     <BaseButtons type="justify-start lg:justify-end" no-wrap>
-                                        <BaseButton color="info" :icon="mdiEye" small />
+                                        <BaseButton v-show="i > 0" @click="upRow(i)" color="info" :icon="mdiArrowUp"
+                                            small />
+                                        <BaseButton @click="downRow(i)" v-show="i < detailArr.length - 1" color="info"
+                                            :icon="mdiArrowDown" small />
                                         <BaseButton @click="delRow(i)" color="danger" :icon="mdiTrashCan" small />
                                     </BaseButtons>
                                 </td>

@@ -457,15 +457,14 @@ const onSave = async () => {
             valueField="id"
             displayField="barcode"
             :api="{
-              url: `${store.server}/operation/m_item`,
+              url: `${store.server}/operation/v_item_catalog`,
               headers: {
                 'Content-Type': 'Application/json',
                 Authorization: `Bearer ${token}`
               },
               params: {
                 simplest: true,
-                searchfield: 'this.code,this.item_name,unit.name',
-                where: 'this.is_active=true',
+                searchfield: 'this.item_code,this.item_name,unit,this.barcode,this.supp',
                 notin:
                   detailArr.length > 0
                     ? `this.id:${detailArr
@@ -476,12 +475,13 @@ const onSave = async () => {
               },
               onsuccess: (response) => {
                 response.data = [...response.data].map((dt) => {
-                  dt['m_item_id'] = dt['id']
+                  dt['m_item_id'] = dt['m_item_id']
                   dt['m_item.item_name'] = dt['item_name']
-                  dt['m_item_type.name'] = dt['m_item_type.name']
+                  dt['m_item_type_id'] = dt['item_type_id']
+                  dt['m_item_type.name'] = dt['m_item_type_name']
                   dt['m_unit_id'] = dt['unit_id']
-                  dt['m_unit.name'] = dt['unit.name']
-                  dt['price'] = parseFloat(dt['price_base'] ?? 0)
+                  dt['m_unit.name'] = dt['unit']
+                  dt['price'] = parseFloat(dt['price'] ?? 0)
                   return dt
                 })
                 response.page = response.current_page
@@ -501,7 +501,7 @@ const onSave = async () => {
               },
               {
                 flex: 1,
-                field: 'code',
+                field: 'item_code',
                 headerName: 'Code Item',
                 sortable: false,
                 resizable: true,
@@ -519,7 +519,25 @@ const onSave = async () => {
               },
               {
                 flex: 1,
-                field: 'unit.name',
+                field: 'barcode',
+                headerName: 'Barcode',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'supp',
+                headerName: 'Supp',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'unit',
                 headerName: 'Unit',
                 sortable: false,
                 resizable: true,
@@ -538,24 +556,24 @@ const onSave = async () => {
             title="Add To List"
             @add="onDetailAddReguler"
             :api="{
-              url: `${store.server}/operation/m_item`,
+              url: `${store.server}/operation/v_item_catalog`,
               headers: {
                 'Content-Type': 'Application/json',
                 Authorization: `Bearer ${token}`
               },
               params: {
                 simplest: true,
-                searchfield: 'this.code,this.item_name,unit.name',
-                where: 'this.is_active=true'
+                searchfield: 'this.item_code,this.barcode,this.supp,this.item_name,unit'
               },
               onsuccess: (response) => {
                 response.data = [...response.data].map((dt) => {
-                  dt['m_item_id'] = dt['id']
+                  dt['m_item_id'] = dt['m_item_id']
                   dt['m_item.item_name'] = dt['item_name']
-                  dt['m_item_type.name'] = dt['m_item_type.name']
+                  dt['m_item_type_id'] = dt['item_type_id']
+                  dt['m_item_type.name'] = dt['m_item_type_name']
                   dt['m_unit_id'] = dt['unit_id']
-                  dt['m_unit.name'] = dt['unit.name']
-                  dt['price'] = parseFloat(dt['price_base'] ?? 0)
+                  dt['m_unit.name'] = dt['unit']
+                  dt['price'] = parseFloat(dt['price'] ?? 0)
                   return dt
                 })
                 response.page = response.current_page
@@ -583,7 +601,7 @@ const onSave = async () => {
               },
               {
                 flex: 1,
-                field: 'code',
+                field: 'item_code',
                 headerName: 'Code Item',
                 sortable: false,
                 resizable: true,
@@ -601,7 +619,25 @@ const onSave = async () => {
               },
               {
                 flex: 1,
-                field: 'unit.name',
+                field: 'barcode',
+                headerName: 'Barcode',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'supp',
+                headerName: 'Supp',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+              },
+              {
+                flex: 1,
+                field: 'unit',
                 headerName: 'Unit',
                 sortable: false,
                 resizable: true,

@@ -95,7 +95,7 @@
     <div
       v-show="isFocus"
       v-if="hints && hints.length > 0"
-      class="absolute z-5 top-9/10 w-full -left-4 px-4 animated animate-zoom-in animate-duration-100"
+      class="absolute z-5 top-[33px] w-full -left-4 px-4 animated animate-zoom-in animate-duration-100"
     >
       <ul class="bg-white border p-1 shadow-md">
         <li

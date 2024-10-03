@@ -152,6 +152,7 @@ const landing = reactive({
 .datePickerCustomCalender {
   font-size: 0.8rem;
 }
+
 .datePickerCustomCell {
   width: 30px;
   height: 20px;
@@ -175,20 +176,25 @@ const landing = reactive({
   transition: all 300ms;
   outline: none;
 }
+
 .datePickerCustom::placeholder {
   color: #6b7280;
 }
+
 .datePickerCustom:hover {
   border: 1px solid #374151 !important;
 }
-.datePickerCustomMenu:hover ~ .datePickerCustom,
-.datePickerCustomMenu:focus-within ~ .datePickerCustom {
+
+.datePickerCustomMenu:hover~.datePickerCustom,
+.datePickerCustomMenu:focus-within~.datePickerCustom {
   border-color: #3b82f6 !important;
 }
+
 .datePickerCustom:focus-within,
 .dp__input_focus {
   border: 1px solid #3b82f6 !important;
-  box-shadow: 0 0 0 1px #3b82f6; /* Efek seperti ring */
+  box-shadow: 0 0 0 1px #3b82f6;
+  /* Efek seperti ring */
 }
 </style>
 <template>
@@ -198,13 +204,8 @@ const landing = reactive({
       </SectionTitleLineWithButton>
       <CardBox>
         <FormField>
-          <TableApi
-            ref="apiTable"
-            :api="landing.api"
-            :columns="landing.columns"
-            :actions="landing.actions"
-            class="max-h-[450px]"
-          >
+          <TableApi ref="apiTable" :api="landing.api" :columns="landing.columns" :actions="landing.actions"
+            class="max-h-[450px]">
           </TableApi>
         </FormField>
       </CardBox>

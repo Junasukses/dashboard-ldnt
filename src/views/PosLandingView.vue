@@ -249,6 +249,9 @@ const getDaily = async () => {
 
     if (response.status !== 200) throw new Error('Failed when trying to read data')
     const dataDaily = response.data
+    if (dataDaily.data.next_shift) {
+      data.shift = dataDaily.data.next_shift
+    }
     data.isOpen = dataDaily.data.is_open
     if (data.isOpen) {
       for (const key in dataDaily.data) {

@@ -49,10 +49,10 @@
           <div class="grid grid-cols-5 gap-2" v-if="!prop.data.isOpen">
             <label class="col-span-2">Shift</label>
             <FieldSelect
-              :bind="{ disabled: false, clearable: false }"
+              :bind="{ disabled: true, clearable: false }"
               class="w-full !mt-0 col-span-3"
-              :value="data.shift"
-              @input="(v) => (data.shift = v)"
+              :value="prop.data.shift"
+              @input="(v) => (prop.data.shift = v)"
               :errorText="formErrors.shift ? 'failed' : ''"
               :hints="formErrors.shift"
               :options="['1', '2', '3']"
@@ -161,6 +161,7 @@ const onsave = async () => {
     } else {
       data.open_saldo = data.open_saldo ?? 0
     }
+    data.shift = prop.data.shift
     const response = await axios.post('/operation/t_daily/send_daily', data)
 
     alertify.success(response.data.message)

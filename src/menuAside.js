@@ -10,7 +10,10 @@ import {
   mdiTelevisionGuide,
   mdiResponsive,
   mdiPalette,
-  mdiReact
+  mdiReact,
+  mdiNumeric,
+  mdiCodeArray,
+  mdiNumeric0Box
 } from '@mdi/js'
 
 export default [
@@ -32,6 +35,11 @@ export default [
         to: '/master-diskon',
         label: 'Diskon',
         icon: mdiSquareEditOutline
+      },
+      {
+        to: '/setting-penomoran',
+        label: 'Penomoran',
+        icon: mdiNumeric
       }
     ]
   },

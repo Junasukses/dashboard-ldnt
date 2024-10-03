@@ -98,6 +98,30 @@ const routes = [
     meta: {
       title: 'Master Diskon'
     }
+  },
+  {
+    path: '/setting-penomoran',
+    name: 'setting-penomoran',
+    component: () => import('@/views/master/penomoran/Index.vue'),
+    meta: {
+      title: 'Setting Penomoran'
+    }
+  },
+  {
+    path: '/setting-penomoran/format/:id',
+    name: 'setting-penomoran-format-id',
+    component: () => import('@/views/master/penomoran/FormatForm.vue'),
+    meta: {
+      title: 'Setting Format Penomoran'
+    }
+  },
+  {
+    path: '/setting-penomoran/prefix/:id',
+    name: 'setting-penomoran-prefix-id',
+    component: () => import('@/views/master/penomoran/PrefixForm.vue'),
+    meta: {
+      title: 'Setting Prefix Penomoran'
+    }
   }
 ]
 

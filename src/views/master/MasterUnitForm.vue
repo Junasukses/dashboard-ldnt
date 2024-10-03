@@ -51,55 +51,26 @@ const values = reactive({})
           <div class="grid grid-cols-2 gap-8">
             <div>
               <label class="block font-bold mb-2">Business Unit</label>
-              <FieldX
-                :bind="{ readonly: true }"
-                class="w-full !mt-0"
-                :value="values['m_bu.code']"
-                :errorText="formErrors.m_bu_id ? 'failed' : ''"
-                :check="false"
-                placeholder=""
-              />
+              <FieldX :bind="{ readonly: true }" class="w-full !mt-0" :value="values['m_bu.code']"
+                :errorText="formErrors.m_bu_id ? 'failed' : ''" :check="false" placeholder="" />
             </div>
             <div>
               <label class="block font-bold mb-2">Kode</label>
-              <FieldX
-                :bind="{ readonly: true }"
-                class="w-full !mt-0"
-                :value="values['code']"
-                :errorText="formErrors.code ? 'failed' : ''"
-                :check="false"
-                placeholder=""
-              />
+              <FieldX :bind="{ readonly: true }" class="w-full !mt-0" :value="values['code']"
+                :errorText="formErrors.code ? 'failed' : ''" :check="false" placeholder="" />
             </div>
             <div>
               <label class="block font-bold mb-2">Nama</label>
-              <FieldX
-                :bind="{ readonly: false }"
-                class="w-full !mt-0"
-                :value="values['name']"
-                :errorText="formErrors.name ? 'failed' : ''"
-                :check="false"
-                placeholder=""
-              />
+              <FieldX :bind="{ readonly: false }" class="w-full !mt-0" :value="values['name']"
+                :errorText="formErrors.name ? 'failed' : ''" :check="false" placeholder="" />
             </div>
             <div>
               <label class="block font-bold mb-2">Deskripsi</label>
-              <FieldX
-                :bind="{ readonly: false }"
-                class="w-full !mt-0"
-                :value="values['name']"
-                :errorText="formErrors.name ? 'failed' : ''"
-                :check="false"
-                type="textarea"
-                placeholder=""
-              />
+              <FieldX :bind="{ readonly: false }" class="w-full !mt-0" :value="values['name']"
+                :errorText="formErrors.name ? 'failed' : ''" :check="false" type="textarea" placeholder="" />
             </div>
             <FormField label="Status">
-              <FormCheckRadio
-                v-model="values.is_active"
-                type="switch"
-                :options="{ true: 1, false: 0 }"
-              />
+              <FormCheckRadio v-model="values.is_active" type="switch" :options="{ true: 1, false: 0 }" />
               <div>{{ values.is_active }}</div>
             </FormField>
           </div>

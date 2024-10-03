@@ -391,10 +391,6 @@ const onSave = async () => {
   store.setRequesting(false)
 }
 
-defineExpose({
-  open,
-  onReset
-})
 const changeKeypad = (v) => {
   if (v == 'C') {
     countAmtPay(0)
@@ -441,36 +437,52 @@ function formatNumber(amount, decimals = 2) {
   return `${formattedIntegerPart}${decimalPart ? ',' + decimalPart : ''}`
 }
 
-const handleKeyDown = (event) => {
-  event.preventDefault()
-  const key = event?.key?.toLowerCase()
-
-  const keyMap = {
-    1: { action: changeKeypad, value: 1 },
-    2: { action: changeKeypad, value: 2 },
-    3: { action: changeKeypad, value: 3 },
-    4: { action: changeKeypad, value: 4 },
-    5: { action: changeKeypad, value: 5 },
-    6: { action: changeKeypad, value: 6 },
-    7: { action: changeKeypad, value: 7 },
-    8: { action: changeKeypad, value: 8 },
-    9: { action: changeKeypad, value: 9 },
-    0: { action: changeKeypad, value: 0 },
-    f1: { action: changeAmtMoney, value: 10000 },
-    f2: { action: changeAmtMoney, value: 20000 },
-    f3: { action: changeAmtMoney, value: 50000 },
-    f4: { action: changeAmtMoney, value: 100000 },
-    f5: { action: changeAmtMoney, value: 500000 }
-  }
-
-  const keyAction = keyMap[key]
-
-  if (keyAction) {
-    keyAction.action(keyAction.value)
-  }
+function changeIsOpen() {
+  isOpenPopup.value = !isOpenPopup.value
 }
 
+defineExpose({
+  open,
+  onReset,
+  changeKeypad,
+  changeAmtMoney,
+  changeIsOpen,
+  isOpenPopup
+})
+// const handleKeyDown = (event) => {
+//   event.preventDefault()
+//   event.stopPropagation()
+//   const key = event?.key?.toLowerCase()
+
+//   const keyMap = {
+//     1: { action: changeKeypad, value: 1 },
+//     2: { action: changeKeypad, value: 2 },
+//     3: { action: changeKeypad, value: 3 },
+//     4: { action: changeKeypad, value: 4 },
+//     5: { action: changeKeypad, value: 5 },
+//     6: { action: changeKeypad, value: 6 },
+//     7: { action: changeKeypad, value: 7 },
+//     8: { action: changeKeypad, value: 8 },
+//     9: { action: changeKeypad, value: 9 },
+//     0: { action: changeKeypad, value: 0 },
+//     f1: { action: changeAmtMoney, value: 10000 },
+//     f2: { action: changeAmtMoney, value: 20000 },
+//     f3: { action: changeAmtMoney, value: 50000 },
+//     f4: { action: changeAmtMoney, value: 100000 },
+//     f5: { action: changeAmtMoney, value: 500000 }
+//   }
+
+//   const keyAction = keyMap[key]
+
+//   if (keyAction) {
+//     keyAction.action(keyAction.value)
+//   }
+// }
 // onMounted(() => {
 //   window.addEventListener('keydown', handleKeyDown)
+// })
+
+// onBeforeUnmount(() => {
+//   window.removeEventListener('keydown', handleKeyDown)
 // })
 </script>

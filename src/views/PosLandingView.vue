@@ -149,6 +149,7 @@ const resetAll = () => {
 
 const getPriceQty = async (idItem, idUnit, qtyPar) => {
   try {
+    store.setRequesting(true)
     const response = await axios.get('/operation/v_item_catalog/get_item_unit_qty', {
       params: {
         m_item_id: idItem,
@@ -166,10 +167,12 @@ const getPriceQty = async (idItem, idUnit, qtyPar) => {
     tempData.price = parseInt(tempData.price)
     tempData.price_fix = parseInt(tempData.price_fix)
     tempData.netto = parseInt(tempData.price_fix)
+    store.setRequesting(false)
     return tempData
   } catch (err) {
     const errorMessage = err.response?.data || 'Failed to get data.'
     alertify.error(errorMessage)
+    store.setRequesting(false)
   }
 }
 async function changeQty(type, id) {
@@ -298,9 +301,35 @@ const getPayment = async () => {
 
 const handleKeyDown = (event) => {
   if (data?.isOpen) {
-    if (event?.ctrlKey && event?.key?.toLowerCase() === 'enter') {
+    const key = event?.key?.toLowerCase()
+    if (event?.ctrlKey && key === 'enter') {
       event.preventDefault()
-      paymentPopup.value?.open()
+      paymentPopup.value?.changeIsOpen()
+    }
+
+    const keyMap = {
+      1: { action: 'changeKeypad', value: 1 },
+      2: { action: 'changeKeypad', value: 2 },
+      3: { action: 'changeKeypad', value: 3 },
+      4: { action: 'changeKeypad', value: 4 },
+      5: { action: 'changeKeypad', value: 5 },
+      6: { action: 'changeKeypad', value: 6 },
+      7: { action: 'changeKeypad', value: 7 },
+      8: { action: 'changeKeypad', value: 8 },
+      9: { action: 'changeKeypad', value: 9 },
+      0: { action: 'changeKeypad', value: 0 },
+      f1: { action: 'changeAmtMoney', value: 10000 },
+      f2: { action: 'changeAmtMoney', value: 20000 },
+      f3: { action: 'changeAmtMoney', value: 50000 },
+      f4: { action: 'changeAmtMoney', value: 100000 },
+      f5: { action: 'changeAmtMoney', value: 500000 }
+    }
+
+    const keyAction = keyMap[key]
+
+    if (keyAction && paymentPopup.value?.isOpenPopup) {
+      event.preventDefault()
+      paymentPopup.value[keyAction.action](keyAction.value)
     }
   }
 }
@@ -309,7 +338,7 @@ onMounted(async () => {
   try {
     //
 
-    // window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keydown', handleKeyDown)
     store.setRequesting(true)
     await getDaily()
     await getPayment()
@@ -323,9 +352,9 @@ onMounted(async () => {
 
   store.setRequesting(false)
 })
-// onBeforeUnmount(() => {
-//   window.removeEventListener('keydown', handleKeyDown)
-// })
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>
 <style scoped>
 @tailwind base;
@@ -718,7 +747,10 @@ onMounted(async () => {
 
                       <td class="px-6">
                         <div class="flex items-center justify-center">
-                          <button class="hover:text-gray-800 duration-200 transition-colors">
+                          <button
+                            class="hover:text-gray-800 duration-200 transition-colors"
+                            @click="deleteItem(i)"
+                          >
                             <BaseIcon :path="mdiTrashCan" size="18" />
                           </button>
                         </div>

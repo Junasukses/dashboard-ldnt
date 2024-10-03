@@ -90,8 +90,6 @@ async function newDataItem(newData) {
       {
         ...newData,
         qty: 1,
-        disc_percent: 0,
-        disc_amt: 0,
         subtotal: newData.price,
         netto: newData.price_fix
       }
@@ -100,7 +98,7 @@ async function newDataItem(newData) {
     // ngapi ketika data sama di plus dua qtynya
     item.group_data = await Promise.all(
       item.group_data.map(async (dt) => {
-        if (dt.id === id) {
+        if (dt.id === newData.id) {
           const res = await getPriceQty(dt.m_item_id, dt.unit_id, dt.qty + 1)
           return res
         }
@@ -122,7 +120,6 @@ const grand_total = computed(() => {
   const totalAmt = item.group_data.reduce((a, b) => a + Number(b.subtotal), 0)
   const totalDisc = item.group_data.reduce((a, b) => a + Number(b.disc_amt), 0)
   const totalNetto = item.group_data.reduce((a, b) => a + Number(b.price_fix), 0)
-  console.log(totalDisc)
   data.amt = parseFloat(totalAmt)
   data.amt_disc = parseFloat(totalDisc)
   data.netto = parseFloat(totalNetto)
@@ -371,7 +368,7 @@ onMounted(async () => {
     <div
       class="lg:ml-0 pt-4 h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100 flex"
     >
-      <div class="grid grid-cols-12 gap-[12px] !py-0 overflow-hidden mx-6">
+      <div class="grid grid-cols-12 gap-[12px] !py-0 overflow-hidden mx-6 w-full">
         <div class="col-span-9">
           <h1 class="!ml-2 !font-bold !text-2xl">Selamat Datang Budi Santoso</h1>
           <h1 class="!ml-2 !font-bold !text-md">Kasir Shift II</h1>
@@ -719,15 +716,12 @@ onMounted(async () => {
                       <td class="px-6 py-3 text-right">{{ formatNumber(dt.disc_amt) }}</td>
                       <td class="px-6 py-3 text-right">{{ formatNumber(dt.price_fix) }}</td>
 
-                      <td class="px-6 py-3">
-                        <BaseButtons type="justify-center" no-wrap>
-                          <BaseButton
-                            @click="deleteItem(dt.id)"
-                            color="danger"
-                            :icon="mdiTrashCan"
-                            small
-                          />
-                        </BaseButtons>
+                      <td class="px-6">
+                        <div class="flex items-center justify-center">
+                          <button class="hover:text-gray-800 duration-200 transition-colors">
+                            <BaseIcon :path="mdiTrashCan" size="18" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -788,24 +782,11 @@ onMounted(async () => {
                 <h1 class="!text-[10px]">*Harga diatas sudah termasuk PPN</h1>
               </div>
             </CardBox>
-            <PaymentPopup
-              ref="paymentPopup"
-              :data="data"
-              :payment="arrayPayment"
-              :arr-detail="item.group_data"
-              @saveSuccess="successPayment"
-            />
-            <OpenCloseDaily
-              ref="openCLoseDailyPopup"
-              :data="data"
-              @saveSuccess="getDaily"
-              :payment="arrayPayment"
-            />
           </div> -->
         </div>
 
         <div class="row-span-2 col-span-3 text-[12px] h-screen overflow-auto">
-          <CardBox class="!h-[full] overflow-auto">
+          <CardBox class="!h-[full] overflow-auto w-full">
             <h1 class="font-bold text-center !text-xl">Detail Nota</h1>
             <div class="flex flex-col justify-center items-center py-2 border-t border-b mt-2 mb-4">
               <div>
@@ -857,6 +838,20 @@ onMounted(async () => {
             </div>
           </CardBox>
         </div>
+
+        <PaymentPopup
+          ref="paymentPopup"
+          :data="data"
+          :payment="arrayPayment"
+          :arr-detail="item.group_data"
+          @saveSuccess="successPayment"
+        />
+        <OpenCloseDaily
+          ref="openCLoseDailyPopup"
+          :data="data"
+          @saveSuccess="getDaily"
+          :payment="arrayPayment"
+        />
       </div>
     </div>
   </div>

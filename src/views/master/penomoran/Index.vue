@@ -12,7 +12,7 @@ import BaseButton from '@/components/BaseButton.vue'
 
 const route = useRoute();
 const baseUrl = ref(import.meta.env.VITE_API_URL);
-const token = ref(localStorage.getItem('authToken'));
+const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const formatApiTable = ref();
 const landingApiTable = ref();
 const activeTabIndex = ref(route.query.activeTab ? parseInt(route.query.activeTab) : 1);

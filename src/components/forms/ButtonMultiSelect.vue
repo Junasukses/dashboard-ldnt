@@ -1,10 +1,11 @@
 <template>
   <div>
-    <button class="focus:( !outline-none) !text-xs rounded w-auto" @click="onClick">
+    <button class="focus:!outline-none !text-xs rounded w-auto" @click="onClick">
       <slot />
     </button>
-
-    <vue-final-modal v-model="isOpenPopup" attach="#app">
+    <!-- 
+    <vue-final-modal v-model="isOpenPopup" attach="#app"> -->
+    <vue-final-modal v-model="isOpenPopup">
       <div
         v-if="isOpenPopup"
         class="top-0 left-0 w-screen h-screen !m-0 flex items-center justify-center animated animate-fade-in animate-duration-75"

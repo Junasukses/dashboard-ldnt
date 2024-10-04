@@ -139,7 +139,7 @@ export default {
   },
   computed: {
     idInput() {
-      return this.placeholder || Math.random() - false
+      return this.placeholder || String(Math.random()) // Ubah ke String
     }
   },
   props: {
@@ -565,8 +565,14 @@ export default {
           this.internalOptions = [...this.options]
         }
       }
+
+      // Pastikan inputId adalah string jika diperlukan
+      if (this.inputId !== undefined && typeof this.inputId !== 'string') {
+        this.inputId = String(this.inputId) // Ubah ke String jika perlu
+      }
     })
   },
+
   mounted() {
     if (this.params) {
       this.$nextTick(() => {

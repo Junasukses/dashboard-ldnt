@@ -21,7 +21,7 @@ const props = defineProps({
   },
   inputValue: {
     type: [String, Number, Boolean],
-    required: true
+    required: false
   },
   isDisabled: {
     type: Boolean,

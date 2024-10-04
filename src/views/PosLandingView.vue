@@ -223,15 +223,7 @@ function deleteItem(id) {
       '',
       async (evt, value) => {
         if (value === '12345') {
-          item.group_data = await Promise.all(
-            item.group_data.map(async (dt) => {
-              if (dt.id === id) {
-                const res = await getPriceQty(dt.m_item_id, dt.unit_id, dt.qty - 1)
-                return res
-              }
-              return dt
-            })
-          )
+          console.log(id)
           item.group_data = item.group_data.filter((dt) => dt.id !== id)
           alertify.success('Item Berhasil Dihapus')
         } else {
@@ -301,13 +293,27 @@ const getPayment = async () => {
     alertify.error(errorMessage)
   }
 }
-
+// const togglePopup = () => {
+//   paymentPopup.value?.changeIsOpen()
+//   if (paymentPopup.value?.isOpenPopup) {
+//     nextTick(() => {
+//       paymentPopup.value?.setPayFocused(true, true)
+//     })
+//   }
+//   // When the popup opens, focus the appropriate input field
+// }
 const handleKeyDown = (event) => {
   if (data?.isOpen) {
     const key = event?.key?.toLowerCase()
     if (event?.ctrlKey && key === 'enter') {
       event.preventDefault()
-      paymentPopup.value?.changeIsOpen()
+      paymentPopup.value?.changeIsOpen(true)
+    } else if (key === 'escape') {
+      event.preventDefault()
+      paymentPopup.value?.changeIsOpen(false)
+    } else if (key === 'enter') {
+      event.preventDefault()
+      barcodeInput.value?.onEnter()
     }
 
     const keyMap = {
@@ -325,14 +331,20 @@ const handleKeyDown = (event) => {
       f2: { action: 'changeAmtMoney', value: 20000 },
       f3: { action: 'changeAmtMoney', value: 50000 },
       f4: { action: 'changeAmtMoney', value: 100000 },
-      f5: { action: 'changeAmtMoney', value: 500000 }
+      f5: { action: 'changeAmtMoney', value: 500000 },
+      backspace: { action: 'changeKeypad', value: 'clear' },
+      delete: { action: 'changeKeypad', value: 'C' }
     }
 
     const keyAction = keyMap[key]
-
     if (keyAction && paymentPopup.value?.isOpenPopup) {
-      event.preventDefault()
-      paymentPopup.value[keyAction.action](keyAction.value)
+      if (paymentPopup.value?.isFocused) {
+        event.preventDefault()
+        paymentPopup.value[keyAction.action](keyAction.value)
+      }
+      if (keyAction.value == 'C') {
+        paymentPopup.value[keyAction.action](keyAction.value)
+      }
     }
   }
 }
@@ -752,7 +764,7 @@ onBeforeUnmount(() => {
                         <div class="flex items-center justify-center">
                           <button
                             class="hover:text-gray-800 duration-200 transition-colors"
-                            @click="deleteItem(i)"
+                            @click="deleteItem(dt.id)"
                           >
                             <BaseIcon :path="mdiTrashCan" size="18" />
                           </button>

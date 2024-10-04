@@ -6,21 +6,22 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Client, Message } from 'paho-mqtt'
-import pdfFile from '@/sample.pdf'
+// Mengimpor PDF sebagai base64
+import pdfFileBase64 from '@/sample.pdf?raw' // Misalnya file PDF ada di folder assets
 
 export default {
   setup() {
     const host = 'vps.qqltech.com'
     const port = 7011
-    // const topic = 'directPrint/output'
     const topic = 'directPrint/convert'
     const clientId = `client-${Math.random().toString(16).substr(2, 8)}`
     const username = 'superDollar' // Ganti dengan username MQTT Anda
     const password = 'superDoll4r' // Ganti dengan password MQTT Anda
 
     const client = new Client(host, port, clientId)
+    let isConnected = false // Flag untuk memeriksa status koneksi
 
     // Fungsi untuk menghubungkan ke MQTT server dengan opsi autentikasi
     const connectMQTT = () => {
@@ -30,6 +31,7 @@ export default {
           password: password,
           onSuccess: () => {
             console.log('Connected to MQTT with authentication')
+            isConnected = true // Tandai sudah terhubung
             resolve()
           },
           onFailure: (error) => {
@@ -44,29 +46,29 @@ export default {
     // Fungsi untuk mengirim PDF ke MQTT server
     const sendPdfToMQTT = async () => {
       try {
-        // Ambil file PDF dari folder src menggunakan URL import
-        const response = await fetch(pdfFile)
-        const blob = await response.blob()
-
-        // Convert PDF blob ke base64 string
-        const reader = new FileReader()
-        reader.readAsDataURL(blob)
-        reader.onloadend = async () => {
-          const pdfData = reader.result
-
-          // Hubungkan ke broker MQTT
-          await connectMQTT()
-
-          const message = new Message(pdfData)
-          message.destinationName = topic
-
-          client.send(message) // Kirim pesan
-          console.log('PDF sent to MQTT')
+        if (!isConnected) {
+          await connectMQTT() // Pastikan terhubung jika belum
         }
+
+        // Menggunakan pdfFileBase64 yang sudah di-import sebagai base64
+        const pdfData = pdfFileBase64
+
+        const message = new Message(pdfData)
+        message.destinationName = topic
+
+        client.send(message) // Kirim pesan PDF
+        console.log('PDF sent to MQTT')
       } catch (error) {
         console.error('Error sending PDF to MQTT', error)
       }
     }
+
+    // Hubungkan ke MQTT saat halaman dimuat
+    onMounted(() => {
+      connectMQTT().catch((error) => {
+        console.error('Failed to connect to MQTT on page load', error)
+      })
+    })
 
     return {
       sendPdfToMQTT

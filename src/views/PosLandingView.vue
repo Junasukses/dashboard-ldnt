@@ -310,8 +310,8 @@ const handleKeyDown = (event) => {
       paymentPopup.value?.changeIsOpen(true)
     } else if (key === 'escape') {
       event.preventDefault()
-      paymentPopup.value?.changeIsOpen(false)
-    } else if (key === 'enter') {
+      barcodeInput.value?.changeIsOpen(false)
+    } else if (key === 'enter' && !barcodeInput.value?.isFocus) {
       event.preventDefault()
       barcodeInput.value?.onEnter()
     }

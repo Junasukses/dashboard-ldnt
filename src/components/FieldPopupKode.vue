@@ -113,6 +113,10 @@ const chosen = reactive({})
 const baseUrl = ref(import.meta.env.VITE_API_URL)
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 
+function changeIsOpen(params) {
+  isOpenPopup.value = params
+}
+
 function onEscape() {
   if (!params.value) {
     isOpenPopup.value = false
@@ -211,7 +215,9 @@ defineExpose({
   getValue,
   getValues,
   onEnter,
-  onReset
+  onReset,
+  isFocus,
+  changeIsOpen
 })
 
 onMounted(() => {

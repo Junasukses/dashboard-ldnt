@@ -15,9 +15,9 @@
     .aside-menu-item-active {
       @apply text-white;
     }
-    .aside-menu-dropdown {
+    /* .aside-menu-dropdown {
       @apply bg-gray-700/50;
-    }
+    } */
     .navbar-item-label {
       @apply text-black hover:text-blue-500;
     }

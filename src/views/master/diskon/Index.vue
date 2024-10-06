@@ -25,6 +25,7 @@ import router from '@/router'
 import { useStore } from '@/stores/app'
 import alertify from 'alertifyjs'
 import axios from 'axios'
+import BaseButton from '@/components/BaseButton.vue'
 
 const route = useRoute()
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
@@ -222,10 +223,10 @@ onActivated(() => {
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Diskon" main>
       </SectionTitleLineWithButton>
-      <CardBox>
+      <CardBox class="border border-[#086968]">
         <FormField>
           <div class="flex flex-col w-full col-span-2">
-            <div class="flex justify-between">
+            <!-- <div class="flex justify-between">
               <div class="flex items-center w-[50%]">
                 <label class="block font-bold mb-2 mr-4 w-[40%]">Discount Type :</label>
                 <FieldSelect
@@ -249,7 +250,7 @@ onActivated(() => {
                   Create New
                 </RouterLink>
               </div>
-            </div>
+            </div> -->
             <TableApi
               ref="apiTable"
               :api="landing.api"
@@ -257,6 +258,27 @@ onActivated(() => {
               :actions="landing.actions"
               class="max-h-[450px]"
             >
+              <template #header>
+                <FieldSelect
+                  :bind="{ disabled: false, clearable: false }"
+                  :value="data.discount_type"
+                  @input="(v) => (data.discount_type = v)"
+                  @update:valueFull="(e) => changeDiscType(e.text)"
+                  :check="false"
+                  :options="['REGULER', 'PROGRESIF', 'GLOBAL']"
+                  placeholder="Pilih Discount Type"
+                  label=""
+                  class="!mt-0 !w-40 !h-2"
+                />
+                <BaseButton
+                  @click="router.replace(`${this.$route.path}/create?type=${data.discount_type}`)"
+                  type="submit"
+                  color="info"
+                  label="Create New"
+                  outline
+                  small
+                />
+              </template>
             </TableApi>
           </div>
         </FormField>

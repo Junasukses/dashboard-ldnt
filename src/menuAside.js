@@ -28,6 +28,52 @@ export default [
     label: 'POS'
   },
   {
+    label: 'Setup Master',
+    icon: mdiViewList,
+    menu: [
+      {
+        to: '/business-unit',
+        label: 'Business Unit',
+        icon: mdiResponsive
+      },
+      {
+        to: '/branch',
+        label: 'Branch',
+        icon: mdiResponsive
+      },
+      {
+        to: '/gudang',
+        label: 'Gudang',
+        icon: mdiResponsive
+      },
+      {
+        to: '/general',
+        label: 'General',
+        icon: mdiResponsive
+      },
+      {
+        to: '/satuan',
+        label: 'Satuan',
+        icon: mdiResponsive
+      },
+      {
+        to: '/item-type',
+        label: 'Item Type',
+        icon: mdiResponsive
+      },
+      {
+        to: '/menu',
+        label: 'Menu',
+        icon: mdiResponsive
+      },
+      {
+        to: '/pengguna',
+        label: 'Pengguna',
+        icon: mdiResponsive
+      }
+    ]
+  },
+  {
     label: 'Setting Transaksi',
     icon: mdiViewList,
     menu: [

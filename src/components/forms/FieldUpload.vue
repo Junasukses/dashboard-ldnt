@@ -398,12 +398,13 @@ function doUpload(file) {
           emit('input', file.name)
           imgSrc.value = URL.createObjectURL(file)
           responseText = JSON.parse(responseText)
+          console.log(responseText)
           self.internalValue = responseText
         } catch (e) {
           //
         }
 
-        alertify.error(responseText ?? 'Berhasil Upload')
+        alertify.success(responseText?.message ?? 'Berhasil Upload')
         emit('uploaded', responseText)
       } else {
         valueModel.value = null

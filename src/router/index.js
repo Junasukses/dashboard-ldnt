@@ -122,6 +122,134 @@ const routes = [
     meta: {
       title: 'Setting Prefix Penomoran'
     }
+  },
+  {
+    path: '/business-unit',
+    name: 'business-unit',
+    component: () => import('@/views/master/bu/Index.vue'),
+    meta: {
+      title: 'Master Business Unit'
+    }
+  },
+  {
+    path: '/business-unit/:id',
+    name: 'business-unit-id',
+    component: () => import('@/views/master/bu/Form.vue'),
+    meta: {
+      title: 'Master Business Unit'
+    }
+  },
+  {
+    path: '/gudang',
+    name: 'gudang',
+    component: () => import('@/views/master/gudang/Index.vue'),
+    meta: {
+      title: 'Master Gudang'
+    }
+  },
+  {
+    path: '/gudang/:id',
+    name: 'gudang-id',
+    component: () => import('@/views/master/gudang/Form.vue'),
+    meta: {
+      title: 'Master Gudang'
+    }
+  },
+  {
+    path: '/branch',
+    name: 'branch',
+    component: () => import('@/views/master/branch/Index.vue'),
+    meta: {
+      title: 'Master Cabang'
+    }
+  },
+  {
+    path: '/branch/:id',
+    name: 'branch-id',
+    component: () => import('@/views/master/branch/Form.vue'),
+    meta: {
+      title: 'Master Cabang'
+    }
+  },
+  {
+    path: '/general',
+    name: 'general',
+    component: () => import('@/views/master/general/Index.vue'),
+    meta: {
+      title: 'Master General'
+    }
+  },
+  {
+    path: '/general/:id',
+    name: 'general-id',
+    component: () => import('@/views/master/general/Form.vue'),
+    meta: {
+      title: 'Master General'
+    }
+  },
+  {
+    path: '/satuan',
+    name: 'satuan',
+    component: () => import('@/views/master/satuan/Index.vue'),
+    meta: {
+      title: 'Master Satuan'
+    }
+  },
+  {
+    path: '/satuan/:id',
+    name: 'satuan-id',
+    component: () => import('@/views/master/satuan/Form.vue'),
+    meta: {
+      title: 'Master Satuan'
+    }
+  },
+  {
+    path: '/item-type',
+    name: 'item-type',
+    component: () => import('@/views/master/itemType/Index.vue'),
+    meta: {
+      title: 'Master Item Type'
+    }
+  },
+  {
+    path: '/item-type/:id',
+    name: 'item-type-id',
+    component: () => import('@/views/master/itemType/Form.vue'),
+    meta: {
+      title: 'Master Item Type'
+    }
+  },
+  {
+    path: '/menu',
+    name: 'menu',
+    component: () => import('@/views/master/menu/Index.vue'),
+    meta: {
+      title: 'Master Menu'
+    }
+  },
+  {
+    path: '/menu/:id',
+    name: 'menu-id',
+    component: () => import('@/views/master/menu/Form.vue'),
+    meta: {
+      title: 'Master Menu'
+    }
+  },
+  {
+    path: '/pengguna',
+    name: 'pengguna',
+    component: () => import('@/views/master/pengguna/Index.vue'),
+    meta: {
+      title: 'Master Pengguna'
+    }
+  },
+  {
+    path: '/pengguna/:id',
+    name: 'pengguna-id',
+    component: () => import('@/views/master/pengguna/Form.vue'),
+    meta: {
+      title: 'Master Pengguna'
+    }
   }
 ]
 

@@ -13,11 +13,11 @@ defineProps({
   },
   w: {
     type: String,
-    default: 'w-12'
+    default: 'w-11'
   },
   h: {
     type: String,
-    default: 'h-12'
+    default: 'h-11'
   },
   bg: Boolean
 })

@@ -29,20 +29,10 @@ import BaseButton from '@/components/BaseButton.vue'
 
 const route = useRoute()
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
-const endpointApi = 't_disc'
+const endpointApi = 'm_menu'
 
 const store = useStore()
 const apiTable = ref()
-const data = reactive({
-  discount_type: 'REGULER'
-})
-const changeDiscType = (e) => {
-  if (e) {
-    landing.api.params.where = `this.discount_type='${e}'`
-  }
-
-  apiTable.value.reload()
-}
 const landing = reactive({
   actions: [
     {
@@ -147,8 +137,8 @@ const landing = reactive({
     },
     params: {
       simplest: true,
-      searchfield: 'this.id, this.discount_type, this.name, this.desc, this.status',
-      where: `this.discount_type='${data.discount_type}'`
+      searchfield:
+        'this.id, m_bu.name, this.modul, this.submodul, this.menu, this.path, this.icon, this.seq, this.desc, this.is_active'
     },
     onsuccess(response) {
       response.page = response.current_page
@@ -167,46 +157,97 @@ const landing = reactive({
       cellClass: ['justify-center', 'bg-gray-50', 'border-r', '!border-gray-200']
     },
     {
-      field: 'name',
-      headerName: 'Nama',
+      field: 'm_bu.name',
+      headerName: 'Business Unit',
       filter: true,
       sortable: true,
-      flex: 1,
       filter: 'ColFilter',
       resizable: true,
       wrapText: true,
       cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'modul',
+      headerName: 'Modul',
+      filter: true,
+      sortable: true,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'submodul',
+      headerName: 'Submodul',
+      filter: true,
+      sortable: true,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'menu',
+      headerName: 'Menu',
+      filter: true,
+      sortable: true,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'path',
+      headerName: 'Path',
+      filter: true,
+      sortable: true,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'icon',
+      headerName: 'Icon',
+      filter: true,
+      sortable: true,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-start']
+    },
+    {
+      field: 'seq',
+      headerName: 'Sequence',
+      filter: true,
+      sortable: true,
+      filter: 'ColFilter',
+      resizable: true,
+      wrapText: true,
+      cellClass: ['border-r', '!border-gray-200', 'justify-end']
     },
     {
       field: 'desc',
       headerName: 'Deskripsi',
       filter: true,
       sortable: true,
-      flex: 1,
       filter: 'ColFilter',
       resizable: true,
       wrapText: true,
       cellClass: ['border-r', '!border-gray-200', 'justify-start']
     },
     {
-      field: 'discount_type',
-      headerName: 'Discount Type',
-      filter: true,
-      sortable: true,
-      flex: 1,
-      filter: 'ColFilter',
-      resizable: true,
-      wrapText: true,
-      cellClass: ['border-r', '!border-gray-200', 'justify-start']
-    },
-    {
-      field: 'status',
+      field: 'is_active',
       headerName: 'Status',
       filter: true,
       filter: 'ColFilter',
       sortable: true,
-      flex: 1,
-      cellClass: ['border-r', '!border-gray-200', 'justify-center']
+      cellClass: ['border-r', '!border-gray-200', 'justify-center'],
+      cellRenderer: ({ value }) => {
+        return value === true
+          ? `<span class="text-green-500 rounded-md text-xs font-medium px-4 py-1 inline-block capitalize">Active</span>`
+          : `<span class="text-gray-500 rounded-md text-xs font-medium px-4 py-1 inline-block capitalize">Inactive</span>`
+      }
     }
   ]
 })
@@ -221,66 +262,28 @@ onActivated(() => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Diskon" main>
+      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Menu" main>
       </SectionTitleLineWithButton>
       <CardBox class="border border-[#086968]">
         <FormField>
-          <div class="flex flex-col w-full col-span-2">
-            <!-- <div class="flex justify-between">
-              <div class="flex items-center w-[50%]">
-                <label class="block font-bold mb-2 mr-4 w-[40%]">Discount Type :</label>
-                <FieldSelect
-                  :bind="{ disabled: false, clearable: false }"
-                  :value="data.discount_type"
-                  @input="(v) => (data.discount_type = v)"
-                  @update:valueFull="(e) => changeDiscType(e.text)"
-                  :check="false"
-                  :options="['REGULER', 'PROGRESIF', 'GLOBAL']"
-                  placeholder="Pilih Discount Type"
-                  label=""
-                  class="!mt-0"
-                />
-              </div>
-
-              <div>
-                <RouterLink
-                  :to="`${route.path}/create?type=${data.discount_type}&${Date.parse(new Date())}`"
-                  class="border border-blue-600 text-blue-600 bg-white hover:bg-blue-600 hover:text-white duration-300 transform hover:-translate-y-0.5 rounded-md py-1 px-2"
-                >
-                  Create New
-                </RouterLink>
-              </div>
-            </div> -->
-            <TableApi
-              ref="apiTable"
-              :api="landing.api"
-              :columns="landing.columns"
-              :actions="landing.actions"
-              class="max-h-[450px]"
-            >
-              <template #header>
-                <FieldSelect
-                  :bind="{ disabled: false, clearable: false }"
-                  :value="data.discount_type"
-                  @input="(v) => (data.discount_type = v)"
-                  @update:valueFull="(e) => changeDiscType(e.text)"
-                  :check="false"
-                  :options="['REGULER', 'PROGRESIF', 'GLOBAL']"
-                  placeholder="Pilih Discount Type"
-                  label=""
-                  class="!mt-0 !w-40 !h-2"
-                />
-                <BaseButton
-                  @click="router.push(`${this.$route.path}/create?type=${data.discount_type}`)"
-                  type="submit"
-                  color="info"
-                  label="Create New"
-                  outline
-                  small
-                />
-              </template>
-            </TableApi>
-          </div>
+          <TableApi
+            ref="apiTable"
+            :api="landing.api"
+            :columns="landing.columns"
+            :actions="landing.actions"
+            class="max-h-[450px]"
+          >
+            <template #header>
+              <BaseButton
+                @click="router.push(`${this.$route.path}/create`)"
+                type="submit"
+                color="info"
+                label="Create New"
+                outline
+                small
+              />
+            </template>
+          </TableApi>
         </FormField>
       </CardBox>
     </SectionMain>

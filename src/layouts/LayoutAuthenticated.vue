@@ -90,7 +90,7 @@ const menuClick = (event, item) => {
         @aside-lg-close-click="isAsideLgActive = false"
       />
       <slot />
-      <FooterBar> </FooterBar>
+      <!-- <FooterBar> </FooterBar> -->
     </div>
   </div>
 </template>

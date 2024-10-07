@@ -250,6 +250,38 @@ const routes = [
     meta: {
       title: 'Master Pengguna'
     }
+  },
+  {
+    path: '/approval',
+    name: 'approval',
+    component: () => import('@/views/master/approval/Index.vue'),
+    meta: {
+      title: 'Master Approval'
+    }
+  },
+  {
+    path: '/approval/:id',
+    name: 'approval-id',
+    component: () => import('@/views/master/approval/Form.vue'),
+    meta: {
+      title: 'Master Approval'
+    }
+  },
+  {
+    path: '/role',
+    name: 'role',
+    component: () => import('@/views/master/role/Index.vue'),
+    meta: {
+      title: 'Master Role'
+    }
+  },
+  {
+    path: '/role/:id',
+    name: 'role-id',
+    component: () => import('@/views/master/role/Form.vue'),
+    meta: {
+      title: 'Master Role'
+    }
   }
 ]
 

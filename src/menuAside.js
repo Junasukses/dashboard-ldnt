@@ -70,6 +70,16 @@ export default [
         to: '/pengguna',
         label: 'Pengguna',
         icon: mdiResponsive
+      },
+      {
+        to: '/approval',
+        label: 'Approval',
+        icon: mdiResponsive
+      },
+      {
+        to: '/role',
+        label: 'Role',
+        icon: mdiResponsive
       }
     ]
   },

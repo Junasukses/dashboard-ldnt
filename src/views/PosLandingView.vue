@@ -29,6 +29,7 @@ const store = useStore()
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const activeTabIndex = ref(0)
 const listItem = ref()
+const listDiskon = ref()
 const barcodeInput = ref()
 const item = reactive({ group_data: [] })
 const data = reactive({ netto: 0 })
@@ -79,6 +80,11 @@ setInterval(() => {
 function openListItem() {
   nextTick(() => {
     listItem.value?.onEnter()
+  })
+}
+function openListDiskon() {
+  nextTick(() => {
+    listDiskon.value?.onEnter()
   })
 }
 
@@ -288,6 +294,8 @@ const getPayment = async () => {
       name: item.name,
       is_default: item.is_default
     }))
+    data.pay_type_id =
+      (arrayPayment.value.find((item) => item.is_default === true) || {}).m_payment_type_id || null
   } catch (err) {
     const errorMessage = err.response?.data || 'Failed to get data.'
     alertify.error(errorMessage)
@@ -315,7 +323,8 @@ const handleKeyDown = (event) => {
       key === 'enter' &&
       !barcodeInput.value?.isFocus &&
       !listItem.value.isOpenPopup &&
-      !barcodeInput.value.isOpenPopup
+      !barcodeInput.value.isOpenPopup &&
+      !listDiskon.value.isOpenPopup
     ) {
       event.preventDefault()
       barcodeInput.value?.onEnter()
@@ -552,20 +561,12 @@ onBeforeUnmount(() => {
                 }
               ]"
               class="!mt-0 hidden"
-            />
-
-            <!-- <div
-                class="flex items-center p-2 rounded-lg font-semibold shadow-md cursor-pointer duration-300 transition"
-                :class="
-                  activeTabIndex == 0
-                    ? 'text-white bg-[#086968]'
-                    : 'text-gray-600 hover:bg-gray-100 bg-white'
-                "
-                @click="activeTabIndex = 0"
-              >
-                <BaseIcon :path="mdiListBoxOutline" size="20" />
-                <span class="ml-2">List Item</span>
-              </div> -->
+            >
+              <template #header
+                ><h2 class="text-center !font-bold !text-xl !my-2">Daftar Item</h2>
+                <hr
+              /></template>
+            </FieldPopupKode>
             <div
               class="flex items-center p-2 rounded-lg font-semibold shadow-md cursor-pointer duration-300 transition"
               :class="
@@ -578,7 +579,106 @@ onBeforeUnmount(() => {
               <BaseIcon :path="mdiAccountGroupOutline" size="20" />
               <span class="ml-2">Daftar Member</span>
             </div>
-            <div
+            <button
+              @click="openListDiskon"
+              class="!text-[#086968] !border-2 !border-[#086968] flex items-center !p-2 rounded-lg !font-semibold shadow-md cursor-pointer duration-150 transition hover:bg-[#086968] hover:!text-white"
+            >
+              <BaseIcon :path="mdiListBoxOutline" size="20" />
+              <span class="ml-2">Daftar Diskon</span>
+            </button>
+
+            <FieldPopupKode
+              :clickedRow="false"
+              ref="listDiskon"
+              :check="false"
+              :api="{
+                url: `${store.server}/operation/v_item_catalog`,
+                headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token}` },
+                params: {
+                  simplest: true,
+                  searchfield: 'this.item_code, this.item_name, this.barcode',
+                  scopes: 'DiscItem'
+                }
+              }"
+              :columns="[
+                {
+                  headerName: 'No',
+                  valueGetter: (p) => p.node.rowIndex + 1,
+                  width: 60,
+                  sortable: false,
+                  resizable: false,
+                  filter: false,
+                  cellClass: ['justify-center', 'bg-gray-50']
+                },
+                {
+                  headerName: 'Barcode',
+                  field: 'barcode',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', 'bg-gray-50']
+                },
+                {
+                  headerName: 'Kode',
+                  field: 'item_code',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', 'bg-gray-50']
+                },
+                {
+                  headerName: 'Nama',
+                  field: 'item_name',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', 'bg-gray-50']
+                },
+                {
+                  headerName: 'Satuan',
+                  field: 'unit',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', 'bg-gray-50']
+                },
+                {
+                  headerName: 'Harga',
+                  field: 'price',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-end', 'bg-gray-50']
+                },
+                {
+                  headerName: 'Harga Disc',
+                  field: 'price_fix',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-end', 'bg-gray-50']
+                }
+              ]"
+              class="!mt-0 hidden"
+            >
+              <template #header
+                ><h2 class="text-center !font-bold !text-xl !my-2">Daftar Diskon</h2>
+                <hr
+              /></template>
+            </FieldPopupKode>
+            <!-- <div
               class="flex items-center p-2 rounded-lg font-semibold shadow-md cursor-pointer duration-300 transition"
               :class="
                 activeTabIndex == 2
@@ -589,7 +689,7 @@ onBeforeUnmount(() => {
             >
               <BaseIcon :path="mdiSaleOutline" size="20" />
               <span class="ml-2">Daftar Diskon</span>
-            </div>
+            </div> -->
             <div class="flex items-center space-x-6">
               <FieldX
                 :bind="{ readonly: !data.isOpen }"
@@ -688,7 +788,11 @@ onBeforeUnmount(() => {
                       }
                     ]"
                     class="!mt-0 !ml-2"
-                  />
+                  >
+                    <template #header
+                      ><h2 class="text-center !font-bold !text-xl !my-2">Daftar Item</h2>
+                      <hr /></template
+                  ></FieldPopupKode>
                 </div>
 
                 <div class="flex items-center space-x-6" :class="{ 'ml-auto': !data.isOpen }">

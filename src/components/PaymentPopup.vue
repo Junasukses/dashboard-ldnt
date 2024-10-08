@@ -19,8 +19,8 @@
             >
               <div class="grid grid-cols-3">
                 <div>
-                  <h4 class="text-sm">Kasir : Budi Santoso</h4>
-                  <h4 class="text-sm">Shift : II</h4>
+                  <h4 class="text-sm">Kasir : {{ dataDaily.open_user.name ?? '-' }}</h4>
+                  <h4 class="text-sm">Shift {{ dataDaily.current_shift ?? '-' }}</h4>
                 </div>
                 <div>
                   <h4 class="text-sm">Member : Ima Mulyani</h4>
@@ -219,6 +219,7 @@
                   name="form radio 2"
                   :is-disabled="false"
                   type="checkbox"
+                  :input-value="true"
                 />
                 <FieldNumber
                   :bind="{ readonly: !isDonasiManual }"
@@ -335,21 +336,53 @@ const prop = defineProps({
     default: () => []
   }
 })
-const data = reactive({
-  pay_type_id:
-    (prop.payment.find((item) => item.is_default === true) || {}).m_payment_type_id || null
-})
+const data = reactive({})
+const dataDaily = ref({})
 
 const emit = defineEmits(['saveSuccess'])
 const detailArr = ref([...prop.payment])
 const formErrors = ref({})
 
-watch(
-  () => prop.payment,
-  (newPayment) => {
-    detailArr.value = [...newPayment]
+const getDaily = async () => {
+  try {
+    const response = await axios.get('/operation/t_daily/status')
+
+    if (response.status !== 200) throw new Error('Failed when trying to read data')
+    dataDaily.value = response.data?.data
+    console.log(dataDaily.value)
+  } catch (err) {
+    const errorMessage = err.response?.data || 'Failed to get data.'
+    alertify.error(errorMessage)
   }
-)
+}
+
+const getPayment = async () => {
+  try {
+    const response = await axios.get('/operation/m_payment_type', {
+      params: {
+        selectfield: 'this.id,this.name,this.is_default'
+      }
+    })
+
+    if (response.status !== 200) throw new Error('Failed when trying to read data')
+    const dataPayment = response.data.data
+    data.pay_type_id = (dataPayment.find((item) => item.is_default === true) || {}).id || null
+  } catch (err) {
+    const errorMessage = err.response?.data || 'Failed to get data.'
+    alertify.error(errorMessage)
+  }
+}
+
+onMounted(() => {
+  getPayment()
+  getDaily()
+})
+// watch(
+//   () => prop.data,
+//   (newData) => {
+//     data.pay_type_id = newData.pay_type_id
+//   }
+// )
 
 const clickPayment = (idx) => {}
 

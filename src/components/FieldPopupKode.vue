@@ -87,7 +87,7 @@
             :selectable="true"
             :is-popup="true"
             :search-init="valueModel"
-            custom-class="!h-full"
+            class="!h-[90%]"
             @escape="onEscape"
             @rowClick="onRowClicked"
           />
@@ -183,6 +183,7 @@ function onReset() {
 }
 
 const prop = defineProps({
+  judul: { type: String, default: '' },
   api: { type: Object, default: () => ({}) },
   params: { type: Object, default: null },
   columns: { type: Array, default: () => [] },

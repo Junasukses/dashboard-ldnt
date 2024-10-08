@@ -349,7 +349,6 @@ const getDaily = async () => {
 
     if (response.status !== 200) throw new Error('Failed when trying to read data')
     dataDaily.value = response.data?.data
-    console.log(dataDaily.value)
   } catch (err) {
     const errorMessage = err.response?.data || 'Failed to get data.'
     alertify.error(errorMessage)

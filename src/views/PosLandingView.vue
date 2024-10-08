@@ -20,6 +20,7 @@ import menuNavBar from '@/menuNavBar.js'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import FieldPopupKode from '@/components/FieldPopupKode.vue'
+import FieldPopupTableApi from '@/components/FieldPopupTableApi.vue'
 import PaymentPopup from '@/components/PaymentPopup.vue'
 import OpenCloseDaily from '@/components/OpenCloseDaily.vue'
 import { useStore } from '@/stores/app'
@@ -30,6 +31,7 @@ const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOK
 const activeTabIndex = ref(0)
 const listItem = ref()
 const listDiskon = ref()
+const listRiwayat = ref()
 const barcodeInput = ref()
 const item = reactive({ group_data: [] })
 const data = reactive({ netto: 0 })
@@ -85,6 +87,11 @@ function openListItem() {
 function openListDiskon() {
   nextTick(() => {
     listDiskon.value?.onEnter()
+  })
+}
+function openListRiwayat() {
+  nextTick(() => {
+    listRiwayat.value?.onEnter()
   })
 }
 
@@ -324,7 +331,8 @@ const handleKeyDown = (event) => {
       !barcodeInput.value?.isFocus &&
       !listItem.value.isOpenPopup &&
       !barcodeInput.value.isOpenPopup &&
-      !listDiskon.value.isOpenPopup
+      !listDiskon.value.isOpenPopup &&
+      !listRiwayat.value.isOpenPopup
     ) {
       event.preventDefault()
       barcodeInput.value?.onEnter()
@@ -434,44 +442,58 @@ onBeforeUnmount(() => {
           <h1 class="!ml-2 !mb-4 !font-semibold !text-sm">
             {{ 'Jl. MT. Haryono No.11, Dinoyo, Kec. Lowokwaru, Kota Malang, Jawa Timur 65144' }}
           </h1>
-          <div class="flex flex-row justify-end space-x-2 w-full">
-            <div
-              style="cursor: pointer"
-              class="!justify-end space-x-6 bg-gray-600 hover:bg-gray-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
-              @click="openCLoseDailyPopup?.open()"
-            >
-              <button class="flex flex-col items-center justify-center bg-red-500 text-white">
-                <BaseIcon :path="mdiFunction" size="20" />Open Close Daily
-              </button>
+          <div class="flex flex-row justify-between space-x-2 w-full">
+            <div class="flex items-center space-x-6 w-1/2">
+              <FieldX
+                :bind="{ readonly: !data.isOpen }"
+                label="Member"
+                placeholder="Cari Member"
+                :value="data.name"
+                @input="(v) => (data.name = v)"
+                class="!mt-0 !w-[40%]"
+                :check="false"
+              />
+              <h2>Member: -</h2>
             </div>
-            <div
-              class="space-x-6 text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
-              @click="resetAll()"
-              :class="{
-                'bg-gray-300 bg-opacity-50 cursor-default': !data.isOpen,
-                'bg-purple-600 hover:bg-purple-700 text-white cursor-pointer': data.isOpen
-              }"
-            >
-              <button
-                class="flex flex-col items-center justify-center bg-red-500 text-white"
-                :disabled="!data.isOpen"
+            <div class="flex flex-row space-x-2">
+              <div
+                style="cursor: pointer"
+                class="!justify-end space-x-6 bg-gray-600 hover:bg-gray-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+                @click="openCLoseDailyPopup?.open()"
               >
-                <BaseIcon :path="mdiClose" size="20" />Reset
-              </button>
-            </div>
-            <div
-              style="cursor: pointer"
-              class="!justify-end space-x-6 bg-red-600 hover:bg-red-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
-            >
-              <button class="flex flex-col items-center justify-center bg-red-500 text-white">
-                <BaseIcon :path="mdiLogout" size="20" />Tutup POS
-              </button>
+                <button class="flex flex-col items-center justify-center bg-red-500 text-white">
+                  <BaseIcon :path="mdiFunction" size="20" />Open Close Daily
+                </button>
+              </div>
+              <div
+                class="space-x-6 text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+                @click="resetAll()"
+                :class="{
+                  'bg-gray-300 bg-opacity-50 cursor-default': !data.isOpen,
+                  'bg-purple-600 hover:bg-purple-700 text-white cursor-pointer': data.isOpen
+                }"
+              >
+                <button
+                  class="flex flex-col items-center justify-center bg-red-500 text-white"
+                  :disabled="!data.isOpen"
+                >
+                  <BaseIcon :path="mdiClose" size="20" />Reset
+                </button>
+              </div>
+              <div
+                style="cursor: pointer"
+                class="!justify-end space-x-6 bg-red-600 hover:bg-red-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
+              >
+                <button class="flex flex-col items-center justify-center bg-red-500 text-white">
+                  <BaseIcon :path="mdiLogout" size="20" />Tutup POS
+                </button>
+              </div>
             </div>
           </div>
-          <div class="flex flex-wrap items-center space-x-4">
+          <div class="flex flex-wrap items-center space-x-4 mt-4">
             <button
               @click="openListItem"
-              class="!text-[#086968] !border-2 !border-[#086968] flex items-center !p-2 rounded-lg !font-semibold shadow-md cursor-pointer duration-150 transition hover:bg-[#086968] hover:!text-white"
+              class="!text-[#086968] !border-2 !border-[#086968] !text-sm flex items-center !p-2 rounded-lg !font-semibold shadow-md cursor-pointer duration-150 transition hover:bg-[#086968] hover:!text-white"
             >
               <BaseIcon :path="mdiListBoxOutline" size="20" />
               <span class="ml-2">Daftar Item</span>
@@ -581,7 +603,7 @@ onBeforeUnmount(() => {
             </div>
             <button
               @click="openListDiskon"
-              class="!text-[#086968] !border-2 !border-[#086968] flex items-center !p-2 rounded-lg !font-semibold shadow-md cursor-pointer duration-150 transition hover:bg-[#086968] hover:!text-white"
+              class="!text-[#086968] !border-2 !border-[#086968] flex items-center !text-sm !p-2 rounded-lg !font-semibold shadow-md cursor-pointer duration-150 transition hover:bg-[#086968] hover:!text-white"
             >
               <BaseIcon :path="mdiListBoxOutline" size="20" />
               <span class="ml-2">Daftar Diskon</span>
@@ -690,18 +712,95 @@ onBeforeUnmount(() => {
               <BaseIcon :path="mdiSaleOutline" size="20" />
               <span class="ml-2">Daftar Diskon</span>
             </div> -->
-            <div class="flex items-center space-x-6">
-              <FieldX
-                :bind="{ readonly: !data.isOpen }"
-                label="Member"
-                placeholder="Cari Member"
-                :value="data.name"
-                @input="(v) => (data.name = v)"
-                class="!mt-0"
-                :check="false"
-              />
-            </div>
-            <h2>Member: -</h2>
+
+            <button
+              @click="openListRiwayat"
+              class="!text-[#086968] !border-2 !border-[#086968] flex items-center !p-2 !text-sm rounded-lg !font-semibold shadow-md cursor-pointer duration-150 transition hover:bg-[#086968] hover:!text-white"
+            >
+              <BaseIcon :path="mdiListBoxOutline" size="20" />
+              <span class="ml-2">Riwayat Transaksi</span>
+            </button>
+
+            <FieldPopupTableApi
+              ref="listRiwayat"
+              :check="false"
+              :api="{
+                url: `${store.server}/operation/t_pos`,
+                headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token}` },
+                params: {
+                  simplest: true,
+                  join: true,
+                  searchfield: 'this.no, this.date, this.cust_name, this.kasir'
+                }
+              }"
+              :actions="[
+                {
+                  icon: 'print',
+                  title: 'Print',
+                  class: 'bg-gray-600 text-slate-100',
+                  click(row) {
+                    console.log('click mas')
+                  }
+                }
+              ]"
+              :columns="[
+                {
+                  headerName: 'No',
+                  valueGetter: (p) => p.node.rowIndex + 1,
+                  width: 60,
+                  sortable: false,
+                  resizable: false,
+                  filter: false,
+                  cellClass: ['justify-center', '!border-gray-200']
+                },
+                {
+                  field: 'no',
+                  headerName: 'Nomer',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', '!border-gray-200']
+                },
+                {
+                  field: 'date',
+                  headerName: 'Tanggal Transaksi',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', '!border-gray-200']
+                },
+                {
+                  headerName: 'Kasir',
+                  field: 'kasir',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', '!border-gray-200']
+                },
+                {
+                  headerName: 'Customer',
+                  field: 'cust_name',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', '!border-gray-200']
+                }
+              ]"
+              class="!mt-0 hidden"
+            >
+              <template #header
+                ><h2 class="text-center !font-bold !text-xl !my-2">Daftar Riwayat Transaksi</h2>
+                <hr
+              /></template>
+            </FieldPopupTableApi>
           </div>
           <div class="overflow-scroll">
             <CardBox class="mt-4 h-[1000px] overflow-auto">

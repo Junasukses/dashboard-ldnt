@@ -334,7 +334,8 @@ const onSave = async () => {
                         Authorization: `Bearer ${token}`
                       },
                       params: {
-                        where: `this.is_active='true'`
+                        where: `this.is_active='true'`,
+                        simplest: true
                       }
                     }"
                     placeholder=""

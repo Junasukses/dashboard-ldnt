@@ -95,7 +95,6 @@ async function newDataItem(newData) {
       }
     ]
   } else {
-    // ngapi ketika data sama di plus dua qtynya
     item.group_data = await Promise.all(
       item.group_data.map(async (dt) => {
         if (dt.id === newData.id) {
@@ -279,14 +278,15 @@ const getPayment = async () => {
   try {
     const response = await axios.get('/operation/m_payment_type', {
       params: {
-        selectfield: 'this.id,this.name'
+        selectfield: 'this.id,this.name,this.is_default'
       }
     })
 
     if (response.status !== 200) throw new Error('Failed when trying to read data')
     arrayPayment.value = response.data.data.map((item) => ({
       m_payment_type_id: item.id,
-      name: item.name
+      name: item.name,
+      is_default: item.is_default
     }))
   } catch (err) {
     const errorMessage = err.response?.data || 'Failed to get data.'
@@ -311,7 +311,12 @@ const handleKeyDown = (event) => {
     } else if (key === 'escape') {
       event.preventDefault()
       barcodeInput.value?.changeIsOpen(false)
-    } else if (key === 'enter' && !barcodeInput.value?.isFocus) {
+    } else if (
+      key === 'enter' &&
+      !barcodeInput.value?.isFocus &&
+      !listItem.value.isOpenPopup &&
+      !barcodeInput.value.isOpenPopup
+    ) {
       event.preventDefault()
       barcodeInput.value?.onEnter()
     }

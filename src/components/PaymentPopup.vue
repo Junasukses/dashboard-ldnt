@@ -321,7 +321,6 @@ const isDonasiManual = ref(false)
 const store = useStore()
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 
-const data = reactive({})
 const prop = defineProps({
   data: {
     type: Object,
@@ -335,6 +334,10 @@ const prop = defineProps({
     type: Array,
     default: () => []
   }
+})
+const data = reactive({
+  pay_type_id:
+    (prop.payment.find((item) => item.is_default === true) || {}).m_payment_type_id || null
 })
 
 const emit = defineEmits(['saveSuccess'])

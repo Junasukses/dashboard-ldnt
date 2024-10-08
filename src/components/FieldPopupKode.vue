@@ -217,7 +217,8 @@ defineExpose({
   onEnter,
   onReset,
   isFocus,
-  changeIsOpen
+  changeIsOpen,
+  isOpenPopup
 })
 
 onMounted(() => {

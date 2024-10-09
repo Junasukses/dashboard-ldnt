@@ -62,23 +62,23 @@ function onRowClicked(val) {
 }
 
 async function onEnter() {
-  if (params.value) return
+  // if (params.value) return
 
-  const data = await fetch(
-    `${baseUrl.value}/operation/v_item_catalog/get_by_barcode?barcode=${valueModel.value ?? 0}`,
-    {
-      headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token.value}` }
-    }
-  ).then((res) => res.json())
+  // const data = await fetch(
+  //   `${baseUrl.value}/operation/v_item_catalog/get_by_barcode?barcode=${valueModel.value ?? 0}`,
+  //   {
+  //     headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token.value}` }
+  //   }
+  // ).then((res) => res.json())
 
-  if (data.code === 200) {
-    valueModel.value = data.data[prop.displayField]
-    valueModelFull.value = data.data
-    valueModelId.value = data.data.id
-    emit('update:valueFull', data.data)
-  } else {
-    isOpenPopup.value = true
-  }
+  // if (data.code === 200) {
+  //   valueModel.value = data.data[prop.displayField]
+  //   valueModelFull.value = data.data
+  //   valueModelId.value = data.data.id
+  //   emit('update:valueFull', data.data)
+  // } else {
+  // }
+  isOpenPopup.value = true
 }
 
 function onInput(e) {

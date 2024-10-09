@@ -730,7 +730,7 @@ onBeforeUnmount(() => {
                 params: {
                   simplest: true,
                   join: true,
-                  searchfield: 'this.no, this.date, this.cust_name, this.kasir'
+                  searchfield: 'this.no, this.date, this.cust_name, this.kasir, this.no_invoice'
                 }
               }"
               :actions="[
@@ -755,7 +755,17 @@ onBeforeUnmount(() => {
                 },
                 {
                   field: 'no',
-                  headerName: 'Nomer',
+                  headerName: 'Nomer Transaksi',
+                  width: 60,
+                  flex: 1,
+                  sortable: true,
+                  resizable: true,
+                  filter: true,
+                  cellClass: ['justify-center', '!border-gray-200']
+                },
+                {
+                  field: 'no_invoice',
+                  headerName: 'Nomer Invoice',
                   width: 60,
                   flex: 1,
                   sortable: true,

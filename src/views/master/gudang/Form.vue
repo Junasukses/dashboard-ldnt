@@ -101,7 +101,7 @@ const onSave = async () => {
         <FormField>
           <div class="grid grid-cols-3 gap-8">
             <div class="">
-              <label class="block font-bold mb-2 mr-4 w-[40%]">Code</label>
+              <label class="block font-semibold mb-2 mr-4 w-[40%]">Code</label>
               <FieldX
                 :bind="{ readonly: true, clearable: false }"
                 :value="data.code"
@@ -113,7 +113,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Cabang</label>
+              <label class="block font-semibold mb-2">Cabang</label>
               <FieldSelect
                 :bind="{ disabled: !actionText, clearable: false }"
                 class="w-full !mt-0"
@@ -139,7 +139,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Name</label>
+              <label class="block font-semibold mb-2">Name</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -153,7 +153,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2" for="status">Status</label>
+              <label class="block font-semibold mb-2" for="status">Status</label>
               <FormCheckRadio
                 v-model="data.is_active"
                 name="status"

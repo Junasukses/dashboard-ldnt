@@ -126,7 +126,7 @@ function validatePassword(v) {
         <FormField>
           <div class="grid grid-cols-3 gap-8">
             <div>
-              <label class="block font-bold mb-2">Name</label>
+              <label class="block font-semibold mb-2">Name</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -140,7 +140,7 @@ function validatePassword(v) {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Username</label>
+              <label class="block font-semibold mb-2">Username</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -154,7 +154,7 @@ function validatePassword(v) {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Email</label>
+              <label class="block font-semibold mb-2">Email</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -168,7 +168,7 @@ function validatePassword(v) {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Password</label>
+              <label class="block font-semibold mb-2">Password</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -183,7 +183,7 @@ function validatePassword(v) {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Type</label>
+              <label class="block font-semibold mb-2">Type</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -197,7 +197,7 @@ function validatePassword(v) {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Field Upload</label>
+              <label class="block font-semibold mb-2">Field Upload</label>
               <FieldUpload
                 :value="data.profile_image"
                 @input="(v) => (data.profile_image = v)"
@@ -223,7 +223,7 @@ function validatePassword(v) {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2" for="status">Status</label>
+              <label class="block font-semibold mb-2" for="status">Status</label>
               <FormCheckRadio
                 v-model="data.is_active"
                 name="status"

@@ -102,7 +102,7 @@ const onSave = async () => {
         <FormField>
           <div class="grid grid-cols-3 gap-8">
             <div class="">
-              <label class="block font-bold mb-2 mr-4 w-[40%]">Group</label>
+              <label class="block font-semibold mb-2 mr-4 w-[40%]">Group</label>
               <FieldX
                 :bind="{ readonly: !actionText, clearable: false }"
                 :value="data.group"
@@ -116,7 +116,7 @@ const onSave = async () => {
               />
             </div>
             <div class="">
-              <label class="block font-bold mb-2 mr-4 w-[40%]">Code</label>
+              <label class="block font-semibold mb-2 mr-4 w-[40%]">Code</label>
               <FieldX
                 :bind="{ readonly: !actionText, clearable: false }"
                 :value="data.code"
@@ -130,7 +130,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Key 1</label>
+              <label class="block font-semibold mb-2">Key 1</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -144,7 +144,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Key 2</label>
+              <label class="block font-semibold mb-2">Key 2</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -158,7 +158,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Key 3</label>
+              <label class="block font-semibold mb-2">Key 3</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -172,7 +172,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Key 4</label>
+              <label class="block font-semibold mb-2">Key 4</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -186,7 +186,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">value 1</label>
+              <label class="block font-semibold mb-2">value 1</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -200,7 +200,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">value 2</label>
+              <label class="block font-semibold mb-2">value 2</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -214,7 +214,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">value 3</label>
+              <label class="block font-semibold mb-2">value 3</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -228,7 +228,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">value 4</label>
+              <label class="block font-semibold mb-2">value 4</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -243,7 +243,7 @@ const onSave = async () => {
             </div>
             <div class="relative">
               <div class="absolute top-0 w-full left-0">
-                <label class="block font-bold mb-2">Deskripsi</label>
+                <label class="block font-semibold mb-2">Deskripsi</label>
                 <FieldX
                   :bind="{ readonly: !actionText }"
                   class="w-full !mt-0"
@@ -259,7 +259,7 @@ const onSave = async () => {
               </div>
             </div>
             <div>
-              <label class="block font-bold mb-2" for="all_bu">Semua Business Unit</label>
+              <label class="block font-semibold mb-2" for="all_bu">Semua Business Unit</label>
               <FormCheckRadio
                 v-model="data.all_bu"
                 name="all_bu"
@@ -270,7 +270,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2" for="status">Status</label>
+              <label class="block font-semibold mb-2" for="status">Status</label>
               <FormCheckRadio
                 v-model="data.is_active"
                 name="status"

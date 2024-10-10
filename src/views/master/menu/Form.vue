@@ -103,7 +103,7 @@ const onSave = async () => {
         <FormField>
           <div class="grid grid-cols-3 gap-8">
             <div class="">
-              <label class="block font-bold mb-2 mr-4 w-[40%]">Code</label>
+              <label class="block font-semibold mb-2 mr-4 w-[40%]">Code</label>
               <FieldX
                 :bind="{ readonly: true, clearable: false }"
                 :value="data.code"
@@ -115,7 +115,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Modul</label>
+              <label class="block font-semibold mb-2">Modul</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -129,7 +129,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Sub Modul</label>
+              <label class="block font-semibold mb-2">Sub Modul</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -143,7 +143,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Menu</label>
+              <label class="block font-semibold mb-2">Menu</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -157,7 +157,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Path</label>
+              <label class="block font-semibold mb-2">Path</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -171,7 +171,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Endpoint</label>
+              <label class="block font-semibold mb-2">Endpoint</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -185,7 +185,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Icon</label>
+              <label class="block font-semibold mb-2">Icon</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -199,7 +199,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Sequence</label>
+              <label class="block font-semibold mb-2">Sequence</label>
               <FieldNumber
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -213,7 +213,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Type</label>
+              <label class="block font-semibold mb-2">Type</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -228,7 +228,7 @@ const onSave = async () => {
             </div>
             <div class="relative">
               <div class="absolute top-0 w-full left-0">
-                <label class="block font-bold mb-2">Deskripsi</label>
+                <label class="block font-semibold mb-2">Deskripsi</label>
                 <FieldX
                   :bind="{ readonly: !actionText }"
                   class="w-full !mt-0"
@@ -245,7 +245,7 @@ const onSave = async () => {
             </div>
 
             <div>
-              <label class="block font-bold mb-2" for="status">Status</label>
+              <label class="block font-semibold mb-2" for="status">Status</label>
               <FormCheckRadio
                 v-model="data.is_active"
                 name="status"

@@ -139,7 +139,7 @@ async function pratinjau() {
       <CardBox>
         <div class="grid grid-cols-3 gap-4">
           <div>
-            <label class="block font-bold mb-2">Menu</label>
+            <label class="block font-semibold mb-2">Menu</label>
             <FieldSelect
               :bind="{ disabled: !actionText, clearable: true }"
               class="w-full !mt-0"
@@ -167,7 +167,7 @@ async function pratinjau() {
             />
           </div>
           <div>
-            <label class="block font-bold mb-2">Identifier</label>
+            <label class="block font-semibold mb-2">Identifier</label>
             <FieldX
               :bind="{ readonly: !actionText }"
               class="w-full !mt-0"
@@ -181,7 +181,7 @@ async function pratinjau() {
             />
           </div>
           <div>
-            <label class="block font-bold mb-2">Status</label>
+            <label class="block font-semibold mb-2">Status</label>
             <FieldSelect
               :bind="{ disabled: !actionText, clearable: true }"
               class="w-full !mt-0"
@@ -201,7 +201,7 @@ async function pratinjau() {
             />
           </div>
           <div>
-            <label class="block font-bold mb-2">Pritinjau</label>
+            <label class="block font-semibold mb-2">Pritinjau</label>
             <FieldX
               :bind="{ readonly: true }"
               class="w-full !mt-0"

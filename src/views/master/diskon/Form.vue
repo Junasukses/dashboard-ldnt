@@ -171,7 +171,7 @@ const onSave = async () => {
         <FormField>
           <div class="grid grid-cols-3 gap-8">
             <div class="">
-              <label class="block font-bold mb-2 mr-4 w-[40%]">Discount Type :</label>
+              <label class="block font-semibold mb-2 mr-4 w-[40%]">Discount Type :</label>
               <FieldSelect
                 :bind="{ disabled: true, clearable: false }"
                 :value="data.discount_type"
@@ -184,7 +184,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Name</label>
+              <label class="block font-semibold mb-2">Name</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -198,7 +198,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Payment Type</label>
+              <label class="block font-semibold mb-2">Payment Type</label>
               <FieldSelect
                 :bind="{ disabled: !actionText, clearable: false }"
                 :value="data.payment_type"
@@ -218,7 +218,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Master Payment Type</label>
+              <label class="block font-semibold mb-2">Master Payment Type</label>
               <FieldSelect
                 :bind="{
                   disabled: !actionText || data.payment_type?.toLowerCase() == 'all',
@@ -248,7 +248,7 @@ const onSave = async () => {
             </div>
 
             <div>
-              <label class="block font-bold mb-2" for="claim_supplier">Claim Supplier</label>
+              <label class="block font-semibold mb-2" for="claim_supplier">Claim Supplier</label>
               <FormCheckRadio
                 v-model="data.is_claim_supplier"
                 name="claim_supplier"
@@ -261,7 +261,7 @@ const onSave = async () => {
             </div>
 
             <div>
-              <label class="block font-bold mb-2">Supplier</label>
+              <label class="block font-semibold mb-2">Supplier</label>
               <FieldSelect
                 :bind="{
                   disabled: !actionText || !data.is_claim_supplier,
@@ -290,7 +290,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Price</label>
+              <label class="block font-semibold mb-2">Price</label>
               <FieldNumber
                 :bind="{
                   readonly: !actionText || data.discount_type?.toLowerCase() !== 'tebus murah'
@@ -306,7 +306,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Min QTY</label>
+              <label class="block font-semibold mb-2">Min QTY</label>
               <FieldNumber
                 :bind="{
                   readonly: !actionText || data.discount_type?.toLowerCase() !== 'tebus murah'
@@ -322,7 +322,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Min Amount</label>
+              <label class="block font-semibold mb-2">Min Amount</label>
               <FieldNumber
                 :bind="{
                   readonly: !actionText || data.discount_type?.toLowerCase() !== 'tebus murah'
@@ -338,7 +338,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Max Item QTY</label>
+              <label class="block font-semibold mb-2">Max Item QTY</label>
               <FieldNumber
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -352,7 +352,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Start Date</label>
+              <label class="block font-semibold mb-2">Start Date</label>
               <FieldX
                 :bind="{ readonly: !actionText, disabled: !actionText }"
                 class="w-full !mt-0"
@@ -366,7 +366,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">End Date</label>
+              <label class="block font-semibold mb-2">End Date</label>
               <FieldX
                 :bind="{ readonly: !actionText, disabled: !actionText }"
                 class="w-full !mt-0"
@@ -380,7 +380,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Deskripsi</label>
+              <label class="block font-semibold mb-2">Deskripsi</label>
               <FieldX
                 :bind="{ readonly: !actionText }"
                 class="w-full !mt-0"
@@ -394,7 +394,7 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Status</label>
+              <label class="block font-semibold mb-2">Status</label>
               <FieldX
                 :bind="{ readonly: true }"
                 class="w-full !mt-0"

@@ -126,6 +126,7 @@ const onSave = async () => {
                 label=""
               />
             </div>
+            <!-- Halo -->
             <div class="relative">
               <div class="absolute top-0 w-full left-0">
                 <label class="block font-bold mb-2">Deskripsi</label>

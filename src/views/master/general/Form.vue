@@ -101,32 +101,6 @@ const onSave = async () => {
       <CardBox>
         <FormField>
           <div class="grid grid-cols-3 gap-8">
-            <div>
-              <label class="block font-bold mb-2">Business Unit</label>
-              <FieldSelect
-                :bind="{ disabled: !actionText, clearable: false }"
-                class="w-full !mt-0"
-                :value="data.m_bu_id"
-                @input="(v) => (data.m_bu_id = v)"
-                :hints="formErrors.m_bu_id"
-                :errorText="formErrors.m_bu_id ? 'failed' : ''"
-                :check="false"
-                placeholder="Pilih Business Unit"
-                valueField="id"
-                displayField="name"
-                :api="{
-                  url: `${store.server}/operation/m_bu`,
-                  headers: {
-                    'Content-Type': 'Application/json',
-                    Authorization: `Bearer ${token}`
-                  },
-                  params: {
-                    where: `this.is_active='true'`
-                  }
-                }"
-                label=""
-              />
-            </div>
             <div class="">
               <label class="block font-bold mb-2 mr-4 w-[40%]">Group</label>
               <FieldX

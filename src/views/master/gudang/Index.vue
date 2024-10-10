@@ -213,7 +213,7 @@ onActivated(() => {
           >
             <template #header>
               <BaseButton
-                @click="router.push(`${this.$route.path}/create`)"
+                @click="router.push(`${route.path}/create`)"
                 type="submit"
                 color="info"
                 label="Create New"

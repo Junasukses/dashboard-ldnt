@@ -184,31 +184,6 @@ const onSave = async () => {
               />
             </div>
             <div>
-              <label class="block font-bold mb-2">Business Unit</label>
-              <FieldSelect
-                :bind="{ disabled: !actionText, clearable: false }"
-                :value="data.m_bu_id"
-                @input="(v) => (data.m_bu_id = v)"
-                :errorText="formErrors.m_bu_id ? 'failed' : ''"
-                :hints="formErrors.m_bu_id"
-                :check="false"
-                valueField="id"
-                displayField="name"
-                :api="{
-                  url: `${store.server}/operation/m_bu`,
-                  headers: {
-                    'Content-Type': 'Application/json',
-                    Authorization: `Bearer ${token}`
-                  },
-                  params: {
-                    simplest: true
-                  }
-                }"
-                placeholder="Pilih Bu"
-                class="!mt-0"
-              />
-            </div>
-            <div>
               <label class="block font-bold mb-2">Name</label>
               <FieldX
                 :bind="{ readonly: !actionText }"

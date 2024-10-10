@@ -271,7 +271,7 @@ onActivated(() => {
                   class="!mt-0 !w-40 !h-2"
                 />
                 <BaseButton
-                  @click="router.push(`${this.$route.path}/create?type=${data.discount_type}`)"
+                  @click="router.push(`${route.path}/create`)"
                   type="submit"
                   color="info"
                   label="Create New"

@@ -93,15 +93,14 @@ const delRow = (key) => {
 }
 
 const upRow = (key) => {
-  const current = detailArr.value[key]
-  detailArr.value[key] = detailArr.value[key - 1]
-  detailArr.value[key - 1] = current
+  console.log(key)
+  detailArr.value[key].seq = detailArr.value[key].seq - 1
+  detailArr.value[key - 1].seq = detailArr.value[key].seq + 1
 }
 
 const downRow = (key) => {
-  const current = detailArr.value[key]
-  detailArr.value[key] = detailArr.value[key + 1]
-  detailArr.value[key + 1] = current
+  detailArr.value[key].seq = detailArr.value[key].seq + 1
+  detailArr.value[key + 1].seq = detailArr.value[key].seq - 1
 }
 
 async function pratinjau() {

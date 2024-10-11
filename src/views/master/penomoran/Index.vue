@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { mdiBallotOutline } from '@mdi/js'
+import { mdiAccountGroupOutline, mdiBallotOutline } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import FormField from '@/components/FormField.vue'

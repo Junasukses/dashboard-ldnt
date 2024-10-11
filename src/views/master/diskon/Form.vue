@@ -48,7 +48,8 @@ let seq_ = 0
 const addDetail = () => {
   const tempItem = {
     seq: detailArr.value.length + 1,
-    type: data.discount_type !== 'GLOBAL' ? 'ITEM' : null
+    type: data.discount_type !== 'GLOBAL' ? 'ITEM' : null,
+    disc_type: 'AMT'
   }
   detailArr.value = [...detailArr.value, tempItem]
 }
@@ -62,15 +63,25 @@ const addDetailProgresif = () => {
     'm_item.item_name': firstItem ? firstItem['m_item.item_name'] : null,
     m_unit_id: firstItem ? firstItem.m_unit_id : null,
     'm_unit.name': firstItem ? firstItem['m_unit.name'] : null,
-    disc_type: firstItem ? firstItem.disc_type : null
+    disc_type: firstItem ? firstItem.disc_type : null,
+    price: firstItem ? firstItem.price : null
   }
   detailArr.value = [...detailArr.value, tempItem]
+}
+
+const handleTipeDiskonChange = (newTipeDiskon) => {
+  detailArr.value.forEach((item, index) => {
+    if (index > 0) {
+      item.disc_type = newTipeDiskon
+    }
+  })
 }
 
 function onDetailAdd(rows) {
   Object.assign(rows, {
     seq: detailArr.value.length + 1,
-    type: data.discount_type !== 'GLOBAL' ? 'ITEM' : null
+    type: data.discount_type !== 'GLOBAL' ? 'ITEM' : null,
+    disc_type: 'AMT'
   })
   detailArr.value = [...detailArr.value, rows]
 }
@@ -80,6 +91,7 @@ function onDetailAddReguler(rows) {
   rows.forEach((row) => {
     row.seq = detailArr.value?.length + 1
     row.type = data.discount_type !== 'GLOBAL' ? 'ITEM' : null
+    row.disc_type = 'AMT'
     data.push(row)
   })
 
@@ -305,7 +317,7 @@ const onSave = async () => {
                 label=""
               />
             </div>
-            <div>
+            <div v-show="data.discount_type?.toLowerCase() == 'tebus murah'">
               <label class="block font-semibold mb-2">Min QTY</label>
               <FieldNumber
                 :bind="{
@@ -321,7 +333,7 @@ const onSave = async () => {
                 label=""
               />
             </div>
-            <div>
+            <div v-show="data.discount_type?.toLowerCase() == 'tebus murah'">
               <label class="block font-semibold mb-2">Min Amount</label>
               <FieldNumber
                 :bind="{
@@ -337,7 +349,7 @@ const onSave = async () => {
                 label=""
               />
             </div>
-            <div>
+            <div v-show="data.discount_type?.toLowerCase() == 'tebus murah'">
               <label class="block font-semibold mb-2">Max Item QTY</label>
               <FieldNumber
                 :bind="{ readonly: !actionText }"
@@ -439,7 +451,7 @@ const onSave = async () => {
               },
               params: {
                 simplest: true,
-                searchfield: 'this.item_code,this.item_name,unit,this.barcode,this.supp',
+                searchfield: 'this.item_code,this.item_name,unit,this.barcode,this.supp,this.price',
                 notin:
                   detailArr.length > 0
                     ? `this.id:${detailArr
@@ -481,7 +493,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-end']
               },
               {
                 flex: 1,
@@ -490,7 +502,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
               },
               {
                 flex: 1,
@@ -499,7 +511,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
               },
               {
                 flex: 1,
@@ -508,7 +520,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
               },
               {
                 flex: 1,
@@ -517,7 +529,16 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
+              },
+              {
+                flex: 1,
+                field: 'price',
+                headerName: 'Price',
+                sortable: false,
+                resizable: true,
+                filter: 'ColFilter',
+                cellClass: ['border-r', '!border-gray-200', 'justify-end']
               }
             ]"
             class="!mt-0 !ml-2"
@@ -581,7 +602,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-end']
               },
               {
                 flex: 1,
@@ -590,7 +611,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
               },
               {
                 flex: 1,
@@ -599,7 +620,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
               },
               {
                 flex: 1,
@@ -608,7 +629,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
               },
               {
                 flex: 1,
@@ -617,7 +638,7 @@ const onSave = async () => {
                 sortable: false,
                 resizable: true,
                 filter: 'ColFilter',
-                cellClass: ['border-r', '!border-gray-200', 'justify-center']
+                cellClass: ['border-r', '!border-gray-200', 'justify-start']
               }
             ]"
             class="!mt-0 !ml-2"
@@ -654,6 +675,9 @@ const onSave = async () => {
                 </th>
                 <th scope="col" class="px-6 py-3" v-show="data.discount_type !== 'GLOBAL'">
                   Harga
+                </th>
+                <th scope="col" class="px-6 py-3" v-show="data.discount_type !== 'REGULER'">
+                  Min QTY
                 </th>
                 <th scope="col" class="px-6 py-3">Tipe Diskon</th>
                 <th scope="col" class="px-6 py-3">Diskon</th>
@@ -729,8 +753,19 @@ const onSave = async () => {
                 <td class="px-6 py-4" v-show="data.discount_type !== 'GLOBAL'">
                   {{ item['m_unit.name'] ?? '-' }}
                 </td>
-                <td class="px-6 py-4" v-show="data.discount_type !== 'GLOBAL'">
+                <td class="px-6 py-4 text-right" v-show="data.discount_type !== 'GLOBAL'">
                   {{ (item['price'] ?? 0)?.toLocaleString('id') }}
+                </td>
+                <td class="px-6 py-4" v-show="data.discount_type !== 'REGULER'">
+                  <FieldNumber
+                    :bind="{ readonly: !actionText, clearable: false }"
+                    class="w-full !mt-0"
+                    :value="item.min_qty"
+                    @input="(v) => (item.min_qty = v)"
+                    placeholder=""
+                    label=""
+                    :check="false"
+                  />
                 </td>
                 <td class="px-6 py-4">
                   <FieldSelect
@@ -742,6 +777,11 @@ const onSave = async () => {
                     :value="item.disc_type"
                     @input="(v) => (item.disc_type = v)"
                     :options="['%', 'AMT']"
+                    @update:valueFull="
+                      (e) => {
+                        handleTipeDiskonChange(e?.text)
+                      }
+                    "
                     placeholder=""
                     label=""
                     :check="false"

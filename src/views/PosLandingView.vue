@@ -25,8 +25,10 @@ import PaymentPopup from '@/components/PaymentPopup.vue'
 import OpenCloseDaily from '@/components/OpenCloseDaily.vue'
 import { useStore } from '@/stores/app'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 const store = useStore()
+const router = useRouter()
 const token = ref(localStorage.getItem('token') ?? import.meta.env.VITE_AUTH_TOKEN)
 const activeTabIndex = ref(0)
 const listItem = ref()
@@ -39,7 +41,26 @@ const paymentPopup = ref()
 const openCLoseDailyPopup = ref()
 const arrayPayment = ref([])
 const arrayPayment2 = ref([])
+const user = ref()
+const shift = ref()
 let initalValues
+
+function logoutFunc() {
+  alertify.confirm(
+    'Perhatian',
+    `Yakin ingin menutup POS?`,
+    () => {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+
+      store.token = null
+      store.user = null
+
+      router.push({ name: 'login' })
+    },
+    () => {}
+  )
+}
 
 function formatNumber(amount, decimals = 2) {
   if (isNaN(amount)) {
@@ -235,7 +256,6 @@ function deleteItem(id) {
       '',
       async (evt, value) => {
         if (value === '12345') {
-          console.log(id)
           item.group_data = item.group_data.filter((dt) => dt.id !== id)
           alertify.success('Item Berhasil Dihapus')
         } else {
@@ -256,6 +276,9 @@ const getDaily = async () => {
     if (dataDaily.data.next_shift) {
       data.shift = dataDaily.data.next_shift
     }
+    user.value = dataDaily.data.open_user
+    shift.value = dataDaily.data.current_shift
+    console.log(dataDaily.data)
     data.isOpen = dataDaily.data.is_open
     if (data.isOpen) {
       for (const key in dataDaily.data) {
@@ -275,6 +298,8 @@ const successPayment = async () => {
     if (response.status !== 200) throw new Error('Failed when trying to read data')
     const dataDaily = response.data
     data.isOpen = dataDaily.data.is_open
+    user.value = dataDaily.data.open_user
+    shift.value = dataDaily.data.current_shift
     if (data.isOpen) {
       for (const key in dataDaily.data) {
         data[key] = dataDaily.data[key]
@@ -436,8 +461,8 @@ onBeforeUnmount(() => {
     >
       <div class="grid grid-cols-12 gap-[12px] !py-0 overflow-hidden mx-6 w-full">
         <div class="col-span-9">
-          <h1 class="!ml-2 !font-bold !text-2xl">Selamat Datang Budi Santoso</h1>
-          <h1 class="!ml-2 !font-bold !text-md">Kasir Shift II</h1>
+          <h1 class="!ml-2 !font-bold !text-2xl">Selamat Datang {{ user?.name ?? '-' }}</h1>
+          <h1 class="!ml-2 !font-bold !text-md">Kasir Shift {{ shift?.current_shift ?? '-' }}</h1>
           <h1 class="!ml-2 !font-bold !text-md">PERSADA POS</h1>
           <h1 class="!ml-2 !mb-4 !font-semibold !text-sm">
             {{ 'Jl. MT. Haryono No.11, Dinoyo, Kec. Lowokwaru, Kota Malang, Jawa Timur 65144' }}
@@ -481,6 +506,7 @@ onBeforeUnmount(() => {
                 </button>
               </div>
               <div
+                @click="logoutFunc"
                 style="cursor: pointer"
                 class="!justify-end space-x-6 bg-red-600 hover:bg-red-700 text-white text-center py-1 px-4 text-[11px] font-semibold rounded-lg flex items-center justify-center max-h-[120px]"
               >
@@ -508,7 +534,9 @@ onBeforeUnmount(() => {
                 headers: { 'Content-Type': 'Application/json', authorization: `Bearer ${token}` },
                 params: {
                   simplest: true,
-                  searchfield: 'this.item_code, this.item_name, this.barcode'
+                  searchfield: 'this.item_code, this.item_name, this.barcode',
+                  order_by: 'this.item_name',
+                  order_type: 'ASC'
                 }
               }"
               :columns="[
@@ -529,7 +557,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-start', 'bg-gray-50']
                 },
                 {
                   headerName: 'Kode',
@@ -539,7 +567,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-end', 'bg-gray-50']
                 },
                 {
                   headerName: 'Nama',
@@ -549,7 +577,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-start', 'bg-gray-50']
                 },
                 {
                   headerName: 'Satuan',
@@ -559,7 +587,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-start', 'bg-gray-50']
                 },
                 {
                   headerName: 'Harga',
@@ -619,7 +647,9 @@ onBeforeUnmount(() => {
                 params: {
                   simplest: true,
                   searchfield: 'this.item_code, this.item_name, this.barcode',
-                  scopes: 'DiscItem'
+                  scopes: 'DiscItem',
+                  order_by: 'this.item_name',
+                  order_type: 'ASC'
                 }
               }"
               :columns="[
@@ -640,7 +670,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-start', 'bg-gray-50']
                 },
                 {
                   headerName: 'Kode',
@@ -650,7 +680,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-end', 'bg-gray-50']
                 },
                 {
                   headerName: 'Nama',
@@ -660,7 +690,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-start', 'bg-gray-50']
                 },
                 {
                   headerName: 'Satuan',
@@ -670,7 +700,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', 'bg-gray-50']
+                  cellClass: ['justify-start', 'bg-gray-50']
                 },
                 {
                   headerName: 'Harga',
@@ -730,7 +760,9 @@ onBeforeUnmount(() => {
                 params: {
                   simplest: true,
                   join: true,
-                  searchfield: 'this.no, this.date, this.cust_name, this.kasir, this.no_invoice'
+                  searchfield: ' this.date, this.cust_name, this.kasir, this.no_invoice',
+                  order_by: 'this.no',
+                  order_type: 'ASC'
                 }
               }"
               :actions="[
@@ -754,16 +786,6 @@ onBeforeUnmount(() => {
                   cellClass: ['justify-center', '!border-gray-200']
                 },
                 {
-                  field: 'no',
-                  headerName: 'Nomer Transaksi',
-                  width: 60,
-                  flex: 1,
-                  sortable: true,
-                  resizable: true,
-                  filter: true,
-                  cellClass: ['justify-center', '!border-gray-200']
-                },
-                {
                   field: 'no_invoice',
                   headerName: 'Nomer Invoice',
                   width: 60,
@@ -771,7 +793,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', '!border-gray-200']
+                  cellClass: ['justify-start', '!border-gray-200']
                 },
                 {
                   field: 'date',
@@ -781,7 +803,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', '!border-gray-200']
+                  cellClass: ['justify-start', '!border-gray-200']
                 },
                 {
                   headerName: 'Kasir',
@@ -791,7 +813,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', '!border-gray-200']
+                  cellClass: ['justify-start', '!border-gray-200']
                 },
                 {
                   headerName: 'Customer',
@@ -801,7 +823,7 @@ onBeforeUnmount(() => {
                   sortable: true,
                   resizable: true,
                   filter: true,
-                  cellClass: ['justify-center', '!border-gray-200']
+                  cellClass: ['justify-start', '!border-gray-200']
                 }
               ]"
               class="!mt-0 hidden"
@@ -833,7 +855,9 @@ onBeforeUnmount(() => {
                       },
                       params: {
                         simplest: true,
-                        searchfield: 'this.item_code, this.item_name, this.barcode'
+                        searchfield: 'this.item_code, this.item_name, this.barcode',
+                        order_by: 'this.item_name',
+                        order_type: 'ASC'
                       },
                       onsuccess: (response) => {
                         response.data = [...response.data].map((dt) => {
@@ -863,7 +887,7 @@ onBeforeUnmount(() => {
                         sortable: true,
                         resizable: true,
                         filter: true,
-                        cellClass: ['justify-center', 'bg-gray-50']
+                        cellClass: ['justify-start', 'bg-gray-50']
                       },
                       {
                         headerName: 'Kode',
@@ -873,7 +897,7 @@ onBeforeUnmount(() => {
                         sortable: true,
                         resizable: true,
                         filter: true,
-                        cellClass: ['justify-center', 'bg-gray-50']
+                        cellClass: ['justify-end', 'bg-gray-50']
                       },
                       {
                         headerName: 'Nama',
@@ -883,7 +907,7 @@ onBeforeUnmount(() => {
                         sortable: true,
                         resizable: true,
                         filter: true,
-                        cellClass: ['justify-center', 'bg-gray-50']
+                        cellClass: ['justify-start', 'bg-gray-50']
                       },
                       {
                         headerName: 'Satuan',
@@ -893,7 +917,7 @@ onBeforeUnmount(() => {
                         sortable: true,
                         resizable: true,
                         filter: true,
-                        cellClass: ['justify-center', 'bg-gray-50']
+                        cellClass: ['justify-start', 'bg-gray-50']
                       }
                     ]"
                     class="!mt-0 !ml-2"

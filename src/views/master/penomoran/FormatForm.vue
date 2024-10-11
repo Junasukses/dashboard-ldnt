@@ -35,7 +35,7 @@ onBeforeMount(async () => {
     for (const [key, value] of Object.entries(resData.data)) {
       values[key] = value
     }
-    detailArr.value = values.generate_code_d
+    detailArr.value = values.generate_code_d?.sort((a, b) => a.seq - b.seq)
     values.is_active = values.is_active ? 1 : 0
   } catch (err) {
     alertify.error('Failed to get data')
@@ -254,7 +254,7 @@ async function pratinjau() {
               <tr
                 v-if="detailArr.length > 0"
                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                v-for="(item, i) in detailArr.sort((a, b) => a.seq - b.seq)"
+                v-for="(item, i) in detailArr"
                 :key="item.id"
               >
                 <td class="px-6 py-4">

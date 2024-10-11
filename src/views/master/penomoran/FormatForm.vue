@@ -77,7 +77,7 @@ const delAllRow = () => {
     () => {
       detailArr.value = []
     },
-    () => {}
+    () => { }
   )
 }
 
@@ -88,20 +88,19 @@ const delRow = (key) => {
     () => {
       detailArr.value = detailArr.value.filter((dt, i) => key !== i)
     },
-    () => {}
+    () => { }
   )
 }
 
 const upRow = (key) => {
-  const current = detailArr.value[key]
-  detailArr.value[key] = detailArr.value[key - 1]
-  detailArr.value[key - 1] = current
+  console.log(key)
+  detailArr.value[key].seq = detailArr.value[key].seq - 1;
+  detailArr.value[key - 1].seq = detailArr.value[key].seq + 1;
 }
 
 const downRow = (key) => {
-  const current = detailArr.value[key]
-  detailArr.value[key] = detailArr.value[key + 1]
-  detailArr.value[key + 1] = current
+  detailArr.value[key].seq = detailArr.value[key].seq + 1;
+  detailArr.value[key + 1].seq = detailArr.value[key].seq - 1;
 }
 
 async function pratinjau() {
@@ -140,17 +139,10 @@ async function pratinjau() {
         <div class="grid grid-cols-3 gap-4">
           <div>
             <label class="block font-semibold mb-2">Menu</label>
-            <FieldSelect
-              :bind="{ disabled: !actionText, clearable: true }"
-              class="w-full !mt-0"
-              :value="values.m_menu_id"
-              @input="(v) => (values.m_menu_id = v)"
-              label=""
-              :errorText="formErrors.m_menu_id ? 'failed' : ''"
-              :hints="formErrors.m_menu_id"
-              valueField="id"
-              displayField="menu"
-              :api="{
+            <FieldSelect :bind="{ disabled: !actionText, clearable: true }" class="w-full !mt-0"
+              :value="values.m_menu_id" @input="(v) => (values.m_menu_id = v)" label=""
+              :errorText="formErrors.m_menu_id ? 'failed' : ''" :hints="formErrors.m_menu_id" valueField="id"
+              displayField="menu" :api="{
                 url: `${baseUrl}/operation/m_menu`,
                 headers: {
                   'Content-Type': 'Application/json',
@@ -161,56 +153,28 @@ async function pratinjau() {
                   transform: false,
                   join: false
                 }
-              }"
-              placeholder="Masukkan Menu"
-              :check="false"
-            />
+              }" placeholder="Masukkan Menu" :check="false" />
           </div>
           <div>
             <label class="block font-semibold mb-2">Identifier</label>
-            <FieldX
-              :bind="{ readonly: !actionText }"
-              class="w-full !mt-0"
-              :value="values.identifier"
-              :errorText="formErrors.identifier ? 'failed' : ''"
-              @input="(v) => (values.identifier = v)"
-              :hints="formErrors.identifier"
-              placeholder="Masukkan Identifier"
-              :check="false"
-              label=""
-            />
+            <FieldX :bind="{ readonly: !actionText }" class="w-full !mt-0" :value="values.identifier"
+              :errorText="formErrors.identifier ? 'failed' : ''" @input="(v) => (values.identifier = v)"
+              :hints="formErrors.identifier" placeholder="Masukkan Identifier" :check="false" label="" />
           </div>
           <div>
             <label class="block font-semibold mb-2">Status</label>
-            <FieldSelect
-              :bind="{ disabled: !actionText, clearable: true }"
-              class="w-full !mt-0"
-              :value="values.is_active"
-              @input="(v) => (values.is_active = v)"
-              :errorText="formErrors.is_active ? 'failed' : ''"
-              :hints="formErrors.is_active"
-              valueField="id"
-              displayField="key"
-              :options="[
+            <FieldSelect :bind="{ disabled: !actionText, clearable: true }" class="w-full !mt-0"
+              :value="values.is_active" @input="(v) => (values.is_active = v)"
+              :errorText="formErrors.is_active ? 'failed' : ''" :hints="formErrors.is_active" valueField="id"
+              displayField="key" :options="[
                 { id: 1, key: 'Active' },
                 { id: 0, key: 'InActive' }
-              ]"
-              :check="false"
-              placeholder="Masukkan Status"
-              label=""
-            />
+              ]" :check="false" placeholder="Masukkan Status" label="" />
           </div>
           <div>
             <label class="block font-semibold mb-2">Pritinjau</label>
-            <FieldX
-              :bind="{ readonly: true }"
-              class="w-full !mt-0"
-              :value="values.pratinjau"
-              :errorText="formErrors.pratinjau ? 'failed' : ''"
-              :check="false"
-              placeholder="Pratinjau"
-              label=""
-            />
+            <FieldX :bind="{ readonly: true }" class="w-full !mt-0" :value="values.pratinjau"
+              :errorText="formErrors.pratinjau ? 'failed' : ''" :check="false" placeholder="Pratinjau" label="" />
           </div>
         </div>
         <div class="mt-4 flex justify-between">
@@ -219,30 +183,14 @@ async function pratinjau() {
           </SectionTitleLineWithButton>
           <BaseButtons class="flex justify-end">
             <BaseButton @click="pratinjau" type="button" color="warning" label="Pratinjau" small />
-            <BaseButton
-              v-show="actionText"
-              @click="addRow"
-              type="button"
-              color="info"
-              label="Tambah Baris"
-              small
-            />
-            <BaseButton
-              v-show="actionText"
-              @click="delAllRow"
-              type="button"
-              color="danger"
-              label="Hapus Semua"
-              small
-            />
+            <BaseButton v-show="actionText" @click="addRow" type="button" color="info" label="Tambah Baris" small />
+            <BaseButton v-show="actionText" @click="delAllRow" type="button" color="danger" label="Hapus Semua" small />
           </BaseButtons>
         </div>
 
         <div class="relative">
           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead
-              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-            >
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-6 py-3 w-[5%]">No</th>
                 <th scope="col" class="px-6 py-3">Prefix</th>
@@ -251,84 +199,45 @@ async function pratinjau() {
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-if="detailArr.length > 0"
-                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                v-for="(item, i) in detailArr.sort((a, b) => a.seq - b.seq)"
-                :key="item.id"
-              >
+              <tr v-if="detailArr.length > 0" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                v-for="(item, i) in detailArr.sort((a, b) => a.seq - b.seq)" :key="item.id">
                 <td class="px-6 py-4">
                   {{ i + 1 }}
                 </td>
                 <td class="px-6 py-4">
-                  <FieldSelect
-                    :bind="{ disabled: false, clearable: true }"
-                    class="w-full !mt-0"
-                    :value="item.generate_code_type_id"
-                    @input="(v) => (item.generate_code_type_id = v)"
+                  <FieldSelect :bind="{ disabled: false, clearable: true }" class="w-full !mt-0"
+                    :value="item.generate_code_type_id" @input="(v) => (item.generate_code_type_id = v)"
                     :errorText="formErrors.generate_code_type_id ? 'failed' : ''"
-                    :hints="formErrors.generate_code_type_id"
-                    valueField="id"
-                    displayField="name"
-                    :api="{
+                    :hints="formErrors.generate_code_type_id" valueField="id" displayField="name" :api="{
                       url: `${baseUrl}/operation/generate_code_type`,
                       headers: {
                         'Content-Type': 'Application/json',
                         Authorization: `Bearer ${token}`
                       }
-                    }"
-                    @update:valueFull="
-                      (v) => {
-                        item.generate_code_type_v = v.id
-                      }
-                    "
-                    placeholder="Masukan Prefix"
-                    label=""
-                    :check="false"
-                  />
+                    }" @update:valueFull="(v) => {
+                      item.generate_code_type_v = v.id
+                    }
+                      " placeholder="Masukan Prefix" label="" :check="false" />
                 </td>
                 <td class="px-6 py-4">
-                  <FieldSelect
-                    :bind="{ disabled: true, clearable: true }"
-                    class="w-full !mt-0"
-                    :value="item.generate_code_type_id"
-                    :errorText="formErrors.generate_code_type ? 'failed' : ''"
-                    :hints="formErrors.generate_code_type"
-                    valueField="id"
-                    displayField="value"
-                    :api="{
+                  <FieldSelect :bind="{ disabled: true, clearable: true }" class="w-full !mt-0"
+                    :value="item.generate_code_type_id" :errorText="formErrors.generate_code_type ? 'failed' : ''"
+                    :hints="formErrors.generate_code_type" valueField="id" displayField="value" :api="{
                       url: `${baseUrl}/operation/generate_code_type`,
                       headers: {
                         'Content-Type': 'Application/json',
                         Authorization: `Bearer ${token}`
                       }
-                    }"
-                    @update:valueFull="
-                      (v) => {
-                        item.generate_code_type = v.value
-                      }
-                    "
-                    placeholder="Masukan Prefix"
-                    label=""
-                    :check="false"
-                  />
+                    }" @update:valueFull="(v) => {
+                      item.generate_code_type = v.value
+                    }
+                      " placeholder="Masukan Prefix" label="" :check="false" />
                 </td>
                 <td class="px-6 py-4">
                   <BaseButtons type="justify-start lg:justify-end" no-wrap>
-                    <BaseButton
-                      v-show="i > 0"
-                      @click="upRow(i)"
-                      color="info"
-                      :icon="mdiArrowUp"
-                      small
-                    />
-                    <BaseButton
-                      @click="downRow(i)"
-                      v-show="i < detailArr.length - 1"
-                      color="info"
-                      :icon="mdiArrowDown"
-                      small
-                    />
+                    <BaseButton v-show="i > 0" @click="upRow(i)" color="info" :icon="mdiArrowUp" small />
+                    <BaseButton @click="downRow(i)" v-show="i < detailArr.length - 1" color="info" :icon="mdiArrowDown"
+                      small />
                     <BaseButton @click="delRow(i)" color="danger" :icon="mdiTrashCan" small />
                   </BaseButtons>
                 </td>
@@ -343,19 +252,8 @@ async function pratinjau() {
 
         <template #footer>
           <BaseButtons class="flex justify-end mt-4">
-            <BaseButton
-              @click="router.replace(landing_path)"
-              type="reset"
-              color="danger"
-              label="Kembali"
-            />
-            <BaseButton
-              v-show="actionText"
-              @click="onSave"
-              type="submit"
-              color="success"
-              label="Simpan"
-            />
+            <BaseButton @click="router.replace(landing_path)" type="reset" color="danger" label="Kembali" />
+            <BaseButton v-show="actionText" @click="onSave" type="submit" color="success" label="Simpan" />
           </BaseButtons>
         </template>
       </CardBox>
